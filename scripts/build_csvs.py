@@ -5,6 +5,7 @@ Outputs (data/csv/):
   courses.csv  - one row per course offering (all departments)
   slots.csv    - slot letter -> day + time, from the slot system grid
   faculty.csv  - unique instructors with DUMMY email addresses
+  exam_schedule.csv - minor exam slot schedule (date, time, slot)
 
 Usage: .venv/bin/python scripts/build_csvs.py
 """
@@ -160,6 +161,25 @@ def build_slots() -> pd.DataFrame:
     return pd.DataFrame(out)
 
 
+def build_exam_schedule() -> pd.DataFrame:
+    """Minor exam time table: (date, time window) -> slots examined."""
+    df = pd.read_excel(SLOTS_XLSX, sheet_name="Examination", header=None)
+    hdr = next(i for i in range(len(df)) if "08:00" in _clean(df.iat[i, 2]))
+    times = {j: _clean(df.iat[hdr, j]) for j in range(2, df.shape[1]) if _clean(df.iat[hdr, j])}
+    title = _clean(df.iat[hdr - 2, 1])
+    out = []
+    for i in range(hdr + 2, len(df)):
+        date = _clean(df.iat[i, 1])
+        if not re.match(r"\d{1,2} \w+ \d{4}", date):
+            continue
+        for j, time in times.items():
+            for slot in re.split(r"\s*\+\s*", _clean(df.iat[i, j])):
+                if slot and slot.lower() != "free slot":
+                    out.append({"exam": "Minor", "semester": SEMESTER, "date": date, "time": time, "slot": slot,
+                                "status": "tentative", "source": SLOTS_XLSX.name, "title": title})
+    return pd.DataFrame(out)
+
+
 def _split_instructors(s: str) -> list[str]:
     s = s.replace("**", "")
     parts = re.split(r",|/|&|\band\b|\n|;", s)
@@ -204,11 +224,14 @@ def main() -> None:
     courses = build_courses()
     slots = build_slots()
     faculty = build_faculty(courses)
+    exams = build_exam_schedule()
+    exams.to_csv(OUT / "exam_schedule.csv", index=False)
     courses.to_csv(OUT / "courses.csv", index=False)
     slots.to_csv(OUT / "slots.csv", index=False)
     faculty.to_csv(OUT / "faculty.csv", index=False)
     print(f"courses.csv: {len(courses)} rows across {courses.department_code.nunique()} departments")
     print(f"slots.csv:   {len(slots)} rows, {slots.slot.nunique()} distinct slots")
+    print(f"exam_schedule.csv: {len(exams)} rows ({exams.date.nunique()} days)")
     print(f"faculty.csv: {len(faculty)} instructors (dummy emails @{DUMMY_DOMAIN})")
 
 

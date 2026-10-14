@@ -106,3 +106,12 @@ Three PDFs had no text layer: Circulars 51, 52 and 2283. They were OCR'd with te
 - [x] Scanned PDFs OCR'd
 - [x] Answers to all 5 example questions confirmed in the data
 - Repo is **private**, so the source documents are committed. Faculty names are kept; every email address in the CSVs is a dummy.
+
+### Decisions (user, 2026-10-14)
+- **CSL7570 is a typo for CSL7650** (Autonomous Systems). When a course code isn't found, the agent should *suggest the closest match* ("Did you mean CSL7650 Autonomous Systems?") rather than just refusing. The email answer key uses CSL7650 / Gaurav Harit.
+- **400-level Humanities electives this semester = 2**: LAL4070 (Health Economics) and LAL4850, using the IH3 syllabus together with the SoLA tab.
+
+### Exam time tables
+- **Minor exams (Sem I 2026-27):** the slot-wise tentative schedule is in the `Examination` tab of the slot-system sheet. It is now `data/csv/exam_schedule.csv`: 45 rows (date, time window, slot) for 15–20 Sep 2026. Example: slot E → 18 Sep 2026, 08:00–10:00 AM.
+- **Exam windows** from the Academic Calendar AY 2026-27 (D17): Minor 15–20 Sep 2026; **Major 19–26 Nov 2026**; Sem II Minor 16–21 Feb 2027, Major 22–29 Apr 2027; Summer Minor 04–06 Jun 2027, Major 10–13 Jul 2027.
+- **Not yet available:** a slot-wise **Major** exam time table, and the final (non-tentative) minor schedule. The latter may be in the "Details of Minor Examinations of Semester-I AY 2026-27" email (Examination cell, 1 Sep).
