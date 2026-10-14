@@ -1,0 +1,600 @@
+department_code,department,course_code,course_name,level,ltp,credits,instructor,slot,category,offered_for,remarks,semester,source
+EE,Electrical Engineering,,Circuit Theory,,3-0-0,3,Sandeep Yadav,A,,,,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+EE,Electrical Engineering,,Measurement and Instrumentation,,3-0-0,3,Bharat Singh Rajpurohit,D,,,,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+EE,Electrical Engineering,,Signals and Systems,,,4,Himanshu Kumar,B,,,,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+EE,Electrical Engineering,EEL3010,Analog Circuits,300,3-0-3,4.5,Arani,B,,,,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+EE,Electrical Engineering,EEL3020,Electrical Machines,300,3-0-0,3,Gafoor,C,,,,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+EE,Electrical Engineering,EEL3030,Communication Systems,300,3-0-0,3,Suraj,D,,,,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+EE,Electrical Engineering,EEL3040,Control Systems,300,3-0-3,4.5,Anoop,A,,,,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+EE,Electrical Engineering,EEL7080,Introduction to Cyber Physical Systems,700,3-0-0,3,Niladri Sekhar Tripathy,F,,,,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+EE,Electrical Engineering,EEL7150,Embedded Systems Design,700,3-0-0,3,Deepak Fulwani,K,,,,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+EE,Electrical Engineering,EEL7009,Applied Linear Algebra,700,3-0-0,3,Rajendra Nagar,H,,,,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+EE,Electrical Engineering,EEL7010,Statistical Signal Analysis,700,3-0-0,3,Amit Bhardwaj,I,,,,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+EE,Electrical Engineering,EEL4330,Speech Processing,400,3-0-0,3,Manish Narwaria,E,,,,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+EE,Electrical Engineering,EEL7300,Computational Methods in Power System Analysis,700,3-0-0,3,Vineeth,F,,,,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+EE,Electrical Engineering,EEL7700,Electric Drive Systems,700,3-0-0,3,Nishant,G,,,,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+EE,Electrical Engineering,EEL71720,Power Electronic Converters,700,3-0-0,3,Kunwar,H,,,,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+EE,Electrical Engineering,EEP7140,Integrated Power and Drives Laboratory,700,0-0-2,1,Ravi Yadav,M6,,,,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+EE,Electrical Engineering,EEL7XX0,Power System Protection,,,3,Bandi Ravi Kumar,J,,,,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+EE,Electrical Engineering,EEL7640,selected topics in distributed generation,700,,3,ravi yadav,K,,,,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+EE,Electrical Engineering,EEL4350,Microwave Engineering (400),400,,3,Manoj Gupta,E,,,,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+EE,Electrical Engineering,EEL7900,Physics and Modelling of MOS Transistors,700,,3,Harshit,K,,,,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+EE,Electrical Engineering,EEL3XXX,VLSI Design,,,3,Arpit,K,,,,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+EE,Electrical Engineering,EEL7770,Formal Verification,700,,3,Binod Kumar,I,,,,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+EE,Electrical Engineering,EEL71570,Hradware Software Co-design,700,,3,Binod Kumar,J,,,,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+EE,Electrical Engineering,EEL7XX0,Renewable Energy Systems,,,3,Kunwar,I,,,,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+EE,Electrical Engineering,EET8980,PhD Thesis,800,,,Niladri Sekhar Tripathy,T,,,,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+EE,Electrical Engineering,EET8990,PhD Thesis,800,,,Niladri Sekhar Tripathy,T,,,,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+EE,Electrical Engineering,EET8970,PhD Thesis,800,,,Niladri Sekhar Tripathy,T,,,,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+EE,Electrical Engineering,EET7950,M.Tech Thesis Part 1,700,,,Bharat Singh Rajpurohit,T,,,,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+EE,Electrical Engineering,EEN2020,Design/Practical Experience,200,,,Bandi Ravi,NG2,,,,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+EE,Electrical Engineering,EEN1010,Design/Practical Experience,100,,,Gafoor,NG2,,,,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+EE,Electrical Engineering,EEN3010,Design/Practical Experience,300,,,Himanshu Kumar,NG2,,,,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+EE,Electrical Engineering,EEL71560,Linear System Theory,700,,3,Saurav Kumar,I,,,,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+EE,Electrical Engineering,EEL7580,Introduction to Smart Grid,700,,3,Payal Vyankat Dahiwale,J,,,,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+EE,Electrical Engineering,EEN2010,Introduction to Profession,200,,1,Payal Vyankat Dahiwale,NG3,,,,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+EE,Electrical Engineering,EEL4370,Power System Operation and Control,400,,3,Vineeth,E,,,,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+ECE,Electronics and Communication Engineering,ECL2010,Physics of Semiconductor Devices,200,3-0-0,3,Lavi Tyagi,E,,,,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+ECE,Electronics and Communication Engineering,ECL7008,Digital Communications,700,3-0-0,3,Aashish Mathur,F,,,,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+ECE,Electronics and Communication Engineering,ECL7010,Applied Linear Algebra,700,3-0-0,3,Pradyumna Kumar Bishoyi,I,,,,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+ECE,Electronics and Communication Engineering,ECL7020,Statistical Signal Analysis,700,3-0-0,3,Arun Kumar,K,,,,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+ECE,Electronics and Communication Engineering,ECL7030,Semiconductor Device Characterization,700,3-0-0,3,Akshay,D,,,,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+ECE,Electronics and Communication Engineering,ECL71550,Fiber Optic Devices and Components,700,3-0-0,3,Nitin Bhatia,I,,,,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+ECE,Electronics and Communication Engineering,ECL71580,Solid State Devices,700,3-0-0,3,Akshay,O,,,,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+ECE,Electronics and Communication Engineering,ECL71590,Advanced Electromagnetics,700,3-0-0,3,Abhishek Sharma,D,,,,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+ECE,Electronics and Communication Engineering,ECL71610,Microwave Circuits,700,3-0-0,3,Arani Ali Khan,E,,,,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+ECE,Electronics and Communication Engineering,ECL7940,Signal and Power Integrity,700,3-0-0,3,Jai Narayan Tripathi,S,,,,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+ECE,Electronics and Communication Engineering,ECL7980,Analog IC Design,700,3-0-2,4,Amandeep Kau,R,,,,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+ECE,Electronics and Communication Engineering,ECN2001,Design Practical Experience,200,0-0-4,2,Manoj Gupta,NG2,,,,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+ECE,Electronics and Communication Engineering,ECP71610,Microwave Circuits Lab,700,0-0-2,1,Abhishek Sharma,M4,,,,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+ECE,Electronics and Communication Engineering,ECT7952,MTech Thesis- Communication Systems,700,0-0-16,16,Pradyumna Kumar Bishoyi,T,,,,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+ECE,Electronics and Communication Engineering,ECT7954,MTech Thesis: Microelectronics and VLSI,700,0-0-16,16,Bhupendra Reniwal,T,,,,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+ECE,Electronics and Communication Engineering,ECT8950,Thesis,800,0-0-16,16,Amandeep Kaur,T,,,,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+ECE,Electronics and Communication Engineering,EEL7008,Digital Communications,700,3-0-0,3,Aashish Mathur,F,,,,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+ECE,Electronics and Communication Engineering,EEL7320,Digital VLSI Design,700,3-0-0,3,Bhupendra Reniwal,H,,,,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+ECE,Electronics and Communication Engineering,ECL7320,Digital VLSI Design,700,3-0-0,3,Bhupendra Reniwal,H,,,,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+ECE,Electronics and Communication Engineering,EEP3020,Digital Systems Lab,300,0-0-3,1.5,Binod Kumar,C,,,,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+SoLA,School of Liberal Arts (Humanities & Social Sciences),LAL7420,Politics of Water Governance,700,3-0-0,3,Farhat Naz,I,SE/PE (Msc CSS),,,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+SoLA,School of Liberal Arts (Humanities & Social Sciences),LAL6160,Sociology of Media,600,3-0-0,3,Tonisha Guin,E,SE/PE (Msc CSS),,,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+SoLA,School of Liberal Arts (Humanities & Social Sciences),LAL6150,New Forms of Social Oganisation,600,3-0-0,3,Sherin Sabu,H,SE/PE (Msc CSS),,,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+SoLA,School of Liberal Arts (Humanities & Social Sciences),LAL7620,Economic Challenges and Data Driven Approaches,700,3-0-0,3,Gopakumar,F,SE/PE (Msc CSS),,,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+SoLA,School of Liberal Arts (Humanities & Social Sciences),LAL6190,Sociology of Digital Era,600,3-0-0,3,Prasenjeet,D,SE/PE (Msc CSS),,,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+SoLA,School of Liberal Arts (Humanities & Social Sciences),DHL7100,Images Imaginations and Digital Cultures,700,3-0-0,3,Sunil Lohar,J,PE (Msc DH),,,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+SoLA,School of Liberal Arts (Humanities & Social Sciences),LAL1010,Language 1 (Hindi),100,3-0-0,3,Dinesh Joshi,CA,PC (ITEP),,,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+SoLA,School of Liberal Arts (Humanities & Social Sciences),LAL1020,ART EDUCATION: Elements of Theatre-Making,100,2-0-0,2,Bhaskar,Theory at CB on Wednesday & Practical on Wednesday from 5-6.50,PE (ITEP),,,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+SoLA,School of Liberal Arts (Humanities & Social Sciences),LAL1030,ART EDUCATION: Methods and Materials for Visual Arts,100,2-0-0,2,Sunil Lohar,Theory at CB on Wednesday & Practical on Wednesday from 5-6.50,PE (ITEP),,,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+SoLA,School of Liberal Arts (Humanities & Social Sciences),LAL2180,Child Development and Educational Psychology,200,3-0-2,4,Ankita,CU,PC (ITEP),,,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+SoLA,School of Liberal Arts (Humanities & Social Sciences),LAL3020,Popular Classics,300,3-0-0,3,Anupama Mohan,J,OE,,,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+SoLA,School of Liberal Arts (Humanities & Social Sciences),LAL7490,Indian Economic Development and Policy,700,3-0-0,3,Gopakumar,C,,,,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+SoLA,School of Liberal Arts (Humanities & Social Sciences),LAN7010,Technical Communication,700,,1,Kanak Yadav,Wed (5.00 to 5.50),NG,,,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+SoLA,School of Liberal Arts (Humanities & Social Sciences),LAL6310,Foundations of Digital Humanities,600,3-0-0,3,Natasa Thoudam,D,PC,,,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+SoLA,School of Liberal Arts (Humanities & Social Sciences),LAL6320,Digital Economics,600,3-0-0,3,Akanksha Choudhary,H,PC,,,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+SoLA,School of Liberal Arts (Humanities & Social Sciences),LAL6430,Contemporary Debates in DH,600,3-0-0,3,Parichay,I,PC,,,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+SoLA,School of Liberal Arts (Humanities & Social Sciences),LAL6340,Perspectives in Language and Literary Studies,600,3-0-0,3,"Sreedevi D, Gurujegan Murugesan",C,PC,,,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+SoLA,School of Liberal Arts (Humanities & Social Sciences),LAL6350,"Civilizations, Cultures, and Technologies",600,3-0-0,3,Kanak Yadav,K,PC,,,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+SoLA,School of Liberal Arts (Humanities & Social Sciences),LAL6360,Place and Identity in the Digital Age,600,3-0-0,3,Sreedevi,G,PC,,,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+SoLA,School of Liberal Arts (Humanities & Social Sciences),LAP6020,Statistics Lab,600,0-0-4,2,Sherin Sabu,F,PC,,,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+SoLA,School of Liberal Arts (Humanities & Social Sciences),LAL6050,Fundamentals of Computational Social Sciences,600,3-0-0,3,Alok and Suman,I,PC,,,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+SoLA,School of Liberal Arts (Humanities & Social Sciences),LAL6110,Ethics for CSS,600,3-0-0,3,George K.J.,E,PC,,,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+SoLA,School of Liberal Arts (Humanities & Social Sciences),LAL6210,Sociology of Science and Technology,600,3-0-0,3,Bhaskar,U,PC,,,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+SoLA,School of Liberal Arts (Humanities & Social Sciences),LAL6220,"Language, Society and Computation",600,3-0-0,3,"Gurujegan Murugesan, Sidharth Ranjan",D,PC,,,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+SoLA,School of Liberal Arts (Humanities & Social Sciences),LAL6230,Social Science Research Methods,600,3-0-0,3,Suman,C,PC,,,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+SoLA,School of Liberal Arts (Humanities & Social Sciences),LAL4070,Health Economics,400,3-0-0,3,Alok,D,,,,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+SoLA,School of Liberal Arts (Humanities & Social Sciences),DHP7010,Social Media Application Development,700,1-0-2,2,Romi Banerjee,B,PC,,,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+CET,Centre for Emerging Technologies,EDL1010,Evolution of Indian Education,100,3-0-0,3 credits,Soni,CE,PC,ITEP Batch of 2026,,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+CET,Centre for Emerging Technologies,EDL2010,Basics of Pedagogy at the Secondary Stage,200,3- 0-2,4 credits,Pankaj Chavan,CD,PC,ITEP Batch of 2025,,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+CET,Centre for Emerging Technologies,EDL2040,Mathematical and Quantitative Reasoning,200,2-0-0,2 credits,Dilpreet Kaur,CV,PC,ITEP Batch of 2025,,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+CET,Centre for Emerging Technologies,EDL3010,Content Cum Pedagogy of Mathematics at the Secondary Stage-II,300,1-0-2,2 credits,Sheriya S,CN,PC,ITEP Batch of 2024,,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+CET,Centre for Emerging Technologies,EDL3020,Content Cum Pedagogy of the Physical Sciences at the Secondary Stage-II,300,1-0-2,2 credits,Sheriya S,CU,PC,ITEP Batch of 2024,,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+CET,Centre for Emerging Technologies,EDL3040,ICT In Education,300,1-0-2,2 credits,Rajlaxmi Chouhan,CD,PC,ITEP Batch of 2024,,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+CET,Centre for Emerging Technologies,EDL3030,Pre-Internship Practice,300,1-0-4,3 credits,Rachel Philip,CV,PC,ITEP Batch of 2024,,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+CET,Centre for Emerging Technologies,EDL7010,Education Technology,700,2-0-2,3 credits,"Pankaj Chavan, Rajlaxmi Chouhan",E,DC/OE,PhD,,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+CET,Centre for Emerging Technologies,EDL7020,Learning Sciences,700,3-0-0,3 credits,Hari Narayanan V.,D,DC/OE,PhD,,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+CET,Centre for Emerging Technologies,EDL7040,Research Methods in Education,700,3-0-0,3 credits,Natasa Thoudam,F,DC/OE,PhD,,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+CET,Centre for Emerging Technologies,EDL7030,Education and Social Systems,700,3-0-0,3 Credits,Tonisha Guin,,DC/OE,PhD,,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+CET,Centre for Emerging Technologies,EDT8900,Thesis,800,0-0-16,16 credits,Sumit Kalra,T,DT,PhD,,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+CIE,Civil and Infrastructure Engineering,CIL2070,Hydraulics Engineering,200,3-1-0,4,Deepak Swami,B,,,,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+CIE,Civil and Infrastructure Engineering,CIL2030,Mechanics of Solids,200,3-1-0,4,Sanhita Das,A,,,,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+CIE,Civil and Infrastructure Engineering,CIL2060,Geoinformatics,200,3-0-0,3,Mayank Suman,E,,,,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+CIE,Civil and Infrastructure Engineering,CIL2080,Building Materials and Construction Technology,200,3-0-0,3,Yogiraj Sargam,C,,,,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+CIE,Civil and Infrastructure Engineering,CIP2010,Civil Engineering Laboratory - I,200,0-0-4,2,Anusha S. Basavaraj / Mayank Suman,,,,M1,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+CIE,Civil and Infrastructure Engineering,CIL3010,Transportation Engineering,300,3-0-0,3,Bhupendra Singh,B,,,,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+CIE,Civil and Infrastructure Engineering,CIL3020,Structural Analysis,300,3-0-2,4,Shuvajit Mukherjee / Susmita Panda,A,,,?,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+CIE,Civil and Infrastructure Engineering,CIL3030,Environmental Engineering,300,3-0-2,4,Monika Dubey / Trishikhi Raychoudhury,D,,,?,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+CIE,Civil and Infrastructure Engineering,CIL3040,Geotechnical Engineering,300,3-1-0,4,Sarath Chandra Reddy Nallala,C,,,,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+CIE,Civil and Infrastructure Engineering,CIL3050,Construction Technology and Practices,300,3-0-2,4,Sreejith Krishnan / Bhupendra Singh,E,,,?,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+CIE,Civil and Infrastructure Engineering,CIL4010,Environmental Science,400,2-0-0,2,Amit Sharma / Debanjan Guha Roy,V,,,,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+CIE,Civil and Infrastructure Engineering,CIL4350,Dynamics of Structures,400,3-0-0,3,Falak Vats,U,,,,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+CIE,Civil and Infrastructure Engineering,CIL4360,Traffic System and ITS,400,3-0-0,3,Akshay Gupta,G,,,,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+CIE,Civil and Infrastructure Engineering,CIL4390,Highway Geometric Design,400,3-0-0,3,Subham Jain,H,,,,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+CIE,Civil and Infrastructure Engineering,CIL7660,Advanced Geotechnical Engineering,700,3-0-0,3,Pradeep Kumar Dammala,F,,,,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+CIE,Civil and Infrastructure Engineering,CIL7690,Building Services,700,3-0-0,3,Anusha S. Basavaraj,I,,,,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+CIE,Civil and Infrastructure Engineering,CIL4330,Thermal and Nuclear Power Infrastructure Engineering,400,3-0-0,3,Bhupendra Singh / Pradeep Kumar Dammala,J,,,,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+CIE,Civil and Infrastructure Engineering,CIL4380,Ground Improvement Techniques,400,3-0-0,3,Sarath Chandra Reddy Nallala / Susmita Panda,I,,,,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+CIE,Civil and Infrastructure Engineering,CIL7840,Mathematics for Civil Engineering,700,3-0-0,3,Sanhita Das / Shuvajit Mukherjee,I,,,,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+CIE,Civil and Infrastructure Engineering,CIL7830,Advanced Solid and Fluid Mechanics,700,3-0-0,3,Shuvajit Mukherjee / Saran Aadhar,H,,,,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+CIE,Civil and Infrastructure Engineering,CIL7870,Analysis of Bridge Structures,700,3-0-0,3,P Ravi Prakash / Amit Kumar Rathi,F,,,,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+CIE,Civil and Infrastructure Engineering,CIL7850,Water Quality and Advanced Treatment Processes,700,3-0-0,3,Trishikhi Raychoudhury,G,,,,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+CIE,Civil and Infrastructure Engineering,CIL7920,Advanced Hydrology,700,2-0-2,3,Saran Aadhar,J,,,?,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+CIE,Civil and Infrastructure Engineering,CIL7910,Advanced Concrete Technology,700,3-0-0,3,Sreejith Krishnan,K,,,,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+CIE,Civil and Infrastructure Engineering,CIL7900,Mechanics of Geomaterials,700,3-0-0,3,Debanjan Guha Roy,J,,,,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+CIE,Civil and Infrastructure Engineering,CIL7890,Groundwater Flow and Contaminant Transport Modeling,700,2-0-2,3,Deepak Swami,F,,,?,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+CIE,Civil and Infrastructure Engineering,CIL7860,Wind Turbine and Field Design,700,3-0-0,3,Amit Kumar Rathi,G,,,,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+CIE,Civil and Infrastructure Engineering,CIP7310,Environmental Engineering Lab.,700,1-0-4,3,Trishikhi Raychoudhury / Monika Dubey,L,,,"L2, L7",AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+CIE,Civil and Infrastructure Engineering,CIL7420,Traffic Flow Theory,700,3-0-0,3,Ranju Mohan,F,,,,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+CIE,Civil and Infrastructure Engineering,CIL7520,Environmental Hydrology,700,3-0-2,4,Saran Aadhar,J,,,?,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+CIE,Civil and Infrastructure Engineering,CIN1010,Design/Practical Experience,100,0-0-4,2,Aali Pant,NG3,,,,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+CIE,Civil and Infrastructure Engineering,CIN2030,Design/Practical Experience,200,0-0-4,2,Trishikhi Raychoudhury,NG3,,,,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+CIE,Civil and Infrastructure Engineering,CIN3010,Design/Practical Experience,300,0-0-4,2,Tekcham Gishan Singh,NG3,,,,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+CIE,Civil and Infrastructure Engineering,CID4010,BTech Project,400,0-0-6,3,Tekcham Gishan Singh,T,,,,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+CIE,Civil and Infrastructure Engineering,CIT7010,MTech Thesis Part-1,700,0-0-16,16,Akshay Gupta,T,,,,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+CIE,Civil and Infrastructure Engineering,CIT7020,MTech Thesis Part-2,700,0-0-16,16,Monika Dubey,T,,,,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+CIE,Civil and Infrastructure Engineering,CIT8960,Thesis,800,0-0-16,16,Bhupendra Singh,T,,,,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+CIE,Civil and Infrastructure Engineering,CIT8980,Thesis,800,0-0-6,6,Bhupendra Singh,T,,,,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+CIE,Civil and Infrastructure Engineering,CIT8990,Thesis,800,0-0-12,12,Bhupendra Singh,T,,,,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+MT,Metallurgical and Materials Engineering,MTL2030,Numerical Methods for Materials Engineering,200,3-0-0,,Amitava Banerjee,C,,,PC for UG 3rd Sem,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+MT,Metallurgical and Materials Engineering,MTL2040,Materials Thermodynamics,200,3-0-0,,Saurabh Nene,B,,,PC for UG 3rd Sem,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+MT,Metallurgical and Materials Engineering,MTL2010,Materials Science and Engineering,200,3-0-0,,Abir Bhattacharyya,K,,,PC for UG 3rd Sem,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+MT,Metallurgical and Materials Engineering,MTL2050,Mechanics of Solids,200,[3-1-0],,Abir Bhattacharyya,D,,,PC for UG 3rd Sem,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+MT,Metallurgical and Materials Engineering,MTP2030,Numerical Methods and Materials Engineering Lab,200,0-0-4,,Sumeet Rajesh Khanna,"M7, M8",,,PC for UG 3rd Sem,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+MT,Metallurgical and Materials Engineering,MTL3010,Electronic Materials,300,3-0-0,,Pranay Ranjan,A,,,PC for UG 5th Sem,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+MT,Metallurgical and Materials Engineering,MTL3020,Mechanical Behavior of Materials,300,3-0-0,,Nitin Kumar Sharma,C,,,PC for UG 5th Sem,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+MT,Metallurgical and Materials Engineering,MTL3030,Phase Transformations,300,3-0-0,,Sk Md Hasan,D,,,PC for UG 5th Sem,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+MT,Metallurgical and Materials Engineering,MTL3040,Materials Charaterization,300,3-0-0,,Shipra Bajpai,B,,,PC for UG 5th Sem,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+MT,Metallurgical and Materials Engineering,MTP3010,Electronic Materials Lab,300,0-0-3,,Ravi Prakash Srivastava,M6,,,PC for UG 5th Sem,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+MT,Metallurgical and Materials Engineering,MTP3020,Physical Metallurgy Lab,300,0-0-3,,Jaiveer Singh,M8,,,PC for UG 5th Sem,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+MT,Metallurgical and Materials Engineering,MTP3030,Energy Materials Lab,300,0-0-3,,Srijan Sengupta,M2,,,PC for UG 5th Sem,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+MT,Metallurgical and Materials Engineering,MTP3050,Materials Charaterization Lab,300,0-0-3,,Debasmita Dwibedi,M7,,,PC for UG 5th Sem,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+MT,Metallurgical and Materials Engineering,MTD4010,BTech Project,400,0-0-6,,Amitava Banerjee,T,,,PP for UG 7th Sem,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+MT,Metallurgical and Materials Engineering,MTL7110,Solidification of Metals and Alloys,700,3-0-0,,Sk Md Hasan,N,,,"ME for PG I Sem - Structural, PE for UG VIII Sem",AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+MT,Metallurgical and Materials Engineering,MTL7470,Light Metals and alloys,700,3-0-0,,Saurabh Nene,J,,,"ME for PG I Sem - Structural, PE for UG VIII Sem",AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+MT,Metallurgical and Materials Engineering,MTL7520,Machine Learning for Materials Design,700,2-0-2,,Lalit,K,,,"ME for PG I Sem - Structural/Functional, PE for UG VIII Sem",AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+MT,Metallurgical and Materials Engineering,MTL7410,Diffusion in Solids,700,3-0-0,,Appala Naidu,I,,,"ME for PG I Sem - Structural, PE for UG VIII Sem",AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+MT,Metallurgical and Materials Engineering,MTL7540,Functional 2D Materials,700,2-0-2,,Devendra Singh Negi,I,,,"ME for PG I Sem - Functional, PE for UG VIII Sem",AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+MT,Metallurgical and Materials Engineering,MTL7550,Advanced Semiconductor Materials and Device Applications,700,2-0-2,,Ravi Prakash Srivastava,J,,,"ME for PG I Sem - Functional, PE for UG VIII Sem",AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+MT,Metallurgical and Materials Engineering,MTL7280,Materials For electrochemical Energy Conversion and storage,700,3-0-0,,Amitava Banerjee,I,,,"ME for PG I Sem - Functional, Battery & PE for UG VIII Sem",AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+MT,Metallurgical and Materials Engineering,MTL7590,Batteries with Li and beyond Li –chemistry,700,3-0-0,,Debasmita Dwibedi,J,,,ME for PG I Sem - Battery & PE for UG VIII Sem,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+MT,Metallurgical and Materials Engineering,MTL7660,Sustainable composite,700,3-0-0,,Vikramsingh Thakur,J,,,ME for PG I sem - Composite,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+MT,Metallurgical and Materials Engineering,MTL7690,AI/ML/Big data for composite materials,700,3-0-0,,Lalit,I,,,ME for PG I sem - Composite,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+MT,Metallurgical and Materials Engineering,MTL7250,Thermodynamics of Materials,700,2-0-2,,Sumeet Rajesh Khanna,G,,,PC for PG I sem - Functional & Structural,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+MT,Metallurgical and Materials Engineering,MTL7260,Characterization of Materials,700,2-0-2,,Saurabh Nene,F,,,PC for PG I sem - Functional & Structural,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+MT,Metallurgical and Materials Engineering,MTL7080,Plastic Deformation and Microstructure Evolution,700,3-0-0,,Jaiveer Singh,I,,,PC for PG I sem - Structural,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+MT,Metallurgical and Materials Engineering,MTL7170,"Symmetry, Structure and Tensor Properties",700,3-0-0,,Amitava Banerjee,H,,,PC for PG I sem - Functional,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+MT,Metallurgical and Materials Engineering,MTL7290,Battery Cell Chemistry and Materials,700,3-0-0,,Srijan Sengupta,F,,,PC for PG I sem - Battery,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+MT,Metallurgical and Materials Engineering,MTL7510,Battery Cell Fabrication and Manufacturing Technology,700,3-0-0,,Debasmita Dwibedi,G,,,PC for PG I sem - Battery,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+MT,Metallurgical and Materials Engineering,MTP7040,Battery Material Synthesis and Device Testing Laboratory,700,0-0-6,,Srijan Sengupta,"M3, M2, M4",,,PC for PG I sem - Battery,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+MT,Metallurgical and Materials Engineering,MTL7530,Introduction to Composite Materials,700,3-0-0,,Vikramsingh Thakur,F,,,PC for PG I sem - Composite,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+MT,Metallurgical and Materials Engineering,MTL7570,Composite Processing & Fabrication Technology,700,3-0-0,,Anurag Sharma,G,,,PC for PG I sem - Composite,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+MT,Metallurgical and Materials Engineering,MTL7580,Characterization of Composite Materials,700,3-0-0,,Anurag Sharma,H,,,PC for PG I sem - Composite,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+MT,Metallurgical and Materials Engineering,MTP7050,Composite Materials Processing & Characterization Lab,700,0-0-2,,Vikramsingh Thakur,L5,,,PC for PG I sem - Composite,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+MT,Metallurgical and Materials Engineering,MTT7010,M.Tech. Thesis Part 1,700,0-0-16,,Nitin Kumar Sharma,T,,,,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+MT,Metallurgical and Materials Engineering,MTT8980,Thesis,800,0-0-6,,Saurabh Nene,T,,,,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+MT,Metallurgical and Materials Engineering,MTT8990,Thesis,800,0-0-12,,Saurabh Nene,T,,,,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+MT,Metallurgical and Materials Engineering,MTT8970,Thesis,800,0-0-16,,Saurabh Nene,T,,,,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+MT,Metallurgical and Materials Engineering,MTN1010,Design Practical Experience,100,0-0-2,,Lalit,NG,,,,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+MT,Metallurgical and Materials Engineering,MTN2020,Design Practical Experience,200,0-0-2,,Hasan,NG,,,,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+MT,Metallurgical and Materials Engineering,MTN3010,Design Practical Experience,300,0-0-2,,Amitava Banerjee,NG,,,,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+MT,Metallurgical and Materials Engineering,MTO8990,Research Proposal,800,0-0-32,,Saurabh Nene,T,,,,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+Aero,Aerospace Engineering,MEL7950,Drone Technologies,700,2-0-2,,Arun Kumar R,H,,,PG I sem - DADT,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+Aero,Aerospace Engineering,MEL7960,Anti-Drone Technologies,700,3-0-0,,Jayant Kumar Mohanta,F,,,PG I sem - DADT,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+Aero,Aerospace Engineering,RML7270,"Estimation, Navigation and Guidance",700,3-0-0,,Jayant Kumar Mohanta,G,,,PG I sem - DADT,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+EnAuto,Energy and Automotive Engineering,MEL7970,Engineering Mathematics,700,3-0-0,,Himanshu Dave,G,,,Core,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+EnAuto,Energy and Automotive Engineering,EAL7010,Energy Conversion Technologies,700,3-0-0,,Srijit Biswas,I,,,Core,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+EnAuto,Energy and Automotive Engineering,EAP7010,Energy Engineering Laboratory -I,700,3-0-0,,Shobhana Singh,L2,,,Core,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+EnAuto,Energy and Automotive Engineering,EAL7310,Internal Combustion Engine,700,3-0-0,,Srijit Biswas,J,,,Elective,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+EnAuto,Energy and Automotive Engineering,MEL7060,Applied Heat and Mass Transfer,700,3-0-0,,Shobhana Singh,H,,,Elective,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+EnAuto,Energy and Automotive Engineering,LAN7010,Technical Communication,700,1-0-0,,,,,,NG,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+BSBE,Bioscience and Bioengineering,MAL2170,"Probability, Statistics and Stochastic Processes",200,3-1-2,,Subhash Bhagat,D,PC,,UG III Sem (Transition plan),AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+BSBE,Bioscience and Bioengineering,CSL2XXX,Data Structures and Algorithms,,3-0-0,,DipSankar Banerjee,C,PC,,,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+BSBE,Bioscience and Bioengineering,,Introduction to Machine Learning,,3-0-2,,Divya Saxena and Hardik Jain,,PC,,,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+BSBE,Bioscience and Bioengineering,BBL2010,Biochemistry,200,3-0-0,,Neha Jain,E,PC,,,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+BSBE,Bioscience and Bioengineering,BBL2XXX,Bioinformatics,,3-0-0,,Sucharita Dey,B,PC,,,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+BSBE,Bioscience and Bioengineering,BBP2XXX,Biochemistry and Bioinformatics Lab,,0-0-4,,Neha Jain and Sucharita Dey,M,PC,,,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+BSBE,Bioscience and Bioengineering,BBL3100,Computational and Systems Biology,300,3-0-2,,Sucharita Dey,C,PC,,UG V Sem (Existing curriculum),AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+BSBE,Bioscience and Bioengineering,BBL3110,The Human Machine for Engineers: Quantitative Physiology,300,3-0-0,,Sushmita Jha,A,PC,,,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+BSBE,Bioscience and Bioengineering,BBL3120,Genetics and Gene Manipulation,300,3-0-2,,Mitali Mukerji,D,PC,,,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+BSBE,Bioscience and Bioengineering,EEL3050,Biosensors (offered by Electronics Dept),300,3-0-2,,Ajay Agarwal,B,PC,,,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+BSBE,Bioscience and Bioengineering,BBL4040,Anticancer Drug Development,400,3-0-0,,Dinesh Kumar Ahirwar,E,PE,,,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+BSBE,Bioscience and Bioengineering,BBL4XXX,Microbes in food and sustainable agriculture,,3-0-0,,Balakumaran Chandrasekhar,U,PE,,,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+BSBE,Bioscience and Bioengineering,BBL4210,Viral Infection and Antiviral Drug Development,400,3-0-0,,Sudipta Bhattacharya,E,PE,,,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+BSBE,Bioscience and Bioengineering,BBD7030,B.Tech Project I,700,0-0-6,,Ayan Sadhukhan,T1,,,UG VII Sem (Existing curriculum); PG I Sem,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+BSBE,Bioscience and Bioengineering,BBL7450,Fundamentals of Neuroscience,700,3-0-0,,Amit Kumar Mishra,U,PE,,,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+BSBE,Bioscience and Bioengineering,BBL7080,Plant Genetic Engineering and Functional Genomics,700,3-0-0,,Ayan Sadhukhan,N,PE,,,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+BSBE,Bioscience and Bioengineering,BBL7390,Introduction to Chemical Biology,700,3-0-0,,Surajit Ghosh,E,PE,,,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+BSBE,Bioscience and Bioengineering,BBL7380,Immunotechnology,700,3-0-0,,Indranil Banerjee,E,PE,,,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+BSBE,Bioscience and Bioengineering,BBL7350,Bioenergy Systems,700,3-0-0,,Meenu Chhabbra,U,PE,,,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+BSBE,Bioscience and Bioengineering,BBL7500,Biophysics,700,2-0-2,,Sudipta Bhattacharya,K,PE,,,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+BSBE,Bioscience and Bioengineering,BBL7470,Theranostic Systems,700,3-0-0,,Raviraj Vankayala,K,PE,,,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+BSBE,Bioscience and Bioengineering,BBL7580,Computational Genomics,700,3-0-0,,Pankaj Yadav,N,PE,,,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+BSBE,Bioscience and Bioengineering,BBL7460,Synthetic Biology,700,3-0-0,,Shankar Manoharan,N,PE,,,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+BSBE,Bioscience and Bioengineering,BBN1010,Design and Practical Experience,100,,,Sucharita Dey,NG3,NG,,NG courses,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+BSBE,Bioscience and Bioengineering,BBN2020,Design and Practical Experience,200,,,Sucharita Dey,NG3,NG,,,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+BSBE,Bioscience and Bioengineering,BBN3020,Design and Practical Experience,300,,,Sucharita Dey,NG3,NG,,,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+BSBE,Bioscience and Bioengineering,OSN1010,Social Connect,100,0-0-2,,"Priyanka Singh, Surajit Ghosh",TBD,NG,,,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+BSBE,Bioscience and Bioengineering,OAE1010,Engineering Design-I,100,0-0-2,,"Indranil Banerjee, Balakumaran Chandrasekhar",TBD,NG,,,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+BSBE,Bioscience and Bioengineering,BBN2010,Introduction to Profession,200,,,Shankar Manoharan,TBD,NG,,,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+BSBE,Bioscience and Bioengineering,BBL7620,Imaging Cell Biology,700,2-0-2,,Priyanka Singh,H,PC,,PG I Sem Compulsory courses,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+BSBE,Bioscience and Bioengineering,BBL7640,Omics Technologies,700,2-0-2,,Balakumaran Chandrasekhar and Shankar Manoharan,F,PC,,,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+BSBE,Bioscience and Bioengineering,BBT8990,Thesis,800,0-0-32,,Indranil Banerjee,T,DT,,,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+BSBE,Bioscience and Bioengineering,BBT7040,M.Tech Thesis I,700,0-0-16,,Sudipta Bhattacharya,T1,MT,,,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+Math,Mathematics,MAL1110,Mathematics I,100,,3,Puneet Sharma,AN,,,B.Tech. 1st year Core,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+Math,Mathematics,MAL2170,"Probability, Statistics and Stochastic Processes",200,,4,Subhash Bhagat,D,,,B.Tech. 2nd Year Core,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+Math,Mathematics,MAL2210,Scientific Computations,200,,3,Parag Deshpande,A,,,B.Tech. 2nd Year Core,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+Math,Mathematics,MAL1070,Mathematics-I,100,,4,Pradip Sasmal,CD,,,B.Sc.-B.ed First year Core,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+Math,Mathematics,MAL2110,Real Analysis,200,,4,Kiran Meena,CA,,,B.Sc.-B.Ed 2nd Year Core,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+Math,Mathematics,MAL2120,Linear Algebra,200,,4,Rajat Gupta,CB,,,B.Sc.-B.Ed 2nd Year Core,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+Math,Mathematics,MAL2160,Probability Theory,200,,4,Gaurav Bhatnagar,CC,,,B.Sc.-B.Ed 2nd Year Core,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+Math,Mathematics,MAL3020,Graph Theory,300,,4,Shaily Verma,CA,,,B.Sc.-B.Ed 3rd Year PE,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+Math,Mathematics,MAL3030,Introduction to Programming,300,,4,Moumita Mondal,CB,,,B.Sc.-B.Ed 3rd Year PE,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+Math,Mathematics,MAL3040,Statistics,300,,4,Brahadeesh Sankarnarayanan,CE,,,B.Sc.-B.Ed 3rd Year PE,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+Math,Mathematics,MAL3060,Complex Analysis,300,,4,Abhishek Sarkar,CC,,,B.Sc.-B.Ed 3rd Year PE,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+Math,Mathematics,MAL6110,Linear Algebra,600,,4,Kiran Meena,F,,,M.Sc. First Year Core,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+Math,Mathematics,MAL6120,Real Analysis,600,,4,Sahil Gehlawat,G,,,M.Sc. First Year Core,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+Math,Mathematics,MAL6130,Ordinary Differential Equations,600,,4,Anuj Kumar,K,,,M.Sc. First Year Core,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+Math,Mathematics,MAL6140,Abstract Algebra,600,,4,Kriti Goel,I,,,M.Sc. First Year Core,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+Math,Mathematics,MAL6150,Probability and Statistics,600,,4,Brahadeesh Sankarnarayanan,H,,,M.Sc. First Year Core,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+Math,Mathematics,MAL7420,Statistical Models and Regression,700,,3,Nil Kamal Hazra,J,,,M.Sc. 2nd Year PE,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+Math,Mathematics,MAL7450,Module Theory,700,,3,Kriti Goel,K,,,M.Sc. 2nd Year PE,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+Math,Mathematics,MAL7560,Optimization,700,,3,Kuntal Som,G,,,M.Sc. 2nd Year PE,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+Math,Mathematics,MAL7320,Dynamical Systems,700,,3,Sukhendu Ghosh,H,,,M.Sc. 2nd Year PE,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+Math,Mathematics,MAL7490,Wavelet Analysis and Applications,700,,3,Tuhina Mukherjee,I,,,M.Sc. 2nd Year PE,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+Math,Mathematics,MAD7040,Project-I,700,,5,Kiran Meena,T,,,M.Sc. 2nd Year Project,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+Math,Mathematics,MAL6080,Topology,600,,3,Bimal Mandal,F,,,M.Sc. 2nd Year Core,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+Math,Mathematics,MAL7110,Foundations of Data Science,700,,3,M Abu,F,,,M.Tech. First Year Core,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+Math,Mathematics,MAL7120,Data Analytics,700,,3,Sukhendu Ghosh,V,,,M.Tech. First Year Core,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+Math,Mathematics,MAL7400,Computational Game theory,700,,3,Puneet Sharma,J,,,M.Tech. First Year PE,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+Math,Mathematics,MAT7210,M.Tech Thesis-I,700,,16,Sahil,T,,,M.Tech. 2nd Year Thesis,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+Math,Mathematics,MAL7530,Mathematical Analysis,700,,3,Kirankumar Hiremath,I,,,Ph.D Core,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+Math,Mathematics,MAL7520,Algebra,700,,3,Dilpreet Kaur,J,,,Ph.D Core,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+Math,Mathematics,MAT8020,Thesis,800,,16,Subhas Bhagat,RP,,,Ph.D Thesis,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+Math,Mathematics,MAT8030,Thesis,800,,16,Subhas Bhagat,RP,,,Ph.D Thesis,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+Math,Mathematics,MAT8990,Thesis,800,,12,Subhas Bhagat,RP,,,Ph.D Thesis,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+Math,Mathematics,MAT8980,Thesis,800,,6,Subhas Bhagat,RP,,,Ph.D Thesis,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+Math,Mathematics,MAD7060,M.Tech Project,700,,5,Dr. Bimal Mandal,YT,,,"For Backlog Students, 2024 batch",AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+Math,Mathematics,MAL7070,Optimization for Data Science,700,,2,Prof. Puneet Sharma,YP,,,"For Backlog Students, 2024 batch",AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+Math,Mathematics,MAL7060,Statistics for Data Science,700,,2,Dr. Brahadeesh Sankarnarayanan,YQ,,,"For Backlog Students, 2024 batch",AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+Math,Mathematics,MAT7210,M.Tech Thesis-I,700,,16,Dr. Bimal Mandal,YT,,,M.Tech DCS Executive 2025 batch,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+Math,Mathematics,MAL7110,Foundation of Data Science,700,,3,Prof. Ambesh Dexit,YQ,,,M.Tech DCS Executive 2026 batch (MC),AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+Math,Mathematics,MAL7120,Data Analytic,700,,3,Dr. Sukhandu Ghosh,YS,,,M.Tech DCS Executive 2026 batch (MC),AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+Math,Mathematics,CSL7620,Machine Learning,700,,3,Dr. Subhash Bhagat,YP,,,M.Tech DCS Executive 2026 batch (MC),AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+Math,Mathematics,LAN7010,Technical Communication,700,,1,Dr. Tonisha Guin,YR2,,,M.Tech DCS Executive 2026 batch (NG),AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+Math,Mathematics,CSL7610,Artificial Intelligence,700,,3,Dr. Deeksha Varshney,YO,,,M.Tech DCS Executive 2026 batch (ME),AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+Math,Mathematics,QCL7350,Quantum Inspired Optimization,700,,3,Prof. Kiran R. Hiremath,P,,,M.Tech DCS Executive 2026 batch (ME),AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+Chemical,Chemical Engineering,CHL7070,Advanced Reaction Engineering,700,3-0-0,3,Prof. Pradip,H,,,,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+Chemical,Chemical Engineering,CHL7020,Advanced Mathematical Methods in Chemical Engineering,700,3-0-0,3,Prof. Parag,F,,,,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+Chemical,Chemical Engineering,CHL7030,Advanced Transport Phenomena,700,3-0-0,3,Dr. Krunal,G,,,,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+Chemical,Chemical Engineering,CHL2040,Chemical Process Technology,200,3-0-0,3,Dr. Sumit,C,,,,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+Chemical,Chemical Engineering,CHL2030,Material and Energy Balances,200,3-0-0,3,Dr. Vikky,D,,,,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+Chemical,Chemical Engineering,CHL2060,Momentum Transfer Operations,200,3-1 -0,4,Dr. Praveen,E,,,,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+Chemical,Chemical Engineering,CHL2050,Mechanical Unit Operations,200,3-0-0,3,Dr. Parvate,B,,,,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+Chemical,Chemical Engineering,MAL2210,Scientific Computations,200,3-0-0,3,Prof. Parag,A,,,Only of UG 2nd year),AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+Chemical,Chemical Engineering,MAL2020,Scientific Computations,200,3-0-2,3,Prof. Parag,A,,,Only for UG 3rd year,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+Chemical,Chemical Engineering,CHL3010,Mass Transfer I,300,3-0-3,4.5,Dr. Angan,C,,,,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+Chemical,Chemical Engineering,CHL3030,Chemical Reaction Engineering,300,3-0-3,4.5,Dr. Manoj,B,,,,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+Chemical,Chemical Engineering,MEL3010,Heat Transfer,300,3-0-0,3,Dr. Tara,E,,,,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+Chemical,Chemical Engineering,MEP3010,Heat Transfer Lab,300,0-0-2,1,Dr. Tara,M3,,,,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+Chemical,Chemical Engineering,CHL3040,Chemical Engineering Thermodynamics,300,3-0-0,3,Dr. Prashant,D,,,,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+Chemical,Chemical Engineering,CHL7710,Nanocomposite Membrane Technology,700,3-0-0,3,Dr. Vikky,I,,,,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+Chemical,Chemical Engineering,CHL7720,Computational Fluid Dynamics,700,3-0-0,3,Dr. Krunal,K,,,,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+Chemical,Chemical Engineering,CHL7310,Chemometrics,700,3-0-0,3,Dr. Santhosh,N,,,,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+Chemical,Chemical Engineering,CHL4380,Applications of AI in Chemical Engineering,400,3-0-0,3,Dr. Santhosh,J,,,,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+Chemical,Chemical Engineering,CHL7370,Hydrogen and Methanol Economy,700,3-0-0,3,Dr. Prashant,J,,,,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+Chemical,Chemical Engineering,CHL4320,Introduction to Complex Fluids,400,3-0-0,3,Dr. Tara,C,,,,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+Chemical,Chemical Engineering,CHL4370,Introductory Principles in Polymer Engineering,400,3-0-0,3,Dr. Sumit Parvate,I,,,,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+Chemical,Chemical Engineering,CHD4010,B.Tech Project,400,0-0-6,3,Dr. Santhosh,T,,,,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+Chemical,Chemical Engineering,CHN1010,Design Credit,100,0-0-4,2,Dr. Angan,NG1,,,,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+Chemical,Chemical Engineering,CHN2010,Design Credit,200,0-0-4,2,Dr. Vikky,NG2,,,,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+Chemical,Chemical Engineering,CHN3010,Design Credit,300,0-0-4,2,Dr. Santhosh,NG3,,,,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+Chemical,Chemical Engineering,CHT8980,Thesis,800,0-0-6,6,Dr. Sumit,T,,,,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+Chemical,Chemical Engineering,CHT8990,Thesis,800,0-0-12,12,Dr. Sumit,T,,,,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+Chemical,Chemical Engineering,CHT8970,Thesis,800,1-0-16,16,Dr. Sumit,T,,,,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+Chemical,Chemical Engineering,CHT7010,Thesis,700,0-0-16,16,Dr. Tara,T,,,For M.Tech only,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+Chemical,Chemical Engineering,CHN2040,Introduction to Profession,200,0-0-2,1,Dr. Angan,N,,,,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+AIDE,Artificial Intelligence and Data Engineering,AIL7380,Mathematics for Economics,700,3 (3-0-0),3,Abhinaba Lahiri,C,,,,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+AIDE,Artificial Intelligence and Data Engineering,AIL7280,Introduction to Mechanism Design,700,3 (3-0-0),3,Abhinaba Lahiri,F,,,,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+AIDE,Artificial Intelligence and Data Engineering,AIL6010,Microeconomics-1,600,3 (3-0-0),3,Akanksha Choudhary,C,,,,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+AIDE,Artificial Intelligence and Data Engineering,AIL7110,Introduction to Augmented Reality and Virtual Reality,700,3 (3-0-0),3,Bhivraj Suthar,K,,,,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+AIDE,Artificial Intelligence and Data Engineering,AIL7370,Deep learning for Computer Vision,700,3 (3-0-0),3,Bikash Santra,J,,,,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+AIDE,Artificial Intelligence and Data Engineering,AIL7260,Foundations of Vision and Language,700,3 (3-0-0),3,Deeksha Varshney and Divya Saxena,D,,,,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+AIDE,Artificial Intelligence and Data Engineering,AIL7510,Neural Image Synthesis for VR AR,700,3 (3-0-0),3,Dipanjan Roy,H,,,,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+AIDE,Artificial Intelligence and Data Engineering,AIL7320,Theoretical Foundations of Econometrics,700,3 (3-0-0),3,Dweepobotee Brahma,B,,,,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+AIDE,Artificial Intelligence and Data Engineering,AIL7430,Python Programming for Data Engineering,700,3 (2-0-2),3,Manish Aggarwal,H,,,,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+AIDE,Artificial Intelligence and Data Engineering,AIL7290,Psychophysics,700,3 (3-0-0),3,Shilpa Dang,I,,,,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+AIDE,Artificial Intelligence and Data Engineering,AIL4080,Introduction to Cognitive Science,400,3 (3-0-0),3,Sidharth Ranjan,C,,,,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+AIDE,Artificial Intelligence and Data Engineering,AIL4070,Fundamentals of Economics,400,3 (3-0-0),3,Souryabrata Mohapatra,I,,,,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+AIDE,Artificial Intelligence and Data Engineering,AIL6110,Decision Sciences Applications,600,3 (3-0-0),3,Srivatsa Srinivas S,A,,,,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+AIDE,Artificial Intelligence and Data Engineering,AIL7160,Operations Research for Economics,700,3 (3-0-0),3,Srivatsa Srinivas S,D,,,,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+AIDE,Artificial Intelligence and Data Engineering,AIL7240,Sensation and Perception,700,3 (3-0-0),3,Vignesh Muralidharan,F,,,,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+AIDE,Artificial Intelligence and Data Engineering,AIP4010,Methods and Tools of Science of Intelligence,400,2 (0-0-4),2,Vignesh Muralidharan & Dipanjan Roy,K,,,,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+AIDE,Artificial Intelligence and Data Engineering,AIL4230,Basics of Computational Neuroscience,400,3 (3-0-0),3,Vignesh Muralidharan & Dipanjan Roy,J,,,,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+AIDE,Artificial Intelligence and Data Engineering,AIL7060,Interaction and Experience Design for AR/VR,700,3 (2-0-2),3,Prajnal Borah,H,,,,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+AIDE,Artificial Intelligence and Data Engineering,MSL71200,Computational Intelligence,700,3 (2-0-0-1),3,Manish Aggarwal & Navchetan Awasthi,F,,,,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+AIDE,Artificial Intelligence and Data Engineering,RML7110,Planning and Decision Making for Robots,700,3-0-0,3,Bhivraj Suthar,D,,,,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+AIDE,Artificial Intelligence and Data Engineering,AID4110,Minor Project 1,400,3 (0-0-3),3,HoD/Anil Kumar Tiwari,T,,,,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+AIDE,Artificial Intelligence and Data Engineering,AIT8010,M.Tech Thesis Part-1,800,16(0-0-16),16,HoD/Anil Kumar Tiwari,T,,,Drop AIT8010 and register in AIT7010,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+AIDE,Artificial Intelligence and Data Engineering,AIT8980,Thesis,800,6(0-0-6),6,HoD/Anil Kumar Tiwari,T,,,,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+AIDE,Artificial Intelligence and Data Engineering,AIT8990,Thesis,800,12(0-0-12),12,HoD/Anil Kumar Tiwari,T,,,,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+AIDE,Artificial Intelligence and Data Engineering,AIT8970,Thesis,800,16(0-0-16),16,HoD/Anil Kumar Tiwari,T,,,,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+CSE,Computer Science and Engineering,CSL1010,Introduction to Computer Science,100,3-0-2,4,Anand Mishra and Yashaswi Verma,AF (Fixed),,UG1,,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+CSE,Computer Science and Engineering,CSL1XXX,Introduction to Machine Learning,,3-0-2,4,Divya Saxena and Hardik Jain,TBD,,UG2 (transition),,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+CSE,Computer Science and Engineering,CSL1XXX,Introduction to Profession,,0-0-2,1,TBD,TBD,,UG2-CSE/AI (transition),,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+CSE,Computer Science and Engineering,CSL2120,Data Structures and Algorithms,200,3-0-0,3,Dip Sankar Banerjee,C (Fixed),,UG2,,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+CSE,Computer Science and Engineering,MAL2190,Discrete Mathematics,200,3-1- 0,4,Pallavi Jain,E,,UG2-CSE/AI,,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+CSE,Computer Science and Engineering,CSL2130,Principles of Computer Systems - 1,200,3-0-0,3,Anushka Joshi,B,,UG2-AI,,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+CSE,Computer Science and Engineering,CSP2030,CSE Lab 1,200,0-0-2,1,Dip Sankar Banerjee,M1,,UG2-CSE,,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+CSE,Computer Science and Engineering,CSP2130,AIDE Lab 1,200,0-0-4,2,Anushka Joshi and Dip Sankar Banerjee,M2,,UG2-AI,,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+CSE,Computer Science and Engineering,CSL2020,Data Structures and Algorithms,200,3-0-2,4,Dip Sankar Banerjee,C (Fixed),,Backlog (2024 or before),,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+CSE,Computer Science and Engineering,CSL3010,Design and Analysis of Algorithms,300,3-1- 0,4,Tanmay Nitin Inamdar,C,,UG3-CSE/AI,,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+CSE,Computer Science and Engineering,CSL3130,Computer Organization and Architecture,300,3-0-2,4,Palash Das,U,,UG3-CSE,,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+CSE,Computer Science and Engineering,CSL3030,Operating Systems,300,3-0-2,4,Susil Kumar Mohanty,B,,UG3-CSE,,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+CSE,Computer Science and Engineering,CSL3040,Principles of Programming Languages,300,3-0-0,3,Bikash Santra,E,,UG3-CSE,,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+CSE,Computer Science and Engineering,CSL3050,Database Systems,300,3-0-2,4,Nitin Awathare,A,,UG3-CSE,,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+CSE,Computer Science and Engineering,CSL3090,Artificial Intelligence,300,3-0-0,3,Pratik Majumder,B,,UG3-AI,,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+CSE,Computer Science and Engineering,CSL4010,Optimization for ML,400,3-0-3,4.5,Md Abu Talhamainuddin Ansary,D,,UG3-AI,,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+CSE,Computer Science and Engineering,CSL4030,Data Engineering,400,3-0-3,4.5,Romi Banerjee,E,,UG3-AI,,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+CSE,Computer Science and Engineering,CSL7650,Autonomous Systems (AI+X),700,3-0-0,3,Gaurav Harit,E,,UG4-AI,,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+CSE,Computer Science and Engineering,CSL7130,Mathematical Foundations for Computer Science,700,3-0-0,3,Mohit Kumar Jangid,U,,MTech-CSE/AI,,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+CSE,Computer Science and Engineering,CSL7560,Advanced Data Structures and Algorithms,700,3-0-0,3,Vimal Raj Sharma,F,,MTech-CSE,,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+CSE,Computer Science and Engineering,CSL7090,Software and Data Engineering,700,3-0-0,3,Sumit Kalra,G,,MTech-CSE,,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+CSE,Computer Science and Engineering,CSL7610,Artificial Intelligence,700,3-0-0,3,Deeksha Varshney,G,,MTech-AI,,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+CSE,Computer Science and Engineering,CSL7620,Machine Learning,700,3-0-0,3,Richa Singh,H,,MTech-AI,,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+CSE,Computer Science and Engineering,CSL7360,Computer Vision,700,3-0-0,3,Deepak Mishra,I,,VC-spec/Elec,,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+CSE,Computer Science and Engineering,CSL7150,Cybersecurity,700,3-0-0,3,Susil Kumar Mohanty,J,,Elec,,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+CSE,Computer Science and Engineering,CSL7350,Selected Topics in AI,700,3-0-0,3,Navchetan Awasthi,,,Elec,,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+CSE,Computer Science and Engineering,CSL7460,Mobile and Pervasive Computing,700,3-0-0,3,Suchetana Chakraborty,,,Elec,,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+CSE,Computer Science and Engineering,CSL7860,Foundation Models and Generative AI,700,3-0-0,3,Angshuman Paul,,,Elec,,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+CSE,Computer Science and Engineering,CSD4020,AI Specialization Project,400,0-0-6,3,Pratik Mazumder,T3,,,,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+CSE,Computer Science and Engineering,CSN1020,Design/Practical Experience,100,0-0-4,2,Mohit Kumar Jangid,NG3,,,,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+CSE,Computer Science and Engineering,CSN2020,Design/Practical Experience,200,0-0-4,2,Palash Das,NG3,,,,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+CSE,Computer Science and Engineering,CSN3020,Design/Practical Experience,300,0-0-4,2,Tanmay Nitin Inamdar,NG3,,,,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+CSE,Computer Science and Engineering,CSD4030,B Tech Project,400,0-0-6,3,Tanmay Nitin Inamdar,T1,,,,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+CSE,Computer Science and Engineering,CST8980,Thesis,800,0-0-6,6,Vimal Raj Sharma,T,,,,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+CSE,Computer Science and Engineering,CST8990,Thesis,800,0-0-12,12,Vimal Raj Sharma,T,,,,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+CSE,Computer Science and Engineering,CST8940,Thesis,800,0-0-4,4,Vimal Raj Sharma,T2,,,,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+CSE,Computer Science and Engineering,CST7010,MTech Thesis Part-1,700,0-0-16,16,Hardik Jain,T3,,,,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+MedTech,Medical Technologies,SHD7020,Masters Project,700,0-0-30,15,Dr. Siddharth Srivastava,T,MP,,,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+MedTech,Medical Technologies,SHT8990,Thesis,800,0-0-24,12,Dr. Hardik Kothadia,T,DT,,,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+MedTech,Medical Technologies,SHT8950,Thesis,800,0-0-32,16,Dr. Hardik Kothadia,T,DT,,,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+MedTech,Medical Technologies,SHL7020,Biomedical Signals and Systems,700,3-0-2,4,Dr. Anil Tiwari,B,MC,,,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+MedTech,Medical Technologies,SHL7470,Foundation of Medical Informatics,700,3-0-2,4,Dr. Navchetan Awasthi,D,MC,,,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+MedTech,Medical Technologies,SHL7060,Biodesign Immersion,700,0-1-6,4,Dr. Siddharth Srivastava,F,MC,,,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+MedTech,Medical Technologies,SHL7030,Innovation and Entrepreneurship in Healthcare,700,3-0-0,3,Dr. Siddharth Srivastava,C,MC,,,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+MedTech,Medical Technologies,SHL7050,"Anatomy, Surgery and Allied",700,3-0-2,4,Dr. Siddharth Srivastava (Allocated by Dean Academic AIIMSJ),A,MC,,,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+MedTech,Medical Technologies,SHL7040,"Physiology, Medicine and allied",700,3-0-2,4,Dr. Siddharth Srivastava (Allocated by Dean Academic AIIMSJ),E,MC,,,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+MedTech,Medical Technologies,SHL7480,Point of care diagnostics,700,2-0-2,3,Dr. Saakshi Dhanekar,J,ME,,,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+MedTech,Medical Technologies,SHL7110,Electronic Nose for Health Monitoring,700,2-0-0,2,Dr. Saakshi Dhanekar,I,ME,,,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+SME,School of Management and Entrepreneurship,MSL73060,Fundamentals of Marketing,700,3-0-0,3,Neha,F,PC,MBA Sem 1,,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+SME,School of Management and Entrepreneurship,MSL73070,Business Economics-I,700,3-0-0,3,"Devi (1), Bhushan (1), Seema (1)",C,PC,MBA Sem 1,,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+SME,School of Management and Entrepreneurship,MSL73080,Fundamentals in Accounting,700,3-0-0,3,Manisha Yadav,K,PC,MBA Sem 1,,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+SME,School of Management and Entrepreneurship,MSL73090,Corporate Finance,700,3-0-0,3,Manisha Yadav,N,PC,MBA Sem 1,,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+SME,School of Management and Entrepreneurship,MSL73300,Business Statistics,700,3-0-0,3,Bhargab,D,PC,MBA Sem 1,,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+SME,School of Management and Entrepreneurship,MSL73310,Operations Research for Managers,700,3-0-0,3,Magesh Nagarajan,B,PC,MBA Sem 1,,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+SME,School of Management and Entrepreneurship,MSL73320,Human Behavior and Organization Dynamics,700,3-0-0,3,Venkat Ram Reddy,E,PC,MBA Sem 1,,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+SME,School of Management and Entrepreneurship,MSN7030,Business Communication,700,1-0-0,1,Deepak Saxena,F,NG,MBA Sem 1/PhD,,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+SME,School of Management and Entrepreneurship,MSL73200,Quantitative Research Methods for Management,700,3-0-0,3,Bhargab (1.5) Deepak Srivastav (1.5),I,DC,PhD,,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+SME,School of Management and Entrepreneurship,MSL73210,Qualitative Research Methods for Management,700,3-0-0,3,Jitesh Mohnot,G,DC,PhD,,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+SME,School of Management and Entrepreneurship,MSL73220,Paradigms and Philosophies of Management Research,700,3-0-0,3,"Jitesh Mohnot (2), Deepak Saxena (1)",H,DC,PhD,,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+SME,School of Management and Entrepreneurship,MSO8010,Research Proposal,800,0-0-16,8,Venkat Ram Reddy,D1,DE,PhD,,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+SME,School of Management and Entrepreneurship,MSO8020,Research Proposal,800,0-0-16,8,Venkat Ram Reddy,D2,DE,PhD,,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+SME,School of Management and Entrepreneurship,MSO8060,Research Proposal,800,0-0-32,16,Venkat Ram Reddy,D3,DE,PhD,,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+SME,School of Management and Entrepreneurship,MST8010,Thesis,800,0-0-24,12,Venkat Ram Reddy,T1,DE,PhD,,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+SME,School of Management and Entrepreneurship,MST8020,Thesis,800,0-0-24,12,Venkat Ram Reddy,T1,DE,PhD,,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+SME,School of Management and Entrepreneurship,MST8050,Thesis,800,0-0-24,12,Venkat Ram Reddy,T1,DE,PhD,,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+SME,School of Management and Entrepreneurship,MST8060,Thesis,800,0-0-24,12,Venkat Ram Reddy,T1,DE,PhD,,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+SME,School of Management and Entrepreneurship,MST8030,Thesis,800,0-0-32,16,Venkat Ram Reddy,T1,DE,PhD,,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+SME,School of Management and Entrepreneurship,MST8040,Thesis,800,0-0-32,16,Venkat Ram Reddy,T1,DE,PhD,,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+SME,School of Management and Entrepreneurship,MST8080,Thesis,800,0-0-16,8,Venkat Ram Reddy,T1,DT,PhD,,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+SME,School of Management and Entrepreneurship,MSL4010,Introduction to Business & Management,400,3-0-0,3,Deepak Saxena,U,SC,Minor in Management,,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+SME,School of Management and Entrepreneurship,MSL73490,Nurturing and Managing Brands,700,3-0-0,3,Manu Kanchan,I,PE,MBA Sem III,,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+SME,School of Management and Entrepreneurship,MSL73500,Financial Derivatives and Risk Managment,700,3-0-0,3,Manisha Yadav,B,PE,MBA Sem III,,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+SME,School of Management and Entrepreneurship,MSL73510,Consumer Behaviour,700,3-0-0,3,Anuj Pal Kapoor,A,PE,MBA Sem III,,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+SME,School of Management and Entrepreneurship,MSL73520,Human-AI Collaboration at Work,700,2-0-2,3,Venkat Ram Reddy,J,PE,MBA Sem III,,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+SME,School of Management and Entrepreneurship,MSL73530,Project Management,700,3-0-0,3,Monika Tanwar,C,PE,MBA Sem III,,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+SME,School of Management and Entrepreneurship,MSL73540,Big Data and Cloud Computing,700,3-0-0,3,Aman Pathak,N,PE,MBA Sem III,,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+SME,School of Management and Entrepreneurship,MSL73550,Artificial Intelligence in Business,700,3-0-0,3,"Bhargab Chattopadhyay (2), Aman Pathak (1)",U,PE,MBA Sem III,,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+SME,School of Management and Entrepreneurship,MSL73560,Business Storytelling with Data Visualization and Machine Learning,700,3-0-0,3,Magesh Nagarajan,K,PE,MBA Sem III,,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+SME,School of Management and Entrepreneurship,MSL73570,B2B Marketing,700,3-0-0,3,Neha,D,PE,MBA Sem III,,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+SME,School of Management and Entrepreneurship,MSL73580,Industry 5.0,700,3-0-0,3,Deepak Srivastav,F,PE,MBA Sem III,,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+SME,School of Management and Entrepreneurship,MSL73590,Supply Chain Management,700,3-0-0,3,Vinod Vijay Kumar,H,PE,MBA Sem III,,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+SME,School of Management and Entrepreneurship,MSL73600,Digital Platforms and Sharing Economy,700,3-0-0,3,Bhushan Praveen Jangam,E,PE,MBA Sem III,,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+SME,School of Management and Entrepreneurship,MSL73610,Quality Management,700,3-0-0,3,Monika Tanwar,E,PE,MBA Sem III,,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+SME,School of Management and Entrepreneurship,MSL73620,Introduction to FinTech,700,3-0-0,3,Deepak Saxena and Bhushan,G,PE,MBA Sem III,,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+SME,School of Management and Entrepreneurship,OAL7010,Innovation and IP Management,700,1-0-0,1,"Manu Kanchan, Deepak Saxena",NG 1,NG,Institute Courses,,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+SME,School of Management and Entrepreneurship,OAN7010,Systems Engineering and Project Management,700,1-0-0,1,Vinod Vijay Kumar,NG,NG,Institute Courses,,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+SME,School of Management and Entrepreneurship,MSL7060,Marketing Management I,700,2-0-0,2,Manu Kanchan,K,SC,Minor in Management,,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+SME,School of Management and Entrepreneurship,MSL71040,Financial Accounting and Reporting,700,2-0-0,2,Deepak Saxena,H,SC,Minor in Management,,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+SME,School of Management and Entrepreneurship,MSP7030,Business Plan Phase I,700,0-0-8,4,Venkat Ram Reddy,N,SC,BS Entrepreneurship,,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+SME,School of Management and Entrepreneurship,MSL7190,Entrepreneurial Experiences,700,0-0-2,2,Bharat Maheshvari (Coordinated by Deepak Saxena),S,SE,BS Entrepreneurship,,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+Physics,Physics,PHL1110,General Physics-I,100,3-1-0,4,Durgamadhab Mishra,CU,PC,BSc BEd (1st Year) Sem I,,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+Physics,Physics,PHL2020,Fundamentals of Thermodynamics,200,3-0-0,3,Santosh,CA,PC,BSc BEd (2nd Year) Sem III,,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+Physics,Physics,PHL2030,Fundamentals of Optics,200,3-0-0,3,Sagar Kumar Verma,CE,PC,BSc BEd (2nd Year) Sem III,,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+Physics,Physics,PHL2010,Mathematical Methods in Physics,200,3-0-0,3,Ambesh Dixit,CC,PC,BSc BEd (2nd Year) Sem III,,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+Physics,Physics,PHP2110,Physics Lab-1,200,0-0-6,3,Sagar k Verma +Durgamadhab,M1,PC,BSc BEd (2nd Year) Sem III,,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+Physics,Physics,PHL3110,Electronics I,300,3-0-0,3,Satyajit Sahu,CC,PC,BSc BEd (3rd Year) Sem V,,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+Physics,Physics,PHL3030,Solid State Physics,300,3-0-0,3,Durgamadhab Mishra + Krishna*,CK,PC,BSc BEd (3rd Year) Sem V,,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+Physics,Physics,PHL3090,Introduction to Plasma Physics,300,3-0-0,3,Ram Prakash,CA,PC,BSc BEd (3rd Year) Sem V,,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+Physics,Physics,PHL3120,Modern Optics,300,3-0-0,3,Sagar k Verma,CB,PC,BSc BEd (3rd Year) Sem V,,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+Physics,Physics,PHP3070,Physics Lab-2,300,0-0-6,3,Satyajit Sahu + Ambesh,M6,PC,BSc BEd (3rd Year) Sem V,,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+Physics,Physics,PHL1010,Physics [Electromagnetism and Optics Theory] [English + Hindi],100,3-0-0,3,Prabhat** + Jitendra Kumar HEP,"AG,AK",PC,B.Tech. (1st Year),,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+Physics,Physics,PHP1010,Physics Lab [Electromagnetism and Optics Lab],100,0-0-2,1,Prabhat + Jitendra Kumar HEP**,M1,PC,B.Tech. (1st Year),,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+Physics,Physics,OAE1010,Engineering Design I,100,0-0-2,1,Dushyant + Jitendra Kumar CMP,,,B.Tech (1st Year),,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+Physics,Physics,OSN1010,Social Connect and responsibilities I,100,0-0-1,0.5,Lata + Sagar Verma,,,B.Tech (1st Year),,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+Physics,Physics,,Environment and Sustainability,,3-0-0,3,??,U,PC,BS (3rd Sem),,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+Physics,Physics,PHL2150,Classical Mechanics,200,3-1-0,4,Monika Sinha* + V Narayanan for tutorial,A,PC,BS (3rd Sem),,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+Physics,Physics,PHL2110,Mathematical Methods For Engineering Physicists,200,3-1-0,4,Ambesh Dixit,E,PC,BS (3rd Sem),,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+Physics,Physics,PHL2100,Thermal Physics,200,3-0-0,3,Sunita+Lata*,B,PC,BS (3rd Sem),,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+Physics,Physics,PHL2140,Electromagnetic Fields and Plasma,200,3-1-0,4,Ram Prakash** +Sagar,D,PC,BS (3rd Sem),,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+Physics,Physics,PHN1010,Design/Practical Experience,100,0-0-4,2,Jitendra HEP,NG1,,BS (3rd Sem),,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+Physics,Physics,PHL3010,"Physics of atoms, molecules and nuclei",300,3-0-0,3,Reetanjali,C,PC,BS (5th Sem),,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+Physics,Physics,PHL3020,Electronics,300,3-0-0,3,Jitendra Kumar (CMP),B,PC,BS (5th Sem),,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+Physics,Physics,PHL3031,Solid State Physics,300,3-0-2,4,Shahab,E,PC,BS (5th Sem),,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+Physics,Physics,PHP3010,Electronics Lab,300,0-0-3,1.5,Satyajit Sahu,M3,PC,BS (5th Sem),,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+Physics,Physics,PHP3020,Thin film & Material Characterization Lab,300,0-0-3,1.5,Dushyant,M4,PC,BS (5th Sem),,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+Physics,Physics,PHN2030,Design/Practical Experience,200,0-0-4,2,Amit,NG2,,BS (5th Sem),,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+Physics,Physics,PHP3030,Applied Computational Lab,300,0-0-3,1.5,Dr. Milan Hazra,M5,PC,BS (5th Sem),,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+Physics,Physics,AIL30XX,Big Data Management (check this),,3-0-0,3,,Will be announced soon,PL,BS (5th Sem),,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+Physics,Physics,PHL4010,Fluids & Plasmas,400,2-0-2,3,Ram Prakash,E,PC,BS (7th Sem),,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+Physics,Physics,PHD6300,Specialization Core Project,600,0-0-6,3,Ram Prakash,T,PC,BS (7th Sem),,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+Physics,Physics,PHN3010,Design/Practical Experience,300,0-0-4,2,Naveen,NG3,PC,BS (7th Sem),,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+Physics,Physics,QCL7080,Specilization 1 (Quantum Tech): Introduction to Quantum Information,700,2-0-2,3,Amit (This is MTech Quantum Core course),H,SC,BS (7th Sem),,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+Physics,Physics,QCL7320,Specilization 2 (Quantum Tech): Quantum Cryptography and Coding,700,3-0-0,3,V Narayanan,G,SE,BS (7th Sem),,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+Physics,Physics,QCP7030,Specilization 3 (Quantum Tech): Quantum computation and communication Laboratory,700,0-0-4,2,V Narayanan,M4,SC,BS (7th Sem),,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+Physics,Physics,QCL7350,Specilization 4 (Quantum Tech): Quantum Inspired Optimization,700,2-0-2,3,Kirankumar,B,SE,BS (7th Sem),,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+Physics,Physics,PHL4110,Mathematical Physics,400,3-0-0,3,Ambesh Dixit,H,PC,MSc (1st Sem),,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+Physics,Physics,PHL4120,Classical Mechanics,400,3-1-0,4,Monika Sinha* + V Narayanan for tutorial,A,PC,MSc (1st Sem),,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+Physics,Physics,PHL4130,Quantum Mechanics,400,3-0-0,3,Subhashish,G,PC,MSc (1st Sem),,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+Physics,Physics,PHL4140,Electronics,400,3-0-0,3,Shahab** + Krishna,I,PC,MSc (1st Sem),,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+Physics,Physics,PHL4150,Statistical Physics,400,3-0-0,3,Sunita,J,PC,MSc (1st Sem),,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+Physics,Physics,PHP4010,Physics Lab-I (Ele/optics),400,0-0-6,3,Krishna+CMP Jitendra,L6,PC,MSc (1st Sem),,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+Physics,Physics,PHP6070,Computational Physics Lab,600,0-0-3,1.5,Santosh,L7,MC,MSc (3rd Sem),,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+Physics,Physics,PHD6040,M.Sc Project I,600,0-0-10,5,Shahab,T,MP,MSc (3rd Sem),,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+Physics,Physics,PHQ6010,M.Sc Seminar,600,0-0-1,0.5,Santosh,L5,MC,MSc (3rd Sem),,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+Physics,Physics,QCL7080,Elective: Introduction to Quantum Information (IDRP QIC),700,2-0-2,3,Amit (This is MTech Quantum Core course),H,ME,MSc (3rd Sem),,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+Physics,Physics,PHL7360,Elective: Introduction to material characterization,700,3-0-0,3,Naveen Tailor,D,ME,MSc (3rd Sem),,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+Physics,Physics,PHL7340,Elective: Quantum Field Theory,700,3-0-0,3,Lata,J,ME,MSc (3rd Sem),,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+Physics,Physics,QCL7070,Elective: Quantum Computation (IDRP QIC),700,3-0-0,3,Srivatsa N.S (This is MTech Quantum Core course),I,ME,MSc (3rd Sem),,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+Physics,Physics,PHL7330,Elective: Laser Technologies and Ultrafast Optics,700,3-0-0,3,Sagar Verma,N,ME,MSc (3rd Sem),,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+Physics,Physics,PHL7030,Elective: Fiber-Optical Communication,700,3-0-0,3,Sunil Kumar,F,ME,MSc (3rd Sem),,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+Physics,Physics,PHL6170,Elective: Quantum Materials and Devices,600,3-0-0,3,Dushyant,G,ME,MSc (3rd Sem),,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+Physics,Physics,QCL7070,Quantum Computation,700,3-0-0,3,Srivatsa,I,,MTech Quantum Technology,,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+Physics,Physics,QCL7080,Introduction to Quantum Information,700,2-0-2,3,Amit Mukherjee,H,,MTech Quantum Technology,,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+Physics,Physics,QCL7350,Quantum-Inspired Optimization,700,2-0-2,3,Kirankumar,B,,MTech Quantum Technology,,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+Physics,Physics,QCL7320,Quantum cryptography and coding,700,3-0-0,3,V Narayanan,G,,MTech Quantum Technology,,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+Physics,Physics,PHL7020,NEW Core 1: Review of Fundamental Physics,700,3-0-0,3,Naveen,I,PC,Ph.D.,,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+Physics,Physics,PHL7010,NEW Core 2: Review of Quantum and Condensed Matter Physics,700,3-0-0,3,SB** (quantum) + Santosh (quantum) + Dushyant (CMP),U,PC,Ph.D.,,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+Physics,Physics,MSCPE,Elective-1 (Choose form MSc basket),,3-0-0,3,,,PC,Ph.D.,,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+Physics,Physics,MSCPE,Elective-2 (Choose form MSc basket),,3-0-0,3,,,PC,Ph.D.,,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+Physics,Physics,PHL7040,Elective- Statistical Methods and Data Analysis,700,3-0-0,3,Jitendra HEP* + Prabhat,G,PC,Ph.D.,,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+Physics,Physics,PHO8930,Research Proposal,800,0-0-6,3,,,,Ph.D.,,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+Physics,Physics,PHT8980,Thesis,800,0-0-6,6,Monika Sinha,T,,Ph.D.,,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+Physics,Physics,PHT8990,Thesis,800,0-0-12,12,Monika Sinha,T,,Ph.D.,,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+Physics,Physics,PH799,PhD Thesis,700,0-0-0,16,Monika Sinha,T,,Ph.D.,,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+Chemistry,Chemistry,CYL4XX0,Organic Reactions and Mechanisms,,,3-0-0 (3),Koushambi Mitra,F,,"MSc, Semester I",,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+Chemistry,Chemistry,CYL4XX0,Physical Organic Chemistry,,,3-0-0 (3),Vivek Wakchaure,H,,"MSc, Semester I",,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+Chemistry,Chemistry,CYL4XX0,Main Group and Bioinorganic Chemistry,,,3-0-0 (3),Ramesh Metre,I,,"MSc, Semester I",,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+Chemistry,Chemistry,CYL4XX0,Coordination and Organometallic Chemistry,,,3-0-0 (3),Ravindra Raut,K,,"MSc, Semester I",,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+Chemistry,Chemistry,CYL4XX0,Numerical Methods and Group Theory,,,3-0-0 (3),Atul Kumar,G,,"MSc, Semester I",,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+Chemistry,Chemistry,CYL4XX0,Quantum Chemistry and Applications,,,3-0-0 (3),Manikandan Paranjothy,E,,"MSc, Semester I",,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+Chemistry,Chemistry,CYP4XX0,Organic and Inorganic Lab,,,0-0-6 (3),"Mayank Gupta, Amreen Kaur Bains",L4,,"MSc, Semester I",,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+Chemistry,Chemistry,CYL7340,Frontiers in Organic Chemistry,700,,3-0-0 (3),Sandip Murarka,I,,"MSc, Semester III",,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+Chemistry,Chemistry,CYL7450,Nanomaterials and Nanodevices,700,,3-0-0 (3),Suresh Sarkar,K,,"MSc, Semester III",,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+Chemistry,Chemistry,CYL7420,Characterization Techniques in Inorganic Chemistry,700,,3-0-0 (3),Subrata Chakraborty,J,,"MSc, Semester III",,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+Chemistry,Chemistry,CYL6370,Modern NMR methods for Chemists,600,,3-0-0 (3),Samanwita Pal,D,,"MSc, Semester III",,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+Chemistry,Chemistry,CYL7360,Spectroscopic Determination of Organic Compounds,700,,3-0-0 (3),Rohan Erande,U,,"MSc, Semester III",,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+Chemistry,Chemistry,CYL7440,Stereochemistry of Organic Compounds,700,,3-0-0 (3),Nirmal Kumar Rana,K,,"MSc, Semester III",,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+Chemistry,Chemistry,CYL7XX0,Advanced Spectroscopic Methods,,,3-0-0 (3),"Samanwita Pal(C), Dibyendu Kumar Sasmal, Rahul Gera",N,,"MSc, Semester III",,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+Chemistry,Chemistry,CYL6XX0,Chemistry of f-block elements,,,3-0-0 (3),Pragati Pandey,E,,"MSc, Semester III",,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+Chemistry,Chemistry,CYQ6010,Seminar,600,,0-0-1 (0.5),Amreen Kaur Bains,,,"MSc, Semester III",,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+Chemistry,Chemistry,CYP6050,Hands On-2,600,,0-0-2 (1.5),Swati Jindal,L6,,"MSc, Semester III",,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+Chemistry,Chemistry,CYD6040,Major Project I,600,,0-0-0-5,Vivek Wakchaure,T,,"MSc, Semester III",,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+Chemistry,Chemistry,CYL1010,Chemistry Theory,100,,3-0-0 (3),"Dibyendu Sasmal (C), Pragati Pandey, Swati Jindal",AK,,BTech 1st year Semester I,,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+Chemistry,Chemistry,CYP1010,Chemistry Laboratory,100,,0-0-2 (1),"Atul Kumar, Mayank Gupta, Vivek Wakchaure",M2,,BTech 1st year Semester I,,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+Chemistry,Chemistry,CYL2120,"Thermodynamics, Kinetics and Engineering Applications",200,,3-0-0 (3),Ananya Debnath,F,,BS Semester III,,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+Chemistry,Chemistry,CYL2130,Fundamental Organic Chemistry,200,,3-0-0 (3),Hema Kuntrapakam,B,,BS Semester III,,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+Chemistry,Chemistry,CYL2140,Quantum Chemistry and Applications,200,,3-0-0 (3),Manikandan Paranjothy,E,,BS Semester III,,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+Chemistry,Chemistry,CYL2030,Fundamental Inorganic Chemistry,200,,3-0-0 (3),Pritam Mahawar,A,,BS Semester III,,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+Chemistry,Chemistry,CYP2130,Organic Chemistry Lab,200,,0-0-6 (3),Rohan Erande,M8,,BS Semester III,,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+Chemistry,Chemistry,CYL3010,Physical Organic Chemistry and Photochemistry,300,,3-0-0 (3),Monika Gupta,A,,BS Semester V,,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+Chemistry,Chemistry,CYL3020,Atomic and Molecular Structure,300,,3-0-0 (3),"Milan Hazra, Rahul Gera",C,,BS Semester V,,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+Chemistry,Chemistry,CYL3030,Coordination and Bioinorganic Chemistry,300,,3-0-0 (3),Amreen Kaur Bains,D,,BS Semester V,,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+Chemistry,Chemistry,CYP3010,Organic Chemistry Lab 2,300,,0-0-3 (1.5),Shyam Kumar Banjare,M4,,BS Semester V,,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+Chemistry,Chemistry,PHP3030,Applied computational Lab,300,,0-0-3 (1.5),Milan Hazra,M5,,BS Semester V,,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+Chemistry,Chemistry,CYL4010,Structural Chemistry,400,,3-0-0 (3),Mayank Gupta,B,,BS Semester VII,,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+Chemistry,Chemistry,CYL1020,General Chemistry I,100,,3-0-2 (4),"Vivek Wakchaure (C), Pritam Mahawar, Dibyendu Sasmal",CK,,BSC Bed Sem I,,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+Chemistry,Chemistry,CYL2060,Basic Principles of Chemistry,200,,3-0-2 (4),"Rahul Gera (C), Ravindra Raut, Koushambi Mitra",CC,,BSC Bed Sem III,,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+Chemistry,Chemistry,CYL2070,Molecular Structure and Spectroscopy,200,,3-0-2 (4),Samanwita Pal,CA,,BSC Bed Sem III,,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+Chemistry,Chemistry,CYL3XX0,Organic Reactions and Mechanisms,,,3-0-0 (3),Shyam Kumar Banjare,CK,,"BSc-BEd, Semester V",,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+Chemistry,Chemistry,CYL3XX0,Physical Organic Chemistry,,,3-0-0 (3),"Vivek Wakchaure, Nirmal Rana",CB,,"BSc-BEd, Semester V",,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+Chemistry,Chemistry,CYL3XX0,Main Group and Bioinorganic Chemistry,,,3-0-0 (3),"Ramesh Metre, Subrata",CE,,"BSc-BEd, Semester V",,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+Chemistry,Chemistry,CYL3XX0,Coordination and Organometallic Chemistry,,,3-0-0 (3),"Amreen, Ravindra Raut",CA,,"BSc-BEd, Semester V",,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+Chemistry,Chemistry,CYL3XX0,Numerical Methods and Group Theory,,,3-0-0 (3),Atul Kumar,CB,,"BSc-BEd, Semester V",,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+Chemistry,Chemistry,CYL3XX0,Quantum Chemistry and Applications,,,3-0-0 (3),Manikandan Paranjothy,CC,,"BSc-BEd, Semester V",,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+Chemistry,Chemistry,CYL7010,Chemistry 1,700,,3-0-0 (3),"Suresh Sarkar (C), Hema Kuntrapakam, Rahul Gera",F,,"PhD, Semester I",,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+Chemistry,Chemistry,CYL7020,Chemistry 2,700,,3-0-0 (3),"Swati Jindal(C), Pragati Pandey, Milan Hazra",H,,"PhD, Semester I",,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+Chemistry,Chemistry,CYL7340,Frontiers in Organic Chemistry,700,,3-0-0 (3),Sandip Murarka,I,,"PhD, Semester I",,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+Chemistry,Chemistry,CYL7360,Spectroscopic Determination of Organic Compounds,700,,3-0-0 (3),Rohan Erande,U,,"PhD, Semester I",,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+Chemistry,Chemistry,CYL7420,Characterization Techniques in Inorganic Chemistry,700,,3-0-0 (3),Subrata Chakraborty,J,,"PhD, Semester I",,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+Chemistry,Chemistry,CYL7XX0,Advanced Spectroscopic Methods,,,3-0-0 (3),"Samanwita Pal(C), Dibyendu Kumar Sasmal, Rahul Gera",N,,"PhD, Semester I",,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+Chemistry,Chemistry,CYN2020,Design Practical Experience,200,,,,,,,,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+Chemistry,Chemistry,CYN3020,Design Practical Experience,300,,,,,,,,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+Chemistry,Chemistry,CYN4020,Design Practical Experience,400,,,,,,,,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+Chemistry,Chemistry,CYO8960,Research proposal,800,,0-0-20 (10),,,,,,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+Chemistry,Chemistry,CYO8970,Research Proposal,800,,0-0-24 (12),,T,,,,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+SOD,School of Design,DSL7360,Interaction Design,700,2-0-2,3,Sajan Pillai,K,,,Core M.Des (MC),AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+SOD,School of Design,DSL7370,XR Design and Prototyping,700,2-0-2,3,Pranjal Borah,B,,,Core M.Des. XR (MC),AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+SOD,School of Design,DSL7220,Principles of Game Design,700,1-0-4,3,Kedar Dicholkar,E,,,Elective Course,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+SOD,School of Design,DSL6080,Nature of Materials and Processes,600,3-0-0,3,Priyabrata Rautray,D,,,Elective Course,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+SOD,School of Design,DSL6060,Design Thinking,600,1-0-4,3,Priyabrata Rautray,F,,,Elective Course,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+SOD,School of Design,DSL7410,Product Design and Development,700,2-0-2,3,Priyabrata Rautray,H,,,Core M.Des. SPD (MC),AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+SOD,School of Design,DSL7680,Design Processes and Methods,700,2-0-2,3,Shiv Kumar Verma,C,,,Core M.Des (MC),AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+SOD,School of Design,DSL7310,Elements of design,700,2-0-2,3,Sumana Som,I,,,Core M.Des. XR (MC),AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+SOD,School of Design,DSL7170,Advanced Illustration,700,1-0-4,3,Sumana Som,J,,,Elective Course,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+SOD,School of Design,DSL3030,Paper Engineering as Creative Exploration,300,1-0-4,3,Sumana Som,G,,,Elective Course,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+SOD,School of Design,DSL6020,Elements and Principles of Art and Design,600,3-0-0,3,Kedar Dicholkar,D,,,Elective Course,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+SOD,School of Design,DSL7520,Studies in Form and Aesthetics,700,2-0-2 [3],3,Gaurav Vaidya,E,,,Core M.Des. SPD (MC),AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+SOD,School of Design,DSL7560,Computer-Aided Design,700,1-0-4 [3],3,Gaurav Vaidya,I,,,Elective Course,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+SOD,School of Design,DST8011,Thesis,800,0-0-12 [12],12,Gaurav Vaidya,T,,,for PhD,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+SOD,School of Design,DST8031,Thesis,800,0-0-12,12,Sumana Som,T,,,for PhD,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+SOD,School of Design,DST8061,Thesis,800,0-0-12 [12],12,Pranjal Borah,T,,,for PhD,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+SOD,School of Design,DST8071,Thesis,800,0-0-12,12,Priyabrata Rautray,T,,,for PhD,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+SOD,School of Design,DST7710,MDes SPD Thesis Phase I,700,0-0-16 [16],16,Priyabrata Rautray,T,,,Core M.Des,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+SOD,School of Design,DSL7380,MDes XR Thesis Phase I,700,0-0-16 [16],16,Sumana Som,T,,,Core M.Des,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+ME,Mechanical Engineering,MEL1000,Engineering Mechanics,100,3-0-0,3,B. Ravindra,AG,IE,1St,,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+ME,Mechanical Engineering,MEP1000,Engineering Drawing,100,0-0-2,1,Anand Plappally,M3,IE,1St,,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+ME,Mechanical Engineering,MEL2050,Kinematics and Dynamics of Machines,200,3-0-0,3,Babu Ranjan Thakur,D,PC,2nd,,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+ME,Mechanical Engineering,MEL2040,Fluid Mechanics,200,3-1-0,4,Pratyaksh Karan,E,PC,2nd,,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+ME,Mechanical Engineering,MEL2020,Thermodynamics,200,3-1-0,4,Prodyut Chakraborty,C,PC,2nd,,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+ME,Mechanical Engineering,MEL2060,Casting Welding Forming,200,3-0-0,3,Rajit Ranjan,A,PC,2nd,,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+ME,Mechanical Engineering,MEP2000,Mechanics and Manufacturing Lab,200,0-0-6,3,Babu Ranjan Thakur; Pratyaksh Karan; Rajit Ranjan,M1,PC,2nd,,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+ME,Mechanical Engineering,MEN1010,Design/Practical Experience-I,100,0-0-4,2,Rajit Ranjan,NG2,ND,2nd,,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+ME,Mechanical Engineering,MEN2010,Introduction to Profession,200,0-0-2,1,Nipun Arora,NG3,NE,2nd,,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+ME,Mechanical Engineering,MEL3030,Production & Operations Management,300,3-0-0,3,Chandan Pandey,C,PC,3rd,,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+ME,Mechanical Engineering,MEL3010,Heat Transfer,300,3-0-0,3,Shrutidhara Sarma,E,PC,3rd,,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+ME,Mechanical Engineering,MEL3020,Kinematics and Dynamics of Machines,300,3-0-2,4,Roshan Kumar Hota,D,PC,3rd,,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+ME,Mechanical Engineering,MEL3040,Machining Science and Metrology,300,3-0-0,3,Gourhari Ghosh,B,PC,3rd,,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+ME,Mechanical Engineering,MEL3050,Digital Fabrication,300,3-0-0,3,Gopal Gote,A,PC,3rd,,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+ME,Mechanical Engineering,MEP3020,Manufacturing Processes and Systems lab,300,0-0-2,1,Chandan Pandey/ Ambuj Gautam,M2,PC,3rd,,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+ME,Mechanical Engineering,MEP3010,Heat Transfer Lab,300,0-0-2,1,Shrutidhara Sarma,M3,PC,3rd,,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+ME,Mechanical Engineering,MEN2020,Design/Practical Experience-II,200,0-0-4,2,Amrita Puri,NG2,ND,3rd,,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+ME,Mechanical Engineering,MEP4010,Thermofluids Lab,400,0-0-2,1,Srijit Biswas,M1,PC,4th,,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+ME,Mechanical Engineering,MED4010,B. Tech. Project,400,0-0-6,3,Hardik Kothadia,T,PP,4th,,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+ME,Mechanical Engineering,MEN3010,Design/Practical Experience-III,300,0-0-4,2,Hardik Kothadia,NG2,ND,4th,,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+ME,Mechanical Engineering,,Basics of Finite Element Analysis,,MEL4220,,PE,Barun Pratiher,,3-0-0 (3),,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+ME,Mechanical Engineering,,Mechanical Vibrations,,MEL7140,,PE,Nitesh Arora,,3-0-0 (3),,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+ME,Mechanical Engineering,,Computer Integrated Manufacturing,,MEL6060,,PE,Kaushal Desai,,3-0-0 (3),,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+ME,Mechanical Engineering,,Continuum Mechanics,,MEL7220,,PE,Atul Kumar Sharma,,3-0-0 (3),,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+ME,Mechanical Engineering,,Engineering Fracture Mechanics,,MEL7230,,PE,Hirshikesh,,3-0-0 (3),,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+ME,Mechanical Engineering,,Micro nano Flows,,MEL4240,,PE,Pratyaksh Karan,,3-0-0 (3),,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+ME,Mechanical Engineering,,Turbomachinery,,MEL4040,,PE,Ashish Pathak,,3-0-0 (3),,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+ME,Mechanical Engineering,,Computational Fluid Dynamics and Heat Transfer,,MEL7400,,PE,Harshal Akolekar,,3-1-0 (4),,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+ME,Mechanical Engineering,,"AI, ML, and Big Data for Mechanics and Design",,MEL7240,,PE,Amrita Puri,,3-0-0 (3),,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+ME,Mechanical Engineering,MEL7970,Engineering Mathematics,700,3-0-0,,Himanshu Dave,G,MC,1st,,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+ME,Mechanical Engineering,MEL7280,Theory of Elasticity,700,3-0-0,3,Atul Kumar Sharma,F,MC,1st,,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+ME,Mechanical Engineering,MEL7290,Finite Element Analysis,700,3-0-0,3,Hirshikesh,I,MC,1st,,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+ME,Mechanical Engineering,MEL7240,"AI, ML, and Big Data for mechanics and design",700,3-0-0,3,Amrita Puri,H,MC,1st,,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+ME,Mechanical Engineering,MEL7250,Materials Design and Evaluation Techniques,700,3-0-0,,Rahul Chhibber,F,MC,1st,,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+ME,Mechanical Engineering,MEL7260,Advanced Material Processing,700,3-0-0,,Ambuj Gautam,H,MC,1st,,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+ME,Mechanical Engineering,MEL7970,Engineering Mathematics,700,3-0-0,,Himanshu Dave,G,MC,1st,,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+ME,Mechanical Engineering,,Engineering Design Innovation,,MEL7620,,ME,Mrityunjay Doddamani,,3-0-0,,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+ME,Mechanical Engineering,,MEMS and Microsystems Technology,,MEL7530,,ME,Ankur Gupta,,3-0-0,,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+ME,Mechanical Engineering,MEL7040,Incompressible Fluid Flow,700,3-0-0,,Sudipto Mukhopadhyay,F,MC,1st,,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+ME,Mechanical Engineering,MEL7060,Applied Heat and Mass Transfer,700,3-0-0,,Shobhana Singh,H,MC,1st,,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+ME,Mechanical Engineering,MEL7970,Engineering Mathematics,700,3-0-0,,Himanshu Dave,G,MC,1st,,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+ME,Mechanical Engineering,,Computational Fluid Dynamics and Heat Transfer,,MEL7700,,J,Harshal Akolekar,,3 - 0 - 0,,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+ME,Mechanical Engineering,,Design of Heat Exchange Equipment,,MEL7190,,ME,Hardik Kothadia,,3-0-0,,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+ME,Mechanical Engineering,RML7050,Mathematics for Robotics,700,3-0-0,3,Suril V Shah,F,MC,1st,,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+ME,Mechanical Engineering,MEL7080,Robotics,700,3-0-2,4,Riby A Boby,I,MC,1st,,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+ME,Mechanical Engineering,RMP7010,Experimental Robotics,700,0-1-2,2,Suril V Shah,,SC,C,,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+ME,Mechanical Engineering,RML6010,Introduction to Robotics,600,3-0-0,3,Riby A Boby,,SC,I,,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+ME,Mechanical Engineering,,All M.Tech. Semester-1 (2nd Year),,,,,,,,,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+ME,Mechanical Engineering,MET8010,M.Tech. Thesis,800,0-0-16,16,Roshan Hota,,Thesis,T,,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+ME,Mechanical Engineering,,PhD Semester-1,,,,,,,,,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+ME,Mechanical Engineering,MET8990,PhD Thesis,800,0-0-12,12,Gopal Gote,,Thesis,T,,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+ME,Mechanical Engineering,MET8970,PhD Thesis,800,0-0-16,16,Gopal Gote,,Thesis,T,,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+ME,Mechanical Engineering,MET8980,PhD Thesis,800,0-0-6,6,Gopal Gote,,Thesis,T,,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+DESE,Department of Engineering Science,ETL7130,Sustainability Assessment Techniques,700,3-0-0,,Chandana N,D,PC,,M.Tech and Ph.D.,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+DESE,Department of Engineering Science,ETL7140,Resource Sustainability,700,3-0-0,,Kirti Sankhala,E,PC,,,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+DESE,Department of Engineering Science,ETL7060,Industrial Waste Management and Circular Economy,700,3-0-0,,Chandana N,I,PE,,,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+DESE,Department of Engineering Science,ETL7050,Water Sustainability,700,3-0-0,,Kirti Sankhala,J,PE,,,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+DESE,Department of Engineering Science,ETT8970,Thesis,800,16-0-0,,Kirti Sankhala,T,Thesis,,Ph.D. Thesis,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx
+DESE,Department of Engineering Science,,Environment and Sustainability,,3-0-0,,,U,PC,,UG - 3rd semester,AY 2026-27 Semester I,25_Finalized_Courses_List_AY2026-27_SemI.xlsx

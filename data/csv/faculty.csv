@@ -1,0 +1,350 @@
+instructor_id,name,department,email,courses,note
+F0001,Aali Pant,Civil and Infrastructure Engineering,aali.pant@iitj.example,CIN1010,email is a dummy value
+F0002,Aashish Mathur,Electronics and Communication Engineering,aashish.mathur@iitj.example,ECL7008;EEL7008,email is a dummy value
+F0003,Abhinaba Lahiri,Artificial Intelligence and Data Engineering,abhinaba.lahiri@iitj.example,AIL7280;AIL7380,email is a dummy value
+F0004,Abhishek Sarkar,Mathematics,abhishek.sarkar@iitj.example,MAL3060,email is a dummy value
+F0005,Abhishek Sharma,Electronics and Communication Engineering,abhishek.sharma@iitj.example,ECL71590;ECP71610,email is a dummy value
+F0006,Abir Bhattacharyya,Metallurgical and Materials Engineering,abir.bhattacharyya@iitj.example,MTL2010;MTL2050,email is a dummy value
+F0007,Ajay Agarwal,Bioscience and Bioengineering,ajay.agarwal@iitj.example,EEL3050,email is a dummy value
+F0008,Akanksha Choudhary,School of Liberal Arts (Humanities & Social Sciences),akanksha.choudhary@iitj.example,AIL6010;LAL6320,email is a dummy value
+F0009,Akshay,Electronics and Communication Engineering,akshay@iitj.example,ECL7030;ECL71580,email is a dummy value
+F0010,Akshay Gupta,Civil and Infrastructure Engineering,akshay.gupta@iitj.example,CIL4360;CIT7010,email is a dummy value
+F0011,Alok,School of Liberal Arts (Humanities & Social Sciences),alok@iitj.example,LAL4070;LAL6050,email is a dummy value
+F0012,Aman Pathak,School of Management and Entrepreneurship,aman.pathak@iitj.example,MSL73540,email is a dummy value
+F0013,Aman Pathak (1),School of Management and Entrepreneurship,aman.pathak2@iitj.example,MSL73550,email is a dummy value
+F0014,Amandeep Kau,Electronics and Communication Engineering,amandeep.kau@iitj.example,ECL7980,email is a dummy value
+F0015,Amandeep Kaur,Electronics and Communication Engineering,amandeep.kaur@iitj.example,ECT8950,email is a dummy value
+F0016,Ambesh Dixit,Physics,ambesh.dixit@iitj.example,PHL2010;PHL2110;PHL4110,email is a dummy value
+F0017,Ambuj Gautam,Mechanical Engineering,ambuj.gautam@iitj.example,MEL7260;MEP3020,email is a dummy value
+F0018,Amit,Physics,amit@iitj.example,PHN2030,email is a dummy value
+F0019,Amit (This is MTech Quantum Core course),Physics,amit.this.is.mtech.quantum.core.course@iitj.example,QCL7080,email is a dummy value
+F0020,Amit Bhardwaj,Electrical Engineering,amit.bhardwaj@iitj.example,EEL7010,email is a dummy value
+F0021,Amit Kumar Mishra,Bioscience and Bioengineering,amit.kumar.mishra@iitj.example,BBL7450,email is a dummy value
+F0022,Amit Kumar Rathi,Civil and Infrastructure Engineering,amit.kumar.rathi@iitj.example,CIL7860;CIL7870,email is a dummy value
+F0023,Amit Mukherjee,Physics,amit.mukherjee@iitj.example,QCL7080,email is a dummy value
+F0024,Amit Sharma,Civil and Infrastructure Engineering,amit.sharma@iitj.example,CIL4010,email is a dummy value
+F0025,Amitava Banerjee,Metallurgical and Materials Engineering,amitava.banerjee@iitj.example,MTD4010;MTL2030;MTL7170;MTL7280;MTN3010,email is a dummy value
+F0026,Amreen,Chemistry,amreen@iitj.example,CYL3XX0,email is a dummy value
+F0027,Amreen Kaur Bains,Chemistry,amreen.kaur.bains@iitj.example,CYL3030;CYP4XX0;CYQ6010,email is a dummy value
+F0028,Amrita Puri,Mechanical Engineering,amrita.puri@iitj.example,MEL7240;MEN2020,email is a dummy value
+F0029,Anand Mishra,Computer Science and Engineering,anand.mishra@iitj.example,CSL1010,email is a dummy value
+F0030,Anand Plappally,Mechanical Engineering,anand.plappally@iitj.example,MEP1000,email is a dummy value
+F0031,Ananya Debnath,Chemistry,ananya.debnath@iitj.example,CYL2120,email is a dummy value
+F0032,Angshuman Paul,Computer Science and Engineering,angshuman.paul@iitj.example,CSL7860,email is a dummy value
+F0033,Anil Kumar Tiwari,Artificial Intelligence and Data Engineering,anil.kumar.tiwari@iitj.example,AID4110;AIT8010;AIT8970;AIT8980;AIT8990,email is a dummy value
+F0034,Ankita,School of Liberal Arts (Humanities & Social Sciences),ankita@iitj.example,LAL2180,email is a dummy value
+F0035,Anoop,Electrical Engineering,anoop@iitj.example,EEL3040,email is a dummy value
+F0036,Anuj Kumar,Mathematics,anuj.kumar@iitj.example,MAL6130,email is a dummy value
+F0037,Anuj Pal Kapoor,School of Management and Entrepreneurship,anuj.pal.kapoor@iitj.example,MSL73510,email is a dummy value
+F0038,Anupama Mohan,School of Liberal Arts (Humanities & Social Sciences),anupama.mohan@iitj.example,LAL3020,email is a dummy value
+F0039,Anurag Sharma,Metallurgical and Materials Engineering,anurag.sharma@iitj.example,MTL7570;MTL7580,email is a dummy value
+F0040,Anusha S. Basavaraj,Civil and Infrastructure Engineering,anusha.s.basavaraj@iitj.example,CIL7690;CIP2010,email is a dummy value
+F0041,Anushka Joshi,Computer Science and Engineering,anushka.joshi@iitj.example,CSL2130;CSP2130,email is a dummy value
+F0042,Appala Naidu,Metallurgical and Materials Engineering,appala.naidu@iitj.example,MTL7410,email is a dummy value
+F0043,Arani,Electrical Engineering,arani@iitj.example,EEL3010,email is a dummy value
+F0044,Arani Ali Khan,Electronics and Communication Engineering,arani.ali.khan@iitj.example,ECL71610,email is a dummy value
+F0045,Arpit,Electrical Engineering,arpit@iitj.example,EEL3XXX,email is a dummy value
+F0046,Arun Kumar,Electronics and Communication Engineering,arun.kumar@iitj.example,ECL7020,email is a dummy value
+F0047,Arun Kumar R,Aerospace Engineering,arun.kumar.r@iitj.example,MEL7950,email is a dummy value
+F0048,Atul Kumar,Chemistry,atul.kumar@iitj.example,CYL3XX0;CYL4XX0;CYP1010,email is a dummy value
+F0049,Atul Kumar Sharma,Mechanical Engineering,atul.kumar.sharma@iitj.example,MEL7280,email is a dummy value
+F0050,Ayan Sadhukhan,Bioscience and Bioengineering,ayan.sadhukhan@iitj.example,BBD7030;BBL7080,email is a dummy value
+F0051,B. Ravindra,Mechanical Engineering,b.ravindra@iitj.example,MEL1000,email is a dummy value
+F0052,Babu Ranjan Thakur,Mechanical Engineering,babu.ranjan.thakur@iitj.example,MEL2050;MEP2000,email is a dummy value
+F0053,Balakumaran Chandrasekhar,Bioscience and Bioengineering,balakumaran.chandrasekhar@iitj.example,BBL4XXX;BBL7640;OAE1010,email is a dummy value
+F0054,Bandi Ravi,Electrical Engineering,bandi.ravi@iitj.example,EEN2020,email is a dummy value
+F0055,Bandi Ravi Kumar,Electrical Engineering,bandi.ravi.kumar@iitj.example,EEL7XX0,email is a dummy value
+F0056,Bharat Maheshvari (Coordinated by Deepak Saxena),School of Management and Entrepreneurship,bharat.maheshvari.coordinated.by.deepak.saxena@iitj.example,MSL7190,email is a dummy value
+F0057,Bharat Singh Rajpurohit,Electrical Engineering,bharat.singh.rajpurohit@iitj.example,EET7950;Measurement and Instrumentation,email is a dummy value
+F0058,Bhargab,School of Management and Entrepreneurship,bhargab@iitj.example,MSL73300,email is a dummy value
+F0059,Bhargab (1.5) Deepak Srivastav (1.5),School of Management and Entrepreneurship,bhargab.deepak.srivastav@iitj.example,MSL73200,email is a dummy value
+F0060,Bhargab Chattopadhyay (2),School of Management and Entrepreneurship,bhargab.chattopadhyay@iitj.example,MSL73550,email is a dummy value
+F0061,Bhaskar,School of Liberal Arts (Humanities & Social Sciences),bhaskar@iitj.example,LAL1020;LAL6210,email is a dummy value
+F0062,Bhivraj Suthar,Artificial Intelligence and Data Engineering,bhivraj.suthar@iitj.example,AIL7110;RML7110,email is a dummy value
+F0063,Bhupendra Reniwal,Electronics and Communication Engineering,bhupendra.reniwal@iitj.example,ECL7320;ECT7954;EEL7320,email is a dummy value
+F0064,Bhupendra Singh,Civil and Infrastructure Engineering,bhupendra.singh@iitj.example,CIL3010;CIL3050;CIL4330;CIT8960;CIT8980;CIT8990,email is a dummy value
+F0065,Bhushan,School of Management and Entrepreneurship,bhushan@iitj.example,MSL73620,email is a dummy value
+F0066,Bhushan (1),School of Management and Entrepreneurship,bhushan2@iitj.example,MSL73070,email is a dummy value
+F0067,Bhushan Praveen Jangam,School of Management and Entrepreneurship,bhushan.praveen.jangam@iitj.example,MSL73600,email is a dummy value
+F0068,Bikash Santra,Artificial Intelligence and Data Engineering,bikash.santra@iitj.example,AIL7370;CSL3040,email is a dummy value
+F0069,Bimal Mandal,Mathematics,bimal.mandal@iitj.example,MAL6080,email is a dummy value
+F0070,Binod Kumar,Electrical Engineering,binod.kumar@iitj.example,EEL71570;EEL7770;EEP3020,email is a dummy value
+F0071,Brahadeesh Sankarnarayanan,Mathematics,brahadeesh.sankarnarayanan@iitj.example,MAL3040;MAL6150,email is a dummy value
+F0072,Chandan Pandey,Mechanical Engineering,chandan.pandey@iitj.example,MEL3030;MEP3020,email is a dummy value
+F0073,Chandana N,Department of Engineering Science,chandana.n@iitj.example,ETL7060;ETL7130,email is a dummy value
+F0074,Debanjan Guha Roy,Civil and Infrastructure Engineering,debanjan.guha.roy@iitj.example,CIL4010;CIL7900,email is a dummy value
+F0075,Debasmita Dwibedi,Metallurgical and Materials Engineering,debasmita.dwibedi@iitj.example,MTL7510;MTL7590;MTP3050,email is a dummy value
+F0076,Deeksha Varshney,Artificial Intelligence and Data Engineering,deeksha.varshney@iitj.example,AIL7260;CSL7610,email is a dummy value
+F0077,Deepak Fulwani,Electrical Engineering,deepak.fulwani@iitj.example,EEL7150,email is a dummy value
+F0078,Deepak Mishra,Computer Science and Engineering,deepak.mishra@iitj.example,CSL7360,email is a dummy value
+F0079,Deepak Saxena,School of Management and Entrepreneurship,deepak.saxena@iitj.example,MSL4010;MSL71040;MSL73620;MSN7030;OAL7010,email is a dummy value
+F0080,Deepak Saxena (1),School of Management and Entrepreneurship,deepak.saxena2@iitj.example,MSL73220,email is a dummy value
+F0081,Deepak Srivastav,School of Management and Entrepreneurship,deepak.srivastav@iitj.example,MSL73580,email is a dummy value
+F0082,Deepak Swami,Civil and Infrastructure Engineering,deepak.swami@iitj.example,CIL2070;CIL7890,email is a dummy value
+F0083,Devendra Singh Negi,Metallurgical and Materials Engineering,devendra.singh.negi@iitj.example,MTL7540,email is a dummy value
+F0084,Devi (1),School of Management and Entrepreneurship,devi@iitj.example,MSL73070,email is a dummy value
+F0085,Dibyendu Kumar Sasmal,Chemistry,dibyendu.kumar.sasmal@iitj.example,CYL7XX0,email is a dummy value
+F0086,Dibyendu Sasmal,Chemistry,dibyendu.sasmal@iitj.example,CYL1020,email is a dummy value
+F0087,Dibyendu Sasmal (C),Chemistry,dibyendu.sasmal.c@iitj.example,CYL1010,email is a dummy value
+F0088,Dilpreet Kaur,Centre for Emerging Technologies,dilpreet.kaur@iitj.example,EDL2040;MAL7520,email is a dummy value
+F0089,Dinesh Joshi,School of Liberal Arts (Humanities & Social Sciences),dinesh.joshi@iitj.example,LAL1010,email is a dummy value
+F0090,Dinesh Kumar Ahirwar,Bioscience and Bioengineering,dinesh.kumar.ahirwar@iitj.example,BBL4040,email is a dummy value
+F0091,Dip Sankar Banerjee,Computer Science and Engineering,dip.sankar.banerjee@iitj.example,CSL2020;CSL2120;CSP2030;CSP2130,email is a dummy value
+F0092,Dipanjan Roy,Artificial Intelligence and Data Engineering,dipanjan.roy@iitj.example,AIL4230;AIL7510;AIP4010,email is a dummy value
+F0093,DipSankar Banerjee,Bioscience and Bioengineering,dipsankar.banerjee@iitj.example,CSL2XXX,email is a dummy value
+F0094,Divya Saxena,Bioscience and Bioengineering,divya.saxena@iitj.example,AIL7260;CSL1XXX;Introduction to Machine Learning,email is a dummy value
+F0095,Dr. Angan,Chemical Engineering,angan@iitj.example,CHL3010;CHN1010;CHN2040,email is a dummy value
+F0096,Dr. Anil Tiwari,Medical Technologies,anil.tiwari@iitj.example,SHL7020,email is a dummy value
+F0097,Dr. Bimal Mandal,Mathematics,bimal.mandal2@iitj.example,MAD7060;MAT7210,email is a dummy value
+F0098,Dr. Brahadeesh Sankarnarayanan,Mathematics,brahadeesh.sankarnarayanan2@iitj.example,MAL7060,email is a dummy value
+F0099,Dr. Deeksha Varshney,Mathematics,deeksha.varshney2@iitj.example,CSL7610,email is a dummy value
+F0100,Dr. Hardik Kothadia,Medical Technologies,hardik.kothadia@iitj.example,SHT8950;SHT8990,email is a dummy value
+F0101,Dr. Krunal,Chemical Engineering,krunal@iitj.example,CHL7030;CHL7720,email is a dummy value
+F0102,Dr. Manoj,Chemical Engineering,manoj@iitj.example,CHL3030,email is a dummy value
+F0103,Dr. Milan Hazra,Physics,milan.hazra@iitj.example,PHP3030,email is a dummy value
+F0104,Dr. Navchetan Awasthi,Medical Technologies,navchetan.awasthi@iitj.example,SHL7470,email is a dummy value
+F0105,Dr. Parvate,Chemical Engineering,parvate@iitj.example,CHL2050,email is a dummy value
+F0106,Dr. Prashant,Chemical Engineering,prashant@iitj.example,CHL3040;CHL7370,email is a dummy value
+F0107,Dr. Praveen,Chemical Engineering,praveen@iitj.example,CHL2060,email is a dummy value
+F0108,Dr. Saakshi Dhanekar,Medical Technologies,saakshi.dhanekar@iitj.example,SHL7110;SHL7480,email is a dummy value
+F0109,Dr. Santhosh,Chemical Engineering,santhosh@iitj.example,CHD4010;CHL4380;CHL7310;CHN3010,email is a dummy value
+F0110,Dr. Siddharth Srivastava,Medical Technologies,siddharth.srivastava@iitj.example,SHD7020;SHL7030;SHL7060,email is a dummy value
+F0111,Dr. Siddharth Srivastava (Allocated by Dean Academic AIIMSJ),Medical Technologies,siddharth.srivastava.allocated.by.dean.academic.aiimsj@iitj.example,SHL7040;SHL7050,email is a dummy value
+F0112,Dr. Subhash Bhagat,Mathematics,subhash.bhagat@iitj.example,CSL7620,email is a dummy value
+F0113,Dr. Sukhandu Ghosh,Mathematics,sukhandu.ghosh@iitj.example,MAL7120,email is a dummy value
+F0114,Dr. Sumit,Chemical Engineering,sumit@iitj.example,CHL2040;CHT8970;CHT8980;CHT8990,email is a dummy value
+F0115,Dr. Sumit Parvate,Chemical Engineering,sumit.parvate@iitj.example,CHL4370,email is a dummy value
+F0116,Dr. Tara,Chemical Engineering,tara@iitj.example,CHL4320;CHT7010;MEL3010;MEP3010,email is a dummy value
+F0117,Dr. Tonisha Guin,Mathematics,tonisha.guin@iitj.example,LAN7010,email is a dummy value
+F0118,Dr. Vikky,Chemical Engineering,vikky@iitj.example,CHL2030;CHL7710;CHN2010,email is a dummy value
+F0119,Durgamadhab Mishra,Physics,durgamadhab.mishra@iitj.example,PHL1110,email is a dummy value
+F0120,Durgamadhab Mishra + Krishna*,Physics,durgamadhab.mishra.krishna@iitj.example,PHL3030,email is a dummy value
+F0121,Dushyant,Physics,dushyant@iitj.example,PHL6170;PHP3020,email is a dummy value
+F0122,Dushyant + Jitendra Kumar CMP,Physics,dushyant.jitendra.kumar.cmp@iitj.example,OAE1010,email is a dummy value
+F0123,Dweepobotee Brahma,Artificial Intelligence and Data Engineering,dweepobotee.brahma@iitj.example,AIL7320,email is a dummy value
+F0124,Falak Vats,Civil and Infrastructure Engineering,falak.vats@iitj.example,CIL4350,email is a dummy value
+F0125,Farhat Naz,School of Liberal Arts (Humanities & Social Sciences),farhat.naz@iitj.example,LAL7420,email is a dummy value
+F0126,Gafoor,Electrical Engineering,gafoor@iitj.example,EEL3020;EEN1010,email is a dummy value
+F0127,Gaurav Bhatnagar,Mathematics,gaurav.bhatnagar@iitj.example,MAL2160,email is a dummy value
+F0128,Gaurav Harit,Computer Science and Engineering,gaurav.harit@iitj.example,CSL7650,email is a dummy value
+F0129,Gaurav Vaidya,School of Design,gaurav.vaidya@iitj.example,DSL7520;DSL7560;DST8011,email is a dummy value
+F0130,George K.J,School of Liberal Arts (Humanities & Social Sciences),george.k.j@iitj.example,LAL6110,email is a dummy value
+F0131,Gopakumar,School of Liberal Arts (Humanities & Social Sciences),gopakumar@iitj.example,LAL7490;LAL7620,email is a dummy value
+F0132,Gopal Gote,Mechanical Engineering,gopal.gote@iitj.example,MEL3050;MET8970;MET8980;MET8990,email is a dummy value
+F0133,Gourhari Ghosh,Mechanical Engineering,gourhari.ghosh@iitj.example,MEL3040,email is a dummy value
+F0134,Gurujegan Murugesan,School of Liberal Arts (Humanities & Social Sciences),gurujegan.murugesan@iitj.example,LAL6220;LAL6340,email is a dummy value
+F0135,Hardik Jain,Bioscience and Bioengineering,hardik.jain@iitj.example,CSL1XXX;CST7010;Introduction to Machine Learning,email is a dummy value
+F0136,Hardik Kothadia,Mechanical Engineering,hardik.kothadia2@iitj.example,MED4010;MEN3010,email is a dummy value
+F0137,Hari Narayanan V,Centre for Emerging Technologies,hari.narayanan.v@iitj.example,EDL7020,email is a dummy value
+F0138,Harshit,Electrical Engineering,harshit@iitj.example,EEL7900,email is a dummy value
+F0139,Hasan,Metallurgical and Materials Engineering,hasan@iitj.example,MTN2020,email is a dummy value
+F0140,Hema Kuntrapakam,Chemistry,hema.kuntrapakam@iitj.example,CYL2130;CYL7010,email is a dummy value
+F0141,Himanshu Dave,Energy and Automotive Engineering,himanshu.dave@iitj.example,MEL7970,email is a dummy value
+F0142,Himanshu Kumar,Electrical Engineering,himanshu.kumar@iitj.example,EEN3010;Signals and Systems,email is a dummy value
+F0143,Hirshikesh,Mechanical Engineering,hirshikesh@iitj.example,MEL7290,email is a dummy value
+F0144,HoD,Artificial Intelligence and Data Engineering,hod@iitj.example,AID4110;AIT8010;AIT8970;AIT8980;AIT8990,email is a dummy value
+F0145,Indranil Banerjee,Bioscience and Bioengineering,indranil.banerjee@iitj.example,BBL7380;BBT8990;OAE1010,email is a dummy value
+F0146,Jai Narayan Tripathi,Electronics and Communication Engineering,jai.narayan.tripathi@iitj.example,ECL7940,email is a dummy value
+F0147,Jaiveer Singh,Metallurgical and Materials Engineering,jaiveer.singh@iitj.example,MTL7080;MTP3020,email is a dummy value
+F0148,Jayant Kumar Mohanta,Aerospace Engineering,jayant.kumar.mohanta@iitj.example,MEL7960;RML7270,email is a dummy value
+F0149,Jitendra HEP,Physics,jitendra.hep@iitj.example,PHN1010,email is a dummy value
+F0150,Jitendra HEP* + Prabhat,Physics,jitendra.hep.prabhat@iitj.example,PHL7040,email is a dummy value
+F0151,Jitendra Kumar (CMP),Physics,jitendra.kumar.cmp@iitj.example,PHL3020,email is a dummy value
+F0152,Jitesh Mohnot,School of Management and Entrepreneurship,jitesh.mohnot@iitj.example,MSL73210,email is a dummy value
+F0153,Jitesh Mohnot (2),School of Management and Entrepreneurship,jitesh.mohnot2@iitj.example,MSL73220,email is a dummy value
+F0154,Kanak Yadav,School of Liberal Arts (Humanities & Social Sciences),kanak.yadav@iitj.example,LAL6350;LAN7010,email is a dummy value
+F0155,Kedar Dicholkar,School of Design,kedar.dicholkar@iitj.example,DSL6020;DSL7220,email is a dummy value
+F0156,Kiran Meena,Mathematics,kiran.meena@iitj.example,MAD7040;MAL2110;MAL6110,email is a dummy value
+F0157,Kirankumar,Physics,kirankumar@iitj.example,QCL7350,email is a dummy value
+F0158,Kirankumar Hiremath,Mathematics,kirankumar.hiremath@iitj.example,MAL7530,email is a dummy value
+F0159,Kirti Sankhala,Department of Engineering Science,kirti.sankhala@iitj.example,ETL7050;ETL7140;ETT8970,email is a dummy value
+F0160,Koushambi Mitra,Chemistry,koushambi.mitra@iitj.example,CYL2060;CYL4XX0,email is a dummy value
+F0161,Krishna+CMP Jitendra,Physics,krishna.cmp.jitendra@iitj.example,PHP4010,email is a dummy value
+F0162,Kriti Goel,Mathematics,kriti.goel@iitj.example,MAL6140;MAL7450,email is a dummy value
+F0163,Kuntal Som,Mathematics,kuntal.som@iitj.example,MAL7560,email is a dummy value
+F0164,Kunwar,Electrical Engineering,kunwar@iitj.example,EEL71720;EEL7XX0,email is a dummy value
+F0165,Lalit,Metallurgical and Materials Engineering,lalit@iitj.example,MTL7520;MTL7690;MTN1010,email is a dummy value
+F0166,Lata,Physics,lata@iitj.example,PHL7340,email is a dummy value
+F0167,Lata + Sagar Verma,Physics,lata.sagar.verma@iitj.example,OSN1010,email is a dummy value
+F0168,Lavi Tyagi,Electronics and Communication Engineering,lavi.tyagi@iitj.example,ECL2010,email is a dummy value
+F0169,M Abu,Mathematics,m.abu@iitj.example,MAL7110,email is a dummy value
+F0170,Magesh Nagarajan,School of Management and Entrepreneurship,magesh.nagarajan@iitj.example,MSL73310;MSL73560,email is a dummy value
+F0171,Manikandan Paranjothy,Chemistry,manikandan.paranjothy@iitj.example,CYL2140;CYL3XX0;CYL4XX0,email is a dummy value
+F0172,Manish Aggarwal,Artificial Intelligence and Data Engineering,manish.aggarwal@iitj.example,AIL7430;MSL71200,email is a dummy value
+F0173,Manish Narwaria,Electrical Engineering,manish.narwaria@iitj.example,EEL4330,email is a dummy value
+F0174,Manisha Yadav,School of Management and Entrepreneurship,manisha.yadav@iitj.example,MSL73080;MSL73090;MSL73500,email is a dummy value
+F0175,Manoj Gupta,Electrical Engineering,manoj.gupta@iitj.example,ECN2001;EEL4350,email is a dummy value
+F0176,Manu Kanchan,School of Management and Entrepreneurship,manu.kanchan@iitj.example,MSL7060;MSL73490;OAL7010,email is a dummy value
+F0177,Mayank Gupta,Chemistry,mayank.gupta@iitj.example,CYL4010;CYP1010;CYP4XX0,email is a dummy value
+F0178,Mayank Suman,Civil and Infrastructure Engineering,mayank.suman@iitj.example,CIL2060;CIP2010,email is a dummy value
+F0179,Md Abu Talhamainuddin Ansary,Computer Science and Engineering,md.abu.talhamainuddin.ansary@iitj.example,CSL4010,email is a dummy value
+F0180,Meenu Chhabbra,Bioscience and Bioengineering,meenu.chhabbra@iitj.example,BBL7350,email is a dummy value
+F0181,Milan Hazra,Chemistry,milan.hazra2@iitj.example,CYL3020;CYL7020;PHP3030,email is a dummy value
+F0182,Mitali Mukerji,Bioscience and Bioengineering,mitali.mukerji@iitj.example,BBL3120,email is a dummy value
+F0183,Mohit Kumar Jangid,Computer Science and Engineering,mohit.kumar.jangid@iitj.example,CSL7130;CSN1020,email is a dummy value
+F0184,Monika Dubey,Civil and Infrastructure Engineering,monika.dubey@iitj.example,CIL3030;CIP7310;CIT7020,email is a dummy value
+F0185,Monika Gupta,Chemistry,monika.gupta@iitj.example,CYL3010,email is a dummy value
+F0186,Monika Sinha,Physics,monika.sinha@iitj.example,PH799;PHT8980;PHT8990,email is a dummy value
+F0187,Monika Sinha* + V Narayanan for tutorial,Physics,monika.sinha.v.narayanan.for.tutorial@iitj.example,PHL2150;PHL4120,email is a dummy value
+F0188,Monika Tanwar,School of Management and Entrepreneurship,monika.tanwar@iitj.example,MSL73530;MSL73610,email is a dummy value
+F0189,Moumita Mondal,Mathematics,moumita.mondal@iitj.example,MAL3030,email is a dummy value
+F0190,Natasa Thoudam,School of Liberal Arts (Humanities & Social Sciences),natasa.thoudam@iitj.example,EDL7040;LAL6310,email is a dummy value
+F0191,Navchetan Awasthi,Artificial Intelligence and Data Engineering,navchetan.awasthi2@iitj.example,CSL7350;MSL71200,email is a dummy value
+F0192,Naveen,Physics,naveen@iitj.example,PHL7020;PHN3010,email is a dummy value
+F0193,Naveen Tailor,Physics,naveen.tailor@iitj.example,PHL7360,email is a dummy value
+F0194,Neha,School of Management and Entrepreneurship,neha@iitj.example,MSL73060;MSL73570,email is a dummy value
+F0195,Neha Jain,Bioscience and Bioengineering,neha.jain@iitj.example,BBL2010;BBP2XXX,email is a dummy value
+F0196,Nil Kamal Hazra,Mathematics,nil.kamal.hazra@iitj.example,MAL7420,email is a dummy value
+F0197,Niladri Sekhar Tripathy,Electrical Engineering,niladri.sekhar.tripathy@iitj.example,EEL7080;EET8970;EET8980;EET8990,email is a dummy value
+F0198,Nipun Arora,Mechanical Engineering,nipun.arora@iitj.example,MEN2010,email is a dummy value
+F0199,Nirmal Kumar Rana,Chemistry,nirmal.kumar.rana@iitj.example,CYL7440,email is a dummy value
+F0200,Nirmal Rana,Chemistry,nirmal.rana@iitj.example,CYL3XX0,email is a dummy value
+F0201,Nishant,Electrical Engineering,nishant@iitj.example,EEL7700,email is a dummy value
+F0202,Nitin Awathare,Computer Science and Engineering,nitin.awathare@iitj.example,CSL3050,email is a dummy value
+F0203,Nitin Bhatia,Electronics and Communication Engineering,nitin.bhatia@iitj.example,ECL71550,email is a dummy value
+F0204,Nitin Kumar Sharma,Metallurgical and Materials Engineering,nitin.kumar.sharma@iitj.example,MTL3020;MTT7010,email is a dummy value
+F0205,P Ravi Prakash,Civil and Infrastructure Engineering,p.ravi.prakash@iitj.example,CIL7870,email is a dummy value
+F0206,Palash Das,Computer Science and Engineering,palash.das@iitj.example,CSL3130;CSN2020,email is a dummy value
+F0207,Pallavi Jain,Computer Science and Engineering,pallavi.jain@iitj.example,MAL2190,email is a dummy value
+F0208,Pankaj Chavan,Centre for Emerging Technologies,pankaj.chavan@iitj.example,EDL2010;EDL7010,email is a dummy value
+F0209,Pankaj Yadav,Bioscience and Bioengineering,pankaj.yadav@iitj.example,BBL7580,email is a dummy value
+F0210,Parag Deshpande,Mathematics,parag.deshpande@iitj.example,MAL2210,email is a dummy value
+F0211,Parichay,School of Liberal Arts (Humanities & Social Sciences),parichay@iitj.example,LAL6430,email is a dummy value
+F0212,Payal Vyankat Dahiwale,Electrical Engineering,payal.vyankat.dahiwale@iitj.example,EEL7580;EEN2010,email is a dummy value
+F0213,Prabhat + Jitendra Kumar HEP,Physics,prabhat.jitendra.kumar.hep@iitj.example,PHL1010;PHP1010,email is a dummy value
+F0214,Pradeep Kumar Dammala,Civil and Infrastructure Engineering,pradeep.kumar.dammala@iitj.example,CIL4330;CIL7660,email is a dummy value
+F0215,Pradip Sasmal,Mathematics,pradip.sasmal@iitj.example,MAL1070,email is a dummy value
+F0216,Pradyumna Kumar Bishoyi,Electronics and Communication Engineering,pradyumna.kumar.bishoyi@iitj.example,ECL7010;ECT7952,email is a dummy value
+F0217,Pragati Pandey,Chemistry,pragati.pandey@iitj.example,CYL1010;CYL6XX0;CYL7020,email is a dummy value
+F0218,Prajnal Borah,Artificial Intelligence and Data Engineering,prajnal.borah@iitj.example,AIL7060,email is a dummy value
+F0219,Pranay Ranjan,Metallurgical and Materials Engineering,pranay.ranjan@iitj.example,MTL3010,email is a dummy value
+F0220,Pranjal Borah,School of Design,pranjal.borah@iitj.example,DSL7370;DST8061,email is a dummy value
+F0221,Prasenjeet,School of Liberal Arts (Humanities & Social Sciences),prasenjeet@iitj.example,LAL6190,email is a dummy value
+F0222,Pratik Majumder,Computer Science and Engineering,pratik.majumder@iitj.example,CSL3090,email is a dummy value
+F0223,Pratik Mazumder,Computer Science and Engineering,pratik.mazumder@iitj.example,CSD4020,email is a dummy value
+F0224,Pratyaksh Karan,Mechanical Engineering,pratyaksh.karan@iitj.example,MEL2040;MEP2000,email is a dummy value
+F0225,Pritam Mahawar,Chemistry,pritam.mahawar@iitj.example,CYL1020;CYL2030,email is a dummy value
+F0226,Priyabrata Rautray,School of Design,priyabrata.rautray@iitj.example,DSL6060;DSL6080;DSL7410;DST7710;DST8071,email is a dummy value
+F0227,Priyanka Singh,Bioscience and Bioengineering,priyanka.singh@iitj.example,BBL7620;OSN1010,email is a dummy value
+F0228,Prodyut Chakraborty,Mechanical Engineering,prodyut.chakraborty@iitj.example,MEL2020,email is a dummy value
+F0229,Prof. Ambesh Dexit,Mathematics,ambesh.dexit@iitj.example,MAL7110,email is a dummy value
+F0230,Prof. Kiran R. Hiremath,Mathematics,kiran.r.hiremath@iitj.example,QCL7350,email is a dummy value
+F0231,Prof. Parag,Chemical Engineering,parag@iitj.example,CHL7020;MAL2020;MAL2210,email is a dummy value
+F0232,Prof. Pradip,Chemical Engineering,pradip@iitj.example,CHL7070,email is a dummy value
+F0233,Prof. Puneet Sharma,Mathematics,puneet.sharma@iitj.example,MAL7070,email is a dummy value
+F0234,Puneet Sharma,Mathematics,puneet.sharma2@iitj.example,MAL1110;MAL7400,email is a dummy value
+F0235,Rachel Philip,Centre for Emerging Technologies,rachel.philip@iitj.example,EDL3030,email is a dummy value
+F0236,Rahul Chhibber,Mechanical Engineering,rahul.chhibber@iitj.example,MEL7250,email is a dummy value
+F0237,Rahul Gera,Chemistry,rahul.gera@iitj.example,CYL3020;CYL7010;CYL7XX0,email is a dummy value
+F0238,Rahul Gera (C),Chemistry,rahul.gera.c@iitj.example,CYL2060,email is a dummy value
+F0239,Rajat Gupta,Mathematics,rajat.gupta@iitj.example,MAL2120,email is a dummy value
+F0240,Rajendra Nagar,Electrical Engineering,rajendra.nagar@iitj.example,EEL7009,email is a dummy value
+F0241,Rajit Ranjan,Mechanical Engineering,rajit.ranjan@iitj.example,MEL2060;MEN1010;MEP2000,email is a dummy value
+F0242,Rajlaxmi Chouhan,Centre for Emerging Technologies,rajlaxmi.chouhan@iitj.example,EDL3040;EDL7010,email is a dummy value
+F0243,Ram Prakash,Physics,ram.prakash@iitj.example,PHD6300;PHL3090;PHL4010,email is a dummy value
+F0244,Ram Prakash +Sagar,Physics,ram.prakash.sagar@iitj.example,PHL2140,email is a dummy value
+F0245,Ramesh Metre,Chemistry,ramesh.metre@iitj.example,CYL3XX0;CYL4XX0,email is a dummy value
+F0246,Ranju Mohan,Civil and Infrastructure Engineering,ranju.mohan@iitj.example,CIL7420,email is a dummy value
+F0247,Ravi Prakash Srivastava,Metallurgical and Materials Engineering,ravi.prakash.srivastava@iitj.example,MTL7550;MTP3010,email is a dummy value
+F0248,Ravi Yadav,Electrical Engineering,ravi.yadav@iitj.example,EEL7640;EEP7140,email is a dummy value
+F0249,Ravindra Raut,Chemistry,ravindra.raut@iitj.example,CYL2060;CYL3XX0;CYL4XX0,email is a dummy value
+F0250,Raviraj Vankayala,Bioscience and Bioengineering,raviraj.vankayala@iitj.example,BBL7470,email is a dummy value
+F0251,Reetanjali,Physics,reetanjali@iitj.example,PHL3010,email is a dummy value
+F0252,Riby A Boby,Mechanical Engineering,riby.a.boby@iitj.example,MEL7080;RML6010,email is a dummy value
+F0253,Richa Singh,Computer Science and Engineering,richa.singh@iitj.example,CSL7620,email is a dummy value
+F0254,Rohan Erande,Chemistry,rohan.erande@iitj.example,CYL7360;CYP2130,email is a dummy value
+F0255,Romi Banerjee,School of Liberal Arts (Humanities & Social Sciences),romi.banerjee@iitj.example,CSL4030;DHP7010,email is a dummy value
+F0256,Roshan Hota,Mechanical Engineering,roshan.hota@iitj.example,MET8010,email is a dummy value
+F0257,Roshan Kumar Hota,Mechanical Engineering,roshan.kumar.hota@iitj.example,MEL3020,email is a dummy value
+F0258,Sagar k Verma,Physics,sagar.k.verma@iitj.example,PHL3120,email is a dummy value
+F0259,Sagar k Verma +Durgamadhab,Physics,sagar.k.verma.durgamadhab@iitj.example,PHP2110,email is a dummy value
+F0260,Sagar Kumar Verma,Physics,sagar.kumar.verma@iitj.example,PHL2030,email is a dummy value
+F0261,Sagar Verma,Physics,sagar.verma@iitj.example,PHL7330,email is a dummy value
+F0262,Sahil,Mathematics,sahil@iitj.example,MAT7210,email is a dummy value
+F0263,Sahil Gehlawat,Mathematics,sahil.gehlawat@iitj.example,MAL6120,email is a dummy value
+F0264,Sajan Pillai,School of Design,sajan.pillai@iitj.example,DSL7360,email is a dummy value
+F0265,Samanwita Pal,Chemistry,samanwita.pal@iitj.example,CYL2070;CYL6370,email is a dummy value
+F0266,Samanwita Pal(C),Chemistry,samanwita.pal.c@iitj.example,CYL7XX0,email is a dummy value
+F0267,Sandeep Yadav,Electrical Engineering,sandeep.yadav@iitj.example,Circuit Theory,email is a dummy value
+F0268,Sandip Murarka,Chemistry,sandip.murarka@iitj.example,CYL7340,email is a dummy value
+F0269,Sanhita Das,Civil and Infrastructure Engineering,sanhita.das@iitj.example,CIL2030;CIL7840,email is a dummy value
+F0270,Santosh,Physics,santosh@iitj.example,PHL2020;PHP6070;PHQ6010,email is a dummy value
+F0271,Saran Aadhar,Civil and Infrastructure Engineering,saran.aadhar@iitj.example,CIL7520;CIL7830;CIL7920,email is a dummy value
+F0272,Sarath Chandra Reddy Nallala,Civil and Infrastructure Engineering,sarath.chandra.reddy.nallala@iitj.example,CIL3040;CIL4380,email is a dummy value
+F0273,Satyajit Sahu,Physics,satyajit.sahu@iitj.example,PHL3110;PHP3010,email is a dummy value
+F0274,Satyajit Sahu + Ambesh,Physics,satyajit.sahu.ambesh@iitj.example,PHP3070,email is a dummy value
+F0275,Saurabh Nene,Metallurgical and Materials Engineering,saurabh.nene@iitj.example,MTL2040;MTL7260;MTL7470;MTO8990;MTT8970;MTT8980;MTT8990,email is a dummy value
+F0276,Saurav Kumar,Electrical Engineering,saurav.kumar@iitj.example,EEL71560,email is a dummy value
+F0277,SB (quantum) + Santosh (quantum) + Dushyant (CMP),Physics,sb.quantum.santosh.quantum.dushyant.cmp@iitj.example,PHL7010,email is a dummy value
+F0278,Seema (1),School of Management and Entrepreneurship,seema@iitj.example,MSL73070,email is a dummy value
+F0279,Shahab,Physics,shahab@iitj.example,PHD6040;PHL3031,email is a dummy value
+F0280,Shahab + Krishna,Physics,shahab.krishna@iitj.example,PHL4140,email is a dummy value
+F0281,Shaily Verma,Mathematics,shaily.verma@iitj.example,MAL3020,email is a dummy value
+F0282,Shankar Manoharan,Bioscience and Bioengineering,shankar.manoharan@iitj.example,BBL7460;BBL7640;BBN2010,email is a dummy value
+F0283,Sherin Sabu,School of Liberal Arts (Humanities & Social Sciences),sherin.sabu@iitj.example,LAL6150;LAP6020,email is a dummy value
+F0284,Sheriya S,Centre for Emerging Technologies,sheriya.s@iitj.example,EDL3010;EDL3020,email is a dummy value
+F0285,Shilpa Dang,Artificial Intelligence and Data Engineering,shilpa.dang@iitj.example,AIL7290,email is a dummy value
+F0286,Shipra Bajpai,Metallurgical and Materials Engineering,shipra.bajpai@iitj.example,MTL3040,email is a dummy value
+F0287,Shiv Kumar Verma,School of Design,shiv.kumar.verma@iitj.example,DSL7680,email is a dummy value
+F0288,Shobhana Singh,Energy and Automotive Engineering,shobhana.singh@iitj.example,EAP7010;MEL7060,email is a dummy value
+F0289,Shrutidhara Sarma,Mechanical Engineering,shrutidhara.sarma@iitj.example,MEL3010;MEP3010,email is a dummy value
+F0290,Shuvajit Mukherjee,Civil and Infrastructure Engineering,shuvajit.mukherjee@iitj.example,CIL3020;CIL7830;CIL7840,email is a dummy value
+F0291,Shyam Kumar Banjare,Chemistry,shyam.kumar.banjare@iitj.example,CYL3XX0;CYP3010,email is a dummy value
+F0292,Sidharth Ranjan,School of Liberal Arts (Humanities & Social Sciences),sidharth.ranjan@iitj.example,AIL4080;LAL6220,email is a dummy value
+F0293,Sk Md Hasan,Metallurgical and Materials Engineering,sk.md.hasan@iitj.example,MTL3030;MTL7110,email is a dummy value
+F0294,Soni,Centre for Emerging Technologies,soni@iitj.example,EDL1010,email is a dummy value
+F0295,Souryabrata Mohapatra,Artificial Intelligence and Data Engineering,souryabrata.mohapatra@iitj.example,AIL4070,email is a dummy value
+F0296,Sreedevi,School of Liberal Arts (Humanities & Social Sciences),sreedevi@iitj.example,LAL6360,email is a dummy value
+F0297,Sreedevi D,School of Liberal Arts (Humanities & Social Sciences),sreedevi.d@iitj.example,LAL6340,email is a dummy value
+F0298,Sreejith Krishnan,Civil and Infrastructure Engineering,sreejith.krishnan@iitj.example,CIL3050;CIL7910,email is a dummy value
+F0299,Srijan Sengupta,Metallurgical and Materials Engineering,srijan.sengupta@iitj.example,MTL7290;MTP3030;MTP7040,email is a dummy value
+F0300,Srijit Biswas,Energy and Automotive Engineering,srijit.biswas@iitj.example,EAL7010;EAL7310;MEP4010,email is a dummy value
+F0301,Srivatsa,Physics,srivatsa@iitj.example,QCL7070,email is a dummy value
+F0302,Srivatsa N.S (This is MTech Quantum Core course),Physics,srivatsa.n.s.this.is.mtech.quantum.core.course@iitj.example,QCL7070,email is a dummy value
+F0303,Srivatsa Srinivas S,Artificial Intelligence and Data Engineering,srivatsa.srinivas.s@iitj.example,AIL6110;AIL7160,email is a dummy value
+F0304,Subham Jain,Civil and Infrastructure Engineering,subham.jain@iitj.example,CIL4390,email is a dummy value
+F0305,Subhas Bhagat,Mathematics,subhas.bhagat@iitj.example,MAT8020;MAT8030;MAT8980;MAT8990,email is a dummy value
+F0306,Subhash Bhagat,Bioscience and Bioengineering,subhash.bhagat2@iitj.example,MAL2170,email is a dummy value
+F0307,Subhashish,Physics,subhashish@iitj.example,PHL4130,email is a dummy value
+F0308,Subrata,Chemistry,subrata@iitj.example,CYL3XX0,email is a dummy value
+F0309,Subrata Chakraborty,Chemistry,subrata.chakraborty@iitj.example,CYL7420,email is a dummy value
+F0310,Sucharita Dey,Bioscience and Bioengineering,sucharita.dey@iitj.example,BBL2XXX;BBL3100;BBN1010;BBN2020;BBN3020;BBP2XXX,email is a dummy value
+F0311,Suchetana Chakraborty,Computer Science and Engineering,suchetana.chakraborty@iitj.example,CSL7460,email is a dummy value
+F0312,Sudipta Bhattacharya,Bioscience and Bioengineering,sudipta.bhattacharya@iitj.example,BBL4210;BBL7500;BBT7040,email is a dummy value
+F0313,Sudipto Mukhopadhyay,Mechanical Engineering,sudipto.mukhopadhyay@iitj.example,MEL7040,email is a dummy value
+F0314,Sukhendu Ghosh,Mathematics,sukhendu.ghosh@iitj.example,MAL7120;MAL7320,email is a dummy value
+F0315,Suman,School of Liberal Arts (Humanities & Social Sciences),suman@iitj.example,LAL6050;LAL6230,email is a dummy value
+F0316,Sumana Som,School of Design,sumana.som@iitj.example,DSL3030;DSL7170;DSL7310;DSL7380;DST8031,email is a dummy value
+F0317,Sumeet Rajesh Khanna,Metallurgical and Materials Engineering,sumeet.rajesh.khanna@iitj.example,MTL7250;MTP2030,email is a dummy value
+F0318,Sumit Kalra,Centre for Emerging Technologies,sumit.kalra@iitj.example,CSL7090;EDT8900,email is a dummy value
+F0319,Sunil Kumar,Physics,sunil.kumar@iitj.example,PHL7030,email is a dummy value
+F0320,Sunil Lohar,School of Liberal Arts (Humanities & Social Sciences),sunil.lohar@iitj.example,DHL7100;LAL1030,email is a dummy value
+F0321,Sunita,Physics,sunita@iitj.example,PHL4150,email is a dummy value
+F0322,Sunita+Lata*,Physics,sunita.lata@iitj.example,PHL2100,email is a dummy value
+F0323,Suraj,Electrical Engineering,suraj@iitj.example,EEL3030,email is a dummy value
+F0324,Surajit Ghosh,Bioscience and Bioengineering,surajit.ghosh@iitj.example,BBL7390;OSN1010,email is a dummy value
+F0325,Suresh Sarkar,Chemistry,suresh.sarkar@iitj.example,CYL7450,email is a dummy value
+F0326,Suresh Sarkar (C),Chemistry,suresh.sarkar.c@iitj.example,CYL7010,email is a dummy value
+F0327,Suril V Shah,Mechanical Engineering,suril.v.shah@iitj.example,RML7050;RMP7010,email is a dummy value
+F0328,Sushmita Jha,Bioscience and Bioengineering,sushmita.jha@iitj.example,BBL3110,email is a dummy value
+F0329,Susil Kumar Mohanty,Computer Science and Engineering,susil.kumar.mohanty@iitj.example,CSL3030;CSL7150,email is a dummy value
+F0330,Susmita Panda,Civil and Infrastructure Engineering,susmita.panda@iitj.example,CIL3020;CIL4380,email is a dummy value
+F0331,Swati Jindal,Chemistry,swati.jindal@iitj.example,CYL1010;CYP6050,email is a dummy value
+F0332,Swati Jindal(C),Chemistry,swati.jindal.c@iitj.example,CYL7020,email is a dummy value
+F0333,Tanmay Nitin Inamdar,Computer Science and Engineering,tanmay.nitin.inamdar@iitj.example,CSD4030;CSL3010;CSN3020,email is a dummy value
+F0334,TBD,Computer Science and Engineering,tbd@iitj.example,CSL1XXX,email is a dummy value
+F0335,Tekcham Gishan Singh,Civil and Infrastructure Engineering,tekcham.gishan.singh@iitj.example,CID4010;CIN3010,email is a dummy value
+F0336,Tonisha Guin,School of Liberal Arts (Humanities & Social Sciences),tonisha.guin2@iitj.example,EDL7030;LAL6160,email is a dummy value
+F0337,Trishikhi Raychoudhury,Civil and Infrastructure Engineering,trishikhi.raychoudhury@iitj.example,CIL3030;CIL7850;CIN2030;CIP7310,email is a dummy value
+F0338,Tuhina Mukherjee,Mathematics,tuhina.mukherjee@iitj.example,MAL7490,email is a dummy value
+F0339,V Narayanan,Physics,v.narayanan@iitj.example,QCL7320;QCP7030,email is a dummy value
+F0340,Venkat Ram Reddy,School of Management and Entrepreneurship,venkat.ram.reddy@iitj.example,MSL73320;MSL73520;MSO8010;MSO8020;MSO8060;MSP7030;MST8010;MST8020;MST8030;MST8040;MST8050;MST8060;MST8080,email is a dummy value
+F0341,Vignesh Muralidharan,Artificial Intelligence and Data Engineering,vignesh.muralidharan@iitj.example,AIL4230;AIL7240;AIP4010,email is a dummy value
+F0342,Vikramsingh Thakur,Metallurgical and Materials Engineering,vikramsingh.thakur@iitj.example,MTL7530;MTL7660;MTP7050,email is a dummy value
+F0343,Vimal Raj Sharma,Computer Science and Engineering,vimal.raj.sharma@iitj.example,CSL7560;CST8940;CST8980;CST8990,email is a dummy value
+F0344,Vineeth,Electrical Engineering,vineeth@iitj.example,EEL4370;EEL7300,email is a dummy value
+F0345,Vinod Vijay Kumar,School of Management and Entrepreneurship,vinod.vijay.kumar@iitj.example,MSL73590;OAN7010,email is a dummy value
+F0346,Vivek Wakchaure,Chemistry,vivek.wakchaure@iitj.example,CYD6040;CYL3XX0;CYL4XX0;CYP1010,email is a dummy value
+F0347,Vivek Wakchaure (C),Chemistry,vivek.wakchaure.c@iitj.example,CYL1020,email is a dummy value
+F0348,Yashaswi Verma,Computer Science and Engineering,yashaswi.verma@iitj.example,CSL1010,email is a dummy value
+F0349,Yogiraj Sargam,Civil and Infrastructure Engineering,yogiraj.sargam@iitj.example,CIL2080,email is a dummy value

@@ -6,3 +6,5 @@ venv/
 .DS_Store
 chroma_db/
 *.log
+logs/*.jsonl
+drafts/*.md

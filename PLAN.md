@@ -85,22 +85,22 @@ academic-helpdesk-agent/
 ## Task Breakdown
 
 ### Phase 0: Environment Setup
-- [ ] Install Ollama and pull models: `qwen3:8b`, `llama3.1:8b`, `nomic-embed-text`
-- [ ] Create `requirements.txt` (`google-adk`, `litellm`, `chromadb`, `ollama`, `pandas`, `pypdf`, `python-docx`, `python-dotenv`, `rich`)
-- [ ] Create `.env.example` and `helpdesk/config.py`
-- [ ] Smoke test: a minimal ADK agent talking to Ollama through `LiteLlm`, including one tool call
+- [x] Install Ollama and pull models: `qwen3:8b`, `llama3.1:8b`, `nomic-embed-text`
+- [x] Create `requirements.txt` (`google-adk`, `litellm`, `chromadb`, `ollama`, `pandas`, `pypdf`, `python-docx`, `python-dotenv`, `rich`)
+- [x] Create `.env.example` and `helpdesk/config.py`
+- [x] Smoke test: a minimal ADK agent talking to Ollama through `LiteLlm`, including one tool call
 
 ### Phase 1: Data Collection (20–30 documents)
-- [ ] Academic regulations (UG/PG rulebook: attendance, grading, makeup exams, leave)
-- [ ] B.Tech curriculum / credit structure (core, PE, OE, HSS credit requirements)
-- [ ] Course catalogue / course descriptions for a few departments
-- [ ] Current semester time table (slot chart + course-slot mapping)
-- [ ] Course registration guidelines / academic calendar
-- [ ] Recent office orders / circulars (3–5)
-- [ ] Faculty directory (replace real data with dummy names/emails)
-- [ ] Record every file in `data/manifest.csv` (title, category, source URL, date)
-- [ ] Build `timetable.csv`, `courses.csv`, `faculty.csv` from those documents
-- [ ] Make sure the example questions in the problem statement are answerable from the data (Autonomous Systems slot, CSL7570 instructor, HSS 400-level electives, OE credits, Major exam attendance)
+- [x] Academic regulations (UG/PG rulebook: attendance, grading, makeup exams, leave)
+- [x] B.Tech curriculum / credit structure (core, PE, OE, HSS credit requirements)
+- [x] Course catalogue / course descriptions for a few departments
+- [x] Current semester time table (slot chart + course-slot mapping)
+- [x] Course registration guidelines / academic calendar
+- [x] Recent office orders / circulars (3–5)
+- [x] Faculty directory (replace real data with dummy names/emails)
+- [x] Record every file in `data/manifest.csv` (title, category, source URL, date)
+- [x] Build `timetable.csv`, `courses.csv`, `faculty.csv` from those documents
+- [x] Make sure the example questions in the problem statement are answerable from the data (Autonomous Systems slot, CSL7570 instructor, HSS 400-level electives, OE credits, Major exam attendance)
 
 ### Phase 2: RAG Pipeline
 - [ ] `ingest.py`: loaders for PDF/DOCX/TXT that keep page numbers

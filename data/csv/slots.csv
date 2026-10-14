@@ -1,0 +1,62 @@
+slot,type,day,time,source
+K,theory,Mon,8 - 8:50,26_Slot_System_AY2026-27_SemI.xlsx
+N,theory,Tue,8 - 8:50,26_Slot_System_AY2026-27_SemI.xlsx
+K,theory,Wed,8 - 8:50,26_Slot_System_AY2026-27_SemI.xlsx
+N,theory,Thu,8 - 8:50,26_Slot_System_AY2026-27_SemI.xlsx
+K,theory,Fri,8 - 8:50,26_Slot_System_AY2026-27_SemI.xlsx
+A,theory,Mon,9- 9:50,26_Slot_System_AY2026-27_SemI.xlsx
+L1,lab,Mon,9- 9:50,26_Slot_System_AY2026-27_SemI.xlsx
+A,theory,Tue,9- 9:50,26_Slot_System_AY2026-27_SemI.xlsx
+L2,lab,Tue,9- 9:50,26_Slot_System_AY2026-27_SemI.xlsx
+B,theory,Wed,9- 9:50,26_Slot_System_AY2026-27_SemI.xlsx
+L3,lab,Wed,9- 9:50,26_Slot_System_AY2026-27_SemI.xlsx
+A,theory,Thu,9- 9:50,26_Slot_System_AY2026-27_SemI.xlsx
+L4,lab,Thu,9- 9:50,26_Slot_System_AY2026-27_SemI.xlsx
+B,theory,Fri,9- 9:50,26_Slot_System_AY2026-27_SemI.xlsx
+L5,lab,Fri,9- 9:50,26_Slot_System_AY2026-27_SemI.xlsx
+C,theory,Mon,10- 10:50,26_Slot_System_AY2026-27_SemI.xlsx
+B,theory,Tue,10- 10:50,26_Slot_System_AY2026-27_SemI.xlsx
+C,theory,Wed,10- 10:50,26_Slot_System_AY2026-27_SemI.xlsx
+C,theory,Thu,10- 10:50,26_Slot_System_AY2026-27_SemI.xlsx
+D,theory,Fri,10- 10:50,26_Slot_System_AY2026-27_SemI.xlsx
+D,theory,Mon,11- 11:50,26_Slot_System_AY2026-27_SemI.xlsx
+L6,lab,Mon,11- 11:50,26_Slot_System_AY2026-27_SemI.xlsx
+E,theory,Tue,11- 11:50,26_Slot_System_AY2026-27_SemI.xlsx
+L7,lab,Tue,11- 11:50,26_Slot_System_AY2026-27_SemI.xlsx
+D,theory,Wed,11- 11:50,26_Slot_System_AY2026-27_SemI.xlsx
+L8,lab,Wed,11- 11:50,26_Slot_System_AY2026-27_SemI.xlsx
+E,theory,Thu,11- 11:50,26_Slot_System_AY2026-27_SemI.xlsx
+L9,lab,Thu,11- 11:50,26_Slot_System_AY2026-27_SemI.xlsx
+E,theory,Fri,11- 11:50,26_Slot_System_AY2026-27_SemI.xlsx
+L10,lab,Fri,11- 11:50,26_Slot_System_AY2026-27_SemI.xlsx
+U,theory,Mon,12:00 - 12:50,26_Slot_System_AY2026-27_SemI.xlsx
+V,theory,Tue,12:00 - 12:50,26_Slot_System_AY2026-27_SemI.xlsx
+U,theory,Wed,12:00 - 12:50,26_Slot_System_AY2026-27_SemI.xlsx
+V,theory,Thu,12:00 - 12:50,26_Slot_System_AY2026-27_SemI.xlsx
+U,theory,Fri,12:00 - 12:50,26_Slot_System_AY2026-27_SemI.xlsx
+M1,lab,Mon,1-1:50,26_Slot_System_AY2026-27_SemI.xlsx
+M2,lab,Tue,1-1:50,26_Slot_System_AY2026-27_SemI.xlsx
+M3,lab,Wed,1-1:50,26_Slot_System_AY2026-27_SemI.xlsx
+M4,lab,Thu,1-1:50,26_Slot_System_AY2026-27_SemI.xlsx
+M5,lab,Fri,1-1:50,26_Slot_System_AY2026-27_SemI.xlsx
+F,theory,Mon,2-2:50,26_Slot_System_AY2026-27_SemI.xlsx
+F,theory,Tue,2-2:50,26_Slot_System_AY2026-27_SemI.xlsx
+G,theory,Wed,2-2:50,26_Slot_System_AY2026-27_SemI.xlsx
+F,theory,Thu,2-2:50,26_Slot_System_AY2026-27_SemI.xlsx
+G,theory,Fri,2-2:50,26_Slot_System_AY2026-27_SemI.xlsx
+H,theory,Mon,3- 3:50,26_Slot_System_AY2026-27_SemI.xlsx
+M6,lab,Mon,3- 3:50,26_Slot_System_AY2026-27_SemI.xlsx
+G,theory,Tue,3- 3:50,26_Slot_System_AY2026-27_SemI.xlsx
+M7,lab,Tue,3- 3:50,26_Slot_System_AY2026-27_SemI.xlsx
+H,theory,Wed,3- 3:50,26_Slot_System_AY2026-27_SemI.xlsx
+M8,lab,Wed,3- 3:50,26_Slot_System_AY2026-27_SemI.xlsx
+H,theory,Thu,3- 3:50,26_Slot_System_AY2026-27_SemI.xlsx
+M9,lab,Thu,3- 3:50,26_Slot_System_AY2026-27_SemI.xlsx
+I,theory,Fri,3- 3:50,26_Slot_System_AY2026-27_SemI.xlsx
+M10,lab,Fri,3- 3:50,26_Slot_System_AY2026-27_SemI.xlsx
+I,theory,Mon,4- 4:50,26_Slot_System_AY2026-27_SemI.xlsx
+J,theory,Tue,4- 4:50,26_Slot_System_AY2026-27_SemI.xlsx
+I,theory,Wed,4- 4:50,26_Slot_System_AY2026-27_SemI.xlsx
+J,theory,Thu,4- 4:50,26_Slot_System_AY2026-27_SemI.xlsx
+J,theory,Fri,4- 4:50,26_Slot_System_AY2026-27_SemI.xlsx
+N,theory,Fri,5- 5:50,26_Slot_System_AY2026-27_SemI.xlsx
