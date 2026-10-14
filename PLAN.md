@@ -97,10 +97,10 @@ academic-helpdesk-agent/
 - [x] Current semester time table (slot chart + course-slot mapping)
 - [x] Course registration guidelines / academic calendar
 - [x] Recent office orders / circulars (3–5)
-- [x] Faculty directory (replace real data with dummy names/emails)
+- [x] Faculty list (built from the finalized courses list; real names, dummy emails)
 - [x] Record every file in `data/manifest.csv` (title, category, source URL, date)
-- [x] Build `timetable.csv`, `courses.csv`, `faculty.csv` from those documents
-- [x] Make sure the example questions in the problem statement are answerable from the data (Autonomous Systems slot, CSL7570 instructor, HSS 400-level electives, OE credits, Major exam attendance)
+- [x] Build `courses.csv`, `slots.csv`, `exam_schedule.csv`, `faculty.csv` from those documents
+- [x] Make sure the example questions in the problem statement are answerable from the data (Autonomous Systems slot, CSL7650 instructor (CSL7570 in the assignment is a typo), HSS 400-level electives, OE credits, Major exam attendance)
 
 ### Phase 2: RAG Pipeline
 - [ ] `ingest.py`: loaders for PDF/DOCX/TXT that keep page numbers
@@ -131,7 +131,7 @@ academic-helpdesk-agent/
 - [ ] Schedule agent (tools: `lookup_course`, `get_slot`, `list_courses`, `search_documents`)
 - [ ] Email agent (tools: `lookup_course`, `get_instructor_email`, `draft_email`)
 - [ ] Orchestrator root agent with `sub_agents` and a routing/refusal prompt
-- [ ] Handle mixed questions (e.g. "what's the leave rule, and email my CSL7570 instructor")
+- [ ] Handle mixed questions (e.g. "what's the leave rule, and email my CSL7650 instructor (CSL7570 in the assignment is a typo)")
 - [ ] `--mode single|multi` switch in the CLI and the eval runner
 
 ### Phase 6: Evaluation
