@@ -5,7 +5,7 @@ Outputs (data/csv/):
   courses.csv  - one row per course offering (all departments)
   slots.csv    - slot letter -> day + time, from the slot system grid
   faculty.csv  - unique instructors with DUMMY email addresses
-  exam_schedule.csv - minor exam slot schedule (date, time, slot)
+  exam_schedule.csv - minor + major exam slot schedule (date, time, slot)
 
 Usage: .venv/bin/python scripts/build_csvs.py
 """
@@ -21,6 +21,7 @@ DOCS = ROOT / "data" / "docs"
 OUT = ROOT / "data" / "csv"
 COURSES_XLSX = DOCS / "25_Finalized_Courses_List_AY2026-27_SemI.xlsx"
 SLOTS_XLSX = DOCS / "26_Slot_System_AY2026-27_SemI.xlsx"
+MAJOR_XLSX = DOCS / "30_Major_Exam_Timetable_AY2026-27_SemI.xlsx"
 SEMESTER = "AY 2026-27 Semester I"
 DUMMY_DOMAIN = "iitj.example"
 
@@ -161,23 +162,28 @@ def build_slots() -> pd.DataFrame:
     return pd.DataFrame(out)
 
 
-def build_exam_schedule() -> pd.DataFrame:
-    """Minor exam time table: (date, time window) -> slots examined."""
-    df = pd.read_excel(SLOTS_XLSX, sheet_name="Examination", header=None)
-    hdr = next(i for i in range(len(df)) if "08:00" in _clean(df.iat[i, 2]))
+def _exam_sheet(path: Path, sheet, exam: str) -> list[dict]:
+    """Parse an exam time table grid: (date, time window) -> slots examined."""
+    df = pd.read_excel(path, sheet_name=sheet, header=None)
+    hdr = next(i for i in range(len(df)) if re.search(r"\d{2}:\d{2} [AP]M to", _clean(df.iat[i, 2])))
     times = {j: _clean(df.iat[hdr, j]) for j in range(2, df.shape[1]) if _clean(df.iat[hdr, j])}
     title = _clean(df.iat[hdr - 2, 1])
     out = []
     for i in range(hdr + 2, len(df)):
-        date = _clean(df.iat[i, 1])
+        # "26 November2026" -> "26 November 2026"
+        date = re.sub(r"([a-z])(\d)", r"\1 \2", _clean(df.iat[i, 1]))
         if not re.match(r"\d{1,2} \w+ \d{4}", date):
             continue
         for j, time in times.items():
             for slot in re.split(r"\s*\+\s*", _clean(df.iat[i, j])):
-                if slot and slot.lower() != "free slot":
-                    out.append({"exam": "Minor", "semester": SEMESTER, "date": date, "time": time, "slot": slot,
-                                "status": "tentative", "source": SLOTS_XLSX.name, "title": title})
-    return pd.DataFrame(out)
+                if re.fullmatch(r"[A-Z]{1,3}\d?", slot):
+                    out.append({"exam": exam, "semester": SEMESTER, "date": date, "time": time, "slot": slot,
+                                "status": "tentative", "source": path.name, "title": title})
+    return out
+
+
+def build_exam_schedule() -> pd.DataFrame:
+    return pd.DataFrame(_exam_sheet(SLOTS_XLSX, "Examination", "Minor") + _exam_sheet(MAJOR_XLSX, 0, "Major"))
 
 
 def _split_instructors(s: str) -> list[str]:

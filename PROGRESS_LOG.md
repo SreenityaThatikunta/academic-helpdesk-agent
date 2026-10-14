@@ -115,3 +115,20 @@ Three PDFs had no text layer: Circulars 51, 52 and 2283. They were OCR'd with te
 - **Minor exams (Sem I 2026-27):** the slot-wise tentative schedule is in the `Examination` tab of the slot-system sheet. It is now `data/csv/exam_schedule.csv`: 45 rows (date, time window, slot) for 15–20 Sep 2026. Example: slot E → 18 Sep 2026, 08:00–10:00 AM.
 - **Exam windows** from the Academic Calendar AY 2026-27 (D17): Minor 15–20 Sep 2026; **Major 19–26 Nov 2026**; Sem II Minor 16–21 Feb 2027, Major 22–29 Apr 2027; Summer Minor 04–06 Jun 2027, Major 10–13 Jul 2027.
 - **Not yet available:** a slot-wise **Major** exam time table, and the final (non-tentative) minor schedule. The latter may be in the "Details of Minor Examinations of Semester-I AY 2026-27" email (Examination cell, 1 Sep).
+
+### Exam time tables found in the IITJ inbox (2026-10-14)
+With the user's approval, 2 more files were downloaded (bringing the total to **31 documents**):
+| File | From |
+|---|---|
+| `30_Major_Exam_Timetable_AY2026-27_SemI.xlsx` | Examination Cell email "Time-Table for Major Examinations of Semester I, AY 2026-27" (Aug 17). Tentative, 19–26 Nov 2026, 3 sessions a day (09–12, 14–17, 18–21); 24 Nov is an institute holiday. |
+| `31_Examination_Guidelines_2024.pdf` | Examination Cell email "Details of Minor Examinations… Sem I 2026-27" (Sep 1): "New Guidelines for Institute Examination (2024)" Google Doc, exported to PDF |
+
+- I **skipped** the "Offline/Online Student Mapping" and "Examination Venue" sheets linked in the same email, because they contain other students' names and roll numbers.
+- `exam_schedule.csv` now has **89 rows: 45 Minor + 44 Major**. Example: slot E (CSL7650) → Minor 18 Sep 2026 08:00–10:00 AM; **Major 22 Nov 2026 09:00 AM–12:00 PM**.
+- **Exam guidelines (D31), the key policy for make-up emails:**
+  - A **make-up exam** is only for a missed **Minor**. The form (Annexure A) must reach the Office of Academic Affairs **within 10 days** of the missed exam.
+  - An **I grade** is only for a missed **Major**. The form must arrive **before the last day of the exams**.
+  - Valid reasons: medical (a certificate issued or verified by the IITJ Medical Officer, Annexure B format; prescriptions and bills are not accepted), or personal (a competitive exam, interview or academic event; apply *before* the exams, recommended by the instructor and HoD).
+  - Make-up / I-grade exams are held by the instructor before the end of that semester's Major exams.
+  - The email says the last date for Sem I 2026-27 make-up applications was 30 Sep 2026.
+- I could not open the Sep 29 "Regarding Major Examinations Slot Clashes" email (Student Grievance cell). Its preview only points back to the same exam slot system, so nothing is missing.
