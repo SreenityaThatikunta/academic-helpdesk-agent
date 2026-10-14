@@ -132,3 +132,52 @@ With the user's approval, 2 more files were downloaded (bringing the total to **
   - Make-up / I-grade exams are held by the instructor before the end of that semester's Major exams.
   - The email says the last date for Sem I 2026-27 make-up applications was 30 Sep 2026.
 - I could not open the Sep 29 "Regarding Major Examinations Slot Clashes" email (Student Grievance cell). Its preview only points back to the same exam slot system, so nothing is missing.
+
+---
+
+## Phase 2: RAG Pipeline
+
+**Date:** 2026-10-14
+
+### What was built
+- **`helpdesk/ingest.py`**: reads `data/manifest.csv`, loads each document page by page, chunks it, embeds with `nomic-embed-text`, and stores the result in a persistent ChromaDB collection (`chroma_db/academic_docs`, cosine distance).
+  - **Loaders:**
+    - PDF via PyMuPDF, one page at a time. Scanned PDFs use the OCR text in `data/ocr/`, keeping page breaks.
+    - HTML via a small `html.parser` subclass that drops nav/script/header/footer and **renders tables as `a | b | c` rows**. Without that, the OE credit table (Table 11.3) came out as one cell per line and lost its meaning.
+    - XLSX: one "page" per sheet, rows rendered as `a | b | c`.
+  - **Personal data:** the time-table committee, minor/specialization coordinator and classroom allocation sheets are skipped. Any email that isn't an office mailbox (`examhelp@`, `registration@`, …) is masked as `[faculty email: use lookup]`, so the only email addresses the agent sees are the dummy ones from `faculty.csv`.
+  - **Chunking:** about 1800 characters (~450 tokens) with a 250-character overlap. Splits prefer paragraph, then line, then sentence boundaries.
+  - **Contextual header:** every chunk starts with `[<title> | <date> | page N]` (see the iterations below for why).
+  - **Metadata per chunk:** `doc_id`, `title`, `filename`, `category`, `date`, `status`, `source` URL, `page`, `chunk`. Chunk IDs are stable hashes, and re-ingesting a document first deletes its old chunks. `--reset` rebuilds everything.
+  - Uses nomic's task prefixes: `search_document:` for chunks, `search_query:` for queries.
+  - **Result:** 1,139 chunks from 31 documents in about 40 s on the laptop.
+- **`helpdesk/rag.py`**: `search(query, k)` returns chunks with a ready-made `citation` ("<title>, p. N" or "sheet '<name>'"), plus `doc_id`, `date`, `status` and `distance`.
+  - **Hybrid retrieval:** a dense Chroma top-30 and a BM25 top-30 (implemented in ~30 lines, no extra dependency) merged with reciprocal rank fusion (k=60).
+  - **Superseded documents** (D04 2018 B.Tech regulations, D18 2025-26 calendar, D20 2023 slot chart; marked in the manifest's new `status` column) get **0.5× weight**, not removed.
+  - **Refusal guard:** if the best dense distance is above `MAX_DISTANCE` (**0.35**), it returns `found: false` with no results.
+- **`scripts/check_retrieval.py`**: 18 in-scope questions with their acceptable source documents, plus 9 out-of-scope or unanswerable questions. Reports hit@1, hit@k and the distance spread, and tries several thresholds.
+- **`tests/test_ingest.py`**: 6 unit tests (chunk sizes and overlap, HTML table rendering, email masking, tokenizer keeps course codes, BM25 exact-code match). All pass.
+
+### Retrieval iterations (k=5)
+| Version | hit@1 | hit@5 | Notes |
+|---|---|---|---|
+| Dense only | 9/18 | 17/18 | Course codes and short terms (IH2, LAL4070, PE) blurred; the 246-chunk 2022 HSS concept note crowded out the IH2 syllabus |
+| + BM25 hybrid (RRF) | 9/18 | 15/18 | Worse: chunk text rarely names its document ("IH2", "PG"), so keywords had nothing to match |
+| + contextual chunk header (title, date, page) | 10/18 | 16/18 | LAL4070 → IH3 syllabus now ranks first; IH2 syllabus enters the top 3 |
+| + superseded docs at 0.5× | 11/18 | 16/18 | 2018 regulations stop outranking the 2019 ones |
+| + corrected answer key | **12/18** | **17/18** | See "B.Tech max duration" below |
+
+### Findings
+- **B.Tech maximum duration:** I had expected the 2018 regulations (D04, "8 years") to be the only source. Retrieval instead returned the 2019 regulations §11.4: **14 registered semesters**, which supersedes the 8-year rule. Retrieval was right and the answer key was wrong. This is a good example of why superseded documents need handling.
+- **PhD maximum duration is not stated in any document.** The "maximum of 6 years" text is about a different degree mode. The question moved to the unanswerable list. The agent should say it doesn't know and log the question, but retrieval still returns plausible-looking chunks (distance 0.21), so the **LLM has to decide whether the retrieved text actually answers the question**.
+- **The distance threshold cannot separate out-of-scope questions on its own.** In-scope best distances were 0.15–0.27; out-of-scope ones were 0.21–0.43 ("restaurant near IIT Jodhpur" scored 0.26 against the regulations page). At 0.35, every in-scope question is kept and 4 of 9 out-of-scope ones are rejected. **The rest of the refusals must come from the prompt rule** ("answer only if the retrieved text answers the question; otherwise say you don't know and log it"). This goes into the Phase 4 system prompt.
+- **Program-specific curricula can outrank institute-wide rules.** "How many PE credits for B.Tech?" returns the AIDE curriculum (D10) ahead of the institute Table 11.3 (18 PE). This is a known weakness; the prompt should ask which programme when it matters.
+- **Attendance:** the 2019 regulations page (old §4.1.9, superseded) ranks first and Circular 51 second. Both reach the LLM, and each result carries its `date`, so the prompt must say "**when sources conflict, follow the most recent circular**".
+
+### Status
+- [x] Loaders for PDF / OCR text / HTML / XLSX, with page numbers and sheet names
+- [x] Chunking + contextual headers + metadata
+- [x] Embedding + ChromaDB (repeatable; `--reset`)
+- [x] Hybrid retrieval + superseded down-weighting
+- [x] Retrieval check (12/18 at rank 1, 17/18 in top 5)
+- [x] Threshold tuned (0.35), with its limits written down for Phase 4

@@ -26,7 +26,7 @@ UNANSWERED_LOG = _path("UNANSWERED_LOG", "logs/unanswered.jsonl")
 DRAFTS_DIR = _path("DRAFTS_DIR", "drafts")
 
 TOP_K = int(os.getenv("TOP_K", "5"))
-MAX_DISTANCE = float(os.getenv("MAX_DISTANCE", "0.55"))
+MAX_DISTANCE = float(os.getenv("MAX_DISTANCE", "0.35"))
 
 # LiteLLM reads this to reach Ollama
 os.environ.setdefault("OLLAMA_API_BASE", OLLAMA_API_BASE)

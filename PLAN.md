@@ -103,12 +103,13 @@ academic-helpdesk-agent/
 - [x] Make sure the example questions in the problem statement are answerable from the data (Autonomous Systems slot, CSL7650 instructor (CSL7570 in the assignment is a typo), HSS 400-level electives, OE credits, Major exam attendance)
 
 ### Phase 2: RAG Pipeline
-- [ ] `ingest.py`: loaders for PDF/DOCX/TXT that keep page numbers
-- [ ] Chunking (~500–800 tokens, ~100 overlap, split on headings/sections where possible)
-- [ ] Embed with Ollama and upsert into a persistent Chroma collection with metadata
-- [ ] Make ingestion repeatable (stable chunk IDs; `--reset` flag)
-- [ ] Quick retrieval check: top-k results for 10 sample questions look right
-- [ ] Tune the similarity threshold used for refusals
+- [x] `ingest.py`: loaders for PDF/DOCX/TXT that keep page numbers
+- [x] Chunking (~450 tokens / 1800 chars, 250-char overlap, split on paragraph/line/sentence; title+date header on every chunk)
+- [x] Embed with Ollama and upsert into a persistent Chroma collection with metadata
+- [x] Make ingestion repeatable (stable chunk IDs; `--reset` flag)
+- [x] Quick retrieval check: top-k results for 10 sample questions look right
+- [x] Hybrid search (dense + BM25, reciprocal rank fusion) and down-weighting superseded docs
+- [x] Tune the similarity threshold used for refusals (0.35)
 
 ### Phase 3: Tools
 - [ ] `search_documents(query, k)` → chunks + citation metadata, or `found: false`
