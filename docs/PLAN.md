@@ -128,33 +128,33 @@ academic-helpdesk-agent/
 - [x] Summary table (CSV + Markdown) per model × mode
 
 ### Phase 7: Report and Docs
-- [ ] `README.md`: setup, model pulls, ingestion, running CLI / `adk web`, running eval, repo layout
-- [ ] `report/REPORT.md`:
-  - [ ] Architecture diagram (single vs multi-agent) and tool list
-  - [ ] Dataset description (documents, CSVs, how personal data was anonymized)
-  - [ ] Results tables: accuracy, groundedness, refusals, routing, per model/mode
-  - [ ] Questions with unstable answers across runs, and why
-  - [ ] Error analysis (retrieval misses, wrong routing, hallucinated citations)
-  - [ ] Limitations and future work
-- [ ] Final pass: fresh clone → follow the README → everything runs on a 16GB machine
+- [x] `README.md`: problem statement, solution, features, quick start (setup, ingestion, CLI / `adk web`, eval), results, layout; technical deep dive in `docs/TECHNICAL.md`
+- [x] `report/report.tex` → `report/report.pdf` (LaTeX):
+  - [x] Architecture diagram (single vs multi-agent) and tool list
+  - [x] Dataset description (documents, CSVs, how personal data was anonymized)
+  - [x] Results tables: accuracy, groundedness, refusals, routing, per model/mode
+  - [x] Questions with unstable answers across runs, and why
+  - [x] Error analysis (retrieval misses, wrong routing, hallucinated citations)
+  - [x] Limitations and future work
+- [x] Final pass: fresh clone → follow the README → everything runs on a 16GB machine
 
 ---
 
 ## Final Deliverables Checklist
 
-- [ ] 20–30 real documents collected (personal data replaced with dummy values)
-- [ ] RAG pipeline using a local Ollama embedding model + ChromaDB
-- [ ] Tools: vector search, time table/course CSV lookup, instructor email lookup, email draft writer
-- [ ] Unanswered-question log for human follow-up
-- [ ] Answers cite their source document
-- [ ] Out-of-scope questions get an "I don't know"
-- [ ] Single-agent baseline working via ADK + LiteLLM + Ollama (8B model)
-- [ ] Multi-agent version: orchestrator → policy / schedule / email agents
-- [ ] Runs on a 16GB RAM laptop
-- [ ] 20–30 evaluation prompts (`eval/questions.jsonl`)
-- [ ] Metrics reported: accuracy, groundedness, correct refusals
-- [ ] Comparison across at least 2 LLMs
-- [ ] Questions whose answers changed across multiple runs documented
-- [ ] README with setup and usage instructions
-- [ ] Report with findings
-- [ ] Everything committed and pushed to GitHub
+- [x] 20–30 real documents collected (personal data replaced with dummy values)
+- [x] RAG pipeline using a local Ollama embedding model + ChromaDB
+- [x] Tools: vector search, time table/course CSV lookup, instructor email lookup, email draft writer
+- [x] Unanswered-question log for human follow-up
+- [x] Answers cite their source document
+- [x] Out-of-scope questions get an "I don't know"
+- [x] Single-agent baseline working via ADK + LiteLLM + Ollama (8B model)
+- [x] Multi-agent version: orchestrator → policy / schedule / email agents
+- [x] Runs on a 16GB RAM laptop
+- [x] 20–30 evaluation prompts (`eval/questions.jsonl`)
+- [x] Metrics reported: accuracy, groundedness, correct refusals
+- [x] Comparison across at least 2 LLMs
+- [x] Questions whose answers changed across multiple runs documented
+- [x] README with setup and usage instructions
+- [x] Report with findings
+- [x] Everything committed and pushed to GitHub

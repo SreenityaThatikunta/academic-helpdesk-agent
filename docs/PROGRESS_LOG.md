@@ -701,3 +701,16 @@ logs/, drafts/   runtime outputs (git-ignored; local test leftovers deleted)
 - **Build issues and decisions:** the TeX install is **BasicTeX** (no `multirow`, no `pgfplots`). Rather than download packages (`tlmgr` would need admin rights), I removed the unused `multirow`, and `make_tables.py` now **generates the bar chart in plain TikZ** from the data. `\input` inside a `tabular` followed by `\bottomrule` gives "Misplaced \noalign", so the table bodies use an `\inputrows` macro (the primitive `\@@input`). Layout was checked by rendering every page to an image: Figure 1 was 30 pt too wide and its dashed arrow crossed a box (rerouted and scaled); the headline table was 55 pt too wide (scaled); the tools table floated away from its heading and the routing table overflowed the page (both made non-floating with `\captionof`). Final build: **0 overfull boxes**. LaTeX build files are git-ignored (`report/.gitignore`).
 - The author line uses the name and roll number from the user's institute account (B23CS1072); flagged for the user to confirm.
 - **README: all 9 emojis removed (user request).** Checked that the arrows (→) were not in the removed character range; TECHNICAL.md and the report had none.
+
+### Final pass: fresh clone → follow the README
+Cloned the GitHub repo into a scratch folder and followed the README steps, reusing the existing Python environment (so `uv pip install` itself was **not** re-run; Ollama models were already pulled):
+- `pytest` **before** ingest: 1 failure. `test_search_scoped_to_document_finds_cse_oe_credits` needs the vector index (and Ollama), which a fresh clone doesn't have, and the README had claimed the tests need "no LLM". **Fix:** the test is skipped with the reason "needs the vector index: run `python -m helpdesk.ingest` (and Ollama)", and the README now says one test needs the index. Re-check: 34 passed, 1 skipped.
+- `python -m helpdesk.ingest --reset` → **1,134 chunks from 33 documents** (same as the working copy) → `pytest`: **35/35 pass**.
+- `python -m helpdesk.cli --mode multi --ask "What is the slot for the course Autonomous Systems?"` → routed to schedule_agent → "slot E… Source: 26_Slot_System…".
+- `python eval/score.py` on the committed raw results → the same headline numbers as the report.
+
+### Status
+- [x] `README.md`: problem statement, solution, features, quick start, results, layout, data/privacy (no emojis)
+- [x] `docs/TECHNICAL.md`: technical deep dive
+- [x] `report/report.tex` → `report/report.pdf` (LaTeX, tables generated from the eval data)
+- [x] Final pass: fresh clone → README steps → tests, ingest, CLI and scoring all work
