@@ -41,7 +41,8 @@ def draft_email(to: str, subject: str, body: str, cc: str = "") -> dict:
     return {
         "status": "draft_saved",
         "sent": False,
-        "path": str(path.relative_to(config.ROOT)),
+        # DRAFTS_DIR is configurable and may live outside the project
+        "path": str(path.relative_to(config.ROOT)) if path.is_relative_to(config.ROOT) else str(path),
         "draft": text,
         "note": "Review and send it yourself from your institute email; the helpdesk does not send emails.",
     }

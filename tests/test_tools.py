@@ -4,6 +4,7 @@ import json
 import re
 
 import pytest
+from pathlib import Path
 
 from helpdesk import config
 from helpdesk.tools import (
@@ -155,3 +156,48 @@ def test_search_scoped_to_document_finds_cse_oe_credits():
     assert r["found"]
     assert all("CSE" in x["citation"] for x in r["results"])
     assert any(re.search(r"Open Electives \(OE\)\s+10", x["text"]) for x in r["results"])
+
+
+def test_router_refusal_paraphrase_is_standardized():
+    from types import SimpleNamespace
+
+    from google.adk.models import LlmResponse
+    from google.genai import types
+
+    from helpdesk.agents.guards import REFUSAL_SENTENCE, standardize_router_refusal
+    from helpdesk.tools.unanswered import LOGGED_FLAG
+
+    resp = LlmResponse(content=types.Content(role="model", parts=[
+        types.Part(text="The academic office has been notified of your query.")]))
+    standardize_router_refusal(SimpleNamespace(state={LOGGED_FLAG: True}), resp)
+    assert resp.content.parts[0].text == REFUSAL_SENTENCE
+    # no logging this turn -> a normal reply is left alone
+    resp2 = LlmResponse(content=types.Content(role="model", parts=[types.Part(text="Hello! I can help.")]))
+    standardize_router_refusal(SimpleNamespace(state={}), resp2)
+    assert resp2.content.parts[0].text == "Hello! I can help."
+
+
+def test_empty_router_reply_falls_back_to_a_transfer():
+    from types import SimpleNamespace
+
+    from google.adk.models import LlmResponse
+    from google.genai import types
+
+    from helpdesk.agents.guards import route_empty_router_reply
+
+    def route(q):
+        ctx = SimpleNamespace(user_content=types.Content(role="user", parts=[types.Part(text=q)]))
+        out = route_empty_router_reply(ctx, LlmResponse(content=types.Content(role="model", parts=[])))
+        return out.content.parts[0].function_call.args["agent_name"]
+
+    assert route("Who teaches Health Economics this semester?") == "schedule_agent"
+    assert route("Write an email to my instructor") == "email_agent"
+    assert route("When is the semester break?") == "policy_agent"
+    ok = LlmResponse(content=types.Content(role="model", parts=[types.Part(text="Hi!")]))
+    assert route_empty_router_reply(SimpleNamespace(user_content=None), ok) is None
+
+
+def test_draft_email_outside_project_folder(tmp_path, monkeypatch):
+    monkeypatch.setattr(config, "DRAFTS_DIR", tmp_path / "elsewhere")
+    r = draft_email("gaurav.harit@iitj.example", "Leave", "Dear Sir, ... Regards")
+    assert r["status"] == "draft_saved" and Path(r["path"]).exists()

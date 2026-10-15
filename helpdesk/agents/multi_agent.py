@@ -11,7 +11,12 @@ email and schedule agents can also search the documents).
 from google.adk.agents import LlmAgent
 
 from helpdesk import prompts
-from helpdesk.agents.guards import drop_transfer_noise, log_refusals
+from helpdesk.agents.guards import (
+    drop_transfer_noise,
+    log_refusals,
+    route_empty_router_reply,
+    standardize_router_refusal,
+)
 from helpdesk.llm import make_model
 from helpdesk.tools import (
     draft_email,
@@ -55,5 +60,5 @@ def build_multi_agent(model: str | None = None) -> LlmAgent:
         instruction=prompts.orchestrator_instruction(),
         tools=[log_unanswered_question],
         sub_agents=[policy, schedule, email],
-        after_model_callback=log_refusals,
+        after_model_callback=[route_empty_router_reply, log_refusals, standardize_router_refusal],
     )

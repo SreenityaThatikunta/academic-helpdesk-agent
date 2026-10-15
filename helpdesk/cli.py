@@ -77,4 +77,6 @@ async def main() -> None:
 if __name__ == "__main__":
     warnings.filterwarnings("ignore")
     logging.getLogger("LiteLLM").setLevel(logging.ERROR)
+    # ADK warns about Gemini context caching on every multi-agent start; irrelevant for Ollama
+    logging.getLogger("google_adk").setLevel(logging.ERROR)
     asyncio.run(main())

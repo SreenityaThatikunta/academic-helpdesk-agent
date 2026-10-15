@@ -734,3 +734,69 @@ Cloned the GitHub repo into a scratch folder and followed the README steps, reus
 
 ### Report revision 3 (**not committed**)
 - Authors set to the team: Sreenitya Thatikunta (B23CS1072), Arpita Deshmukh (B23CM1007), Prajna Agrawal (B23CS1054). Names stacked one per line. Still 9 pages, 0 overfull boxes.
+
+---
+
+## Post-evaluation fix: router refusing calendar questions (user-reported, 2026-10-15)
+
+### What the user saw (multi mode, qwen3:8b, interactive CLI)
+"When do we have vacation in this semester?", "Do we have any holidays during the semester?" and "Do we have any fests this semester?" were each **refused by the orchestrator itself** ("out of scope: campus vacation dates / campus events"), never routed to policy_agent. The reply was also a **paraphrase** ("The academic office has been notified…") instead of the fixed refusal sentence.
+
+### Diagnosis
+- **All three are answerable from the Academic Calendar AY 2026-27 (D17)**, which is indexed: semester break 2–8 Nov 2026, winter break 2–30 Dec 2026 (UG), holiday list on p. 10 (e.g. Dussehra 20 Oct, Diwali 8 Nov), Institute Foundation Day 2 Aug; fests as "No class days": Prometeo 2–4 Oct 2026, Varchas 30 Oct–1 Nov 2026 (Sem II: IGNUS 29–31 Jan 2027, Spandan 12–14 Mar 2027). Searching "vacation holidays semester…" returns calendar pp. 2 and 10 first, so retrieval is fine.
+- **This is a router error**, the same kind as eval item P09 (PhD duration refused by the router): policy_agent's description only said "academic calendar dates", and the router's out-of-scope examples (dining, hostels…) made it judge "vacation" / "fests" as campus life.
+- The paraphrased refusal also bypassed the wording rule; logging still happened because the tool was called.
+
+### Fix
+1. `AGENT_AREAS["policy_agent"]` names the calendar contents explicitly: holidays, vacations, semester breaks, no-class days and institute events / fests listed in the calendar, exam / registration / withdrawal dates.
+2. The router's refusal rule is narrowed: refuse only requests **clearly unrelated** to academics or the academic calendar (food, hostels, transport, weather, placements, general knowledge). **If a question could be answered by the academic calendar, regulations or circulars, or if unsure, transfer it to policy_agent**, which can search and still refuse (and log) if nothing is found.
+3. New guard `standardize_router_refusal` (router only): if `log_unanswered_question` ran in this turn and the router's final text is not the fixed refusal sentence, it is replaced by the sentence. This keeps refusals consistent in code.
+- Tests: 36/36 pass (new test for the guard).
+
+### Live check after the routing fix (multi, qwen3:8b)
+| Question | Before | After the routing fix |
+|---|---|---|
+| Vacation this semester | router refused | ✅ policy_agent: semester break 2–8 Nov, winter break 2–30 Dec 2026 (2/2) |
+| Holidays during the semester | router refused | ⚠️ routed, but lists **May/June 2026** holidays (before the Jul–Nov semester) |
+| Fests this semester | router refused | ⚠️ routed, but policy_agent refuses (2/2) |
+| 6 out-of-scope eval questions | refused | ✅ still refused, exact sentence (no over-correction) |
+| P09 PhD maximum duration | router refused | ⚠️ routed now, but policy_agent refuses |
+| S02 who teaches Health Economics | empty reply | ❌ still an empty router reply |
+
+### Causes of the remaining problems
+1. **Fests:** the calendar never says "fest"; it lists IGNUS / Prometeo / Varchas / Spandan as "No Class day" rows. Even the query "IGNUS Prometeo Varchas no class day" returns `found=False`: the not-found guard looks only at the dense distance and vetoes a strong keyword (BM25) match.
+2. **Holidays:** the holiday list on calendar p. 10 covers the **calendar year** (01 May → 25 Dec 2026); the model listed everything instead of only Semester I dates.
+3. **PhD:** the answer chunk (PG Regulations p. 22: "Ph.D. … 14 registered semesters") never reaches the top 5. The BM25 tokenizer splits "Ph.D." into `ph` + `d` (`d` is dropped), so it never matches the query token `phd`. This is the same kind of problem as "make-up" vs "Makeup".
+
+### Fixes
+1. **Document keywords:** new manifest column `keywords`, added to every chunk header of that document (like the title), so both dense and BM25 search can match a student's words that the document itself doesn't use. Filled for the three calendars (holidays, vacation, semester / winter break, fests / festivals / events with their names, no class days, exam and registration dates). Re-ingest needed.
+2. **Abbreviation normalisation** in the BM25 tokenizer: Ph.D. / PhD → `phd`, B.Tech → `btech`, M.Tech → `mtech`, M.Sc → `msc` (no re-ingest needed; BM25 is built at query time).
+3. **Prompt (POLICY):** when listing dated items "this semester", include only dates inside the current semester.
+
+### Iteration on the fixes
+- **First version of the keywords included the fest names** (IGNUS, Prometeo…) on *every* calendar chunk. Retrieval then returned calendar pp. 3/5 (no fest rows), because every chunk matched "fests" equally, and the header's names could also be mistaken for facts. **Changed:**
+  - Keywords are now **generic** ("holidays; vacation; semester / winter / summer break; fests / festivals / cultural, technical and sports events; no class days; exam dates; registration dates").
+  - New **query expansion** for keyword search maps student words to the documents' own terms: fest / festival → IGNUS, Prometeo, Varchas, Spandan, Inter IIT, no class day; vacation → semester / winter / summer break; holiday → holidays, class holiday.
+  - **The keyword header is excluded from the BM25 index:** keywords help *find the document* (dense search), BM25 picks *the chunk inside it*. Before this, the holiday-list page (p. 10) was crowded out by other calendar pages that all carried "holidays" in their header.
+- Result: fests → calendar pp. 7, 6 (the Prometeo / Varchas rows); vacation → p. 2 (breaks); holidays → p. 2 (breaks) + **p. 10 (holiday list)**. Retrieval check: hit@1 12/19, **hit@5 19/19** (was 18/19). Tests: 38/38 (+ degree-abbreviation and query-expansion tests).
+- **PhD (P09) still open:** with the abbreviation fix the §11.5 chunk ("Ph.D. … 14 registered semesters") now contains the token `phd`, but it ranks 13th in BM25 (other PhD chunks mention the same words more often), and the p. 22 chunk that does reach the top 5 is §11.2. Left as a known retrieval-ranking limitation rather than tuning for one question.
+- **S02 empty reply (also an eval failure) diagnosed:** the router model returns an **empty message**: no text, no tool call, `finish_reason=STOP`, no error, for both "Who teaches Health Economics this semester, and in which classroom?" and "Who teaches Health Economics?". The cause is in qwen3's output, not in parsing. **Fix: deterministic fallback** `route_empty_router_reply` (router `after_model_callback`). If the router returns nothing, the reply becomes a `transfer_to_agent` call chosen by keyword rules: write / email / draft → email_agent; slot / teach / instructor / classroom / timing / how many courses → schedule_agent; otherwise policy_agent (which can search and refuse properly).
+
+### Final live check (multi, qwen3:8b; logs and drafts isolated in a temp folder)
+| Question | Result |
+|---|---|
+| Vacation this semester (×2) | ✅ policy_agent: semester break 2–8 Nov 2026, winter break 2–30 Dec 2026 (Academic Calendar 2026-27) |
+| Fests this semester (×2) | ✅ policy_agent: Varchas no-class days 30 Oct–1 Nov 2026 (calendar) |
+| Holidays during the semester (×2) | ✅ routed + grounded; ⚠️ one run also listed Republic Day (26 Jan), outside the semester, despite the new rule |
+| 6 out-of-scope eval questions | ✅ refused by the router with the exact sentence |
+| S02 who teaches Health Economics | ✅ **fixed by the fallback**: schedule_agent, "Alok Ranjan, LHC 204" |
+| P09 PhD maximum duration | ⚠️ routed now, but policy_agent says it's not in the documents (ranking issue above) |
+| Regression: attendance, Autonomous Systems slot, Humanities 400-level, CSL7570 email, OE credits, minor exam dates | ✅ unchanged (Circular 51; E; 3; "Did you mean CSL7650"; asks branch + year; 15 Sep onwards) |
+| E02 sick-leave email | ✅ draft to gaurav.harit@iitj.example, saved and shown |
+
+- **Bug found by this check:** `draft_email` computed the draft path relative to the project folder, so it **crashed** when `DRAFTS_DIR` points outside the project (as `.env` allows; the check put drafts in a temp folder). The eval never hit it because it keeps drafts inside the repo. Fixed (falls back to the absolute path) + test.
+- Note: `run_eval.py --only …` was **not** used for spot checks: a partial run would overwrite the committed run folders (`raw.jsonl` is rewritten when its line count doesn't match). A separate script was used instead.
+- Also in this commit: the CLI now hides ADK's `context_cache_config` warning (logger `google_adk` set to ERROR; it concerns Gemini prompt caching, irrelevant for Ollama).
+- **The evaluation numbers in the report and README are for the evaluated version** (before these fixes); the fixes are documented in TECHNICAL.md §15. Re-running the eval would measure them.
+- Tests: **40/40 pass**.
+- **Branch mix-up while committing (resolved):** another Claude session ("Agent UI with chat and graph") had switched this shared working copy to a new branch `web-ui` and started a web UI (`helpdesk/web/`). My `git add -A` committed this fix *and* its in-progress files onto `web-ui` (the push failed: no upstream). Undone with `git reset --soft HEAD~1` + unstage (no files touched, nothing pushed). With the user's agreement, **only my 12 files were committed onto `main` through a separate `git worktree`**, so the other session's checkout was not switched. Lesson: stage explicit paths, and check `git branch --show-current` before committing when other sessions may share the folder.

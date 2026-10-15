@@ -4,10 +4,12 @@ import re
 
 from google.adk.agents.callback_context import CallbackContext
 from google.adk.models import LlmResponse
+from google.genai import types
 
 from helpdesk.tools.unanswered import LOGGED_FLAG, log_unanswered_question
 
 REFUSAL = "I don't know the answer"
+REFUSAL_SENTENCE = "I don't know the answer to that. I've forwarded your question to the academic office."
 # llama3.1 sometimes "calls" a tool by printing it: {"name": "x", "parameters": {...}}
 TEXT_TOOL_CALL = re.compile(r'\{\s*"name"\s*:\s*"\w+"\s*,\s*"parameters"\s*:\s*\{.*?\}\s*\}', re.S)
 
@@ -58,3 +60,39 @@ def drop_transfer_noise(callback_context: CallbackContext, llm_request) -> None:
     if drop:
         llm_request.contents = [c for i, c in enumerate(contents) if i not in drop]
     return None
+
+
+def standardize_router_refusal(callback_context: CallbackContext, llm_response: LlmResponse) -> None:
+    """after_model_callback for the router: once it has logged a question as unanswerable, its reply
+    must be the fixed refusal sentence (it sometimes paraphrased, e.g. "The academic office has been
+    notified..."), so refusals look the same everywhere and are easy to detect."""
+    parts = (llm_response.content.parts if llm_response.content else None) or []
+    if not callback_context.state.get(LOGGED_FLAG) or any(p.function_call for p in parts):
+        return None
+    text = "".join(p.text or "" for p in parts).strip()
+    if text and REFUSAL.lower() not in text.lower():
+        for i, p in enumerate(parts):
+            p.text = REFUSAL_SENTENCE if i == 0 else ""
+    return None
+
+
+# Keyword fallback routes used only when the router returns an empty message
+FALLBACK_ROUTES = [
+    (re.compile(r"\b(e-?mail|mail|draft|write|letter)\b", re.I), "email_agent"),
+    (re.compile(r"\b(slot|teach(es|ing)?|instructor|professor|classroom|room|timings?|time ?table|"
+                r"how many .*(courses|electives)|courses? (offered|floated))\b", re.I), "schedule_agent"),
+]
+
+
+def route_empty_router_reply(callback_context: CallbackContext, llm_response: LlmResponse):
+    """after_model_callback for the router: qwen3 sometimes returns an empty message (no text, no
+    tool call) and the student gets nothing. Replace it with a transfer chosen by keyword rules;
+    anything unmatched goes to policy_agent, which can search and still refuse properly."""
+    parts = (llm_response.content.parts if llm_response.content else None) or []
+    if any(p.function_call for p in parts) or "".join(p.text or "" for p in parts).strip():
+        return None
+    user = callback_context.user_content
+    question = "".join(p.text or "" for p in (user.parts if user else []))
+    target = next((agent for pat, agent in FALLBACK_ROUTES if pat.search(question)), "policy_agent")
+    call = types.FunctionCall(name="transfer_to_agent", args={"agent_name": target})
+    return LlmResponse(content=types.Content(role="model", parts=[types.Part(function_call=call)]))

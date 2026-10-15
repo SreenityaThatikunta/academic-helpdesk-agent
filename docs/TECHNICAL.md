@@ -17,6 +17,7 @@ How the Academic Helpdesk Agent is built, why it is built that way, and what the
 12. [Design decisions and lessons](#12-design-decisions-and-lessons)
 13. [Limitations and future work](#13-limitations-and-future-work)
 14. [Configuration reference](#14-configuration-reference)
+15. [Post-evaluation changes](#15-post-evaluation-changes)
 
 ---
 
@@ -289,3 +290,19 @@ So specialists cannot transfer; only the router routes. Because a specialist can
 | `CSV_DIR`, `CHROMA_DIR`, `CHROMA_COLLECTION` | `data/csv`, `data/index`, `academic_docs` | data locations |
 | `UNANSWERED_LOG`, `DRAFTS_DIR` | `logs/unanswered.jsonl`, `drafts` | runtime outputs |
 | `TOP_K`, `MAX_DISTANCE` | `5`, `0.35` | retrieval defaults |
+
+---
+
+## 15. Post-evaluation changes
+
+Made after the evaluation in §10–11 (the numbers there describe the version before these changes), prompted by live testing in the CLI:
+
+- **Router scope:** "vacation", "holidays" and "fests" were refused by the router as campus life, although the Academic Calendar answers them. policy_agent's description now names the calendar contents (holidays, vacations, semester breaks, no-class days, fests listed in the calendar, exam / registration dates). The router refuses only requests *clearly* unrelated to academics and the calendar, and sends anything uncertain to policy_agent, which can search and still refuse.
+- **`standardize_router_refusal` guard:** after `log_unanswered_question`, the router's reply is forced to the fixed refusal sentence (it sometimes paraphrased it).
+- **`route_empty_router_reply` guard:** qwen3 sometimes returns an empty message (no text, no tool call); the guard replaces it with a `transfer_to_agent` chosen by keyword rules (email words → email_agent; slot / teach / instructor / classroom / course counts → schedule_agent; otherwise policy_agent). This fixes eval item S02.
+- **Document keywords:** manifest column `keywords`, added to every chunk header of a document for dense search (e.g. the calendars: holidays, vacation, breaks, fests / events, no class days) and **excluded from the BM25 index**, so keyword search still picks the right chunk inside the document.
+- **Query expansion (BM25 only):** fest / festival → IGNUS, Prometeo, Varchas, Spandan, Inter IIT, no class day; vacation → semester / winter / summer break; holiday → holidays, class holiday.
+- **Abbreviation normalisation:** Ph.D. / PhD → `phd`, B.Tech → `btech`, M.Tech → `mtech`, M.Sc → `msc`.
+- **Prompt:** "this semester" dates are filtered to the current semester.
+- **`draft_email`** works when `DRAFTS_DIR` is outside the project.
+- Retrieval check after these changes: hit@1 12/19, hit@5 **19/19** (was 18/19). Still open: the PhD maximum duration (the §11.5 chunk ranks 13th in BM25); an occasional out-of-semester holiday in answers.

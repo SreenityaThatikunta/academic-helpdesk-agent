@@ -28,7 +28,25 @@ STOPWORDS = set(
 
 
 # Spelling variants that would otherwise split into different tokens ("make-up" -> make, up)
-VARIANTS = [(re.compile(r"\bmake[\s-]?ups?\b"), "makeup"), (re.compile(r"\bre[\s-]exam"), "reexam")]
+VARIANTS = [(re.compile(r"\bmake[\s-]?ups?\b"), "makeup"), (re.compile(r"\bre[\s-]exam"), "reexam"),
+            # degree abbreviations: "Ph.D." would otherwise become "ph" + "d"
+            (re.compile(r"\bph\.?\s?d\b\.?"), "phd"), (re.compile(r"\bb\.?\s?tech\b\.?"), "btech"),
+            (re.compile(r"\bm\.?\s?tech\b\.?"), "mtech"), (re.compile(r"\bm\.?\s?sc\b\.?"), "msc")]
+
+
+# Student words -> the terms the documents actually use (keyword search only). The calendar lists
+# fests by name as "No Class day" rows and calls vacations "breaks".
+QUERY_EXPANSIONS = {
+    "fest": "ignus prometeo varchas spandan inter iit no class day",
+    "festival": "ignus prometeo varchas spandan inter iit no class day",
+    "vacation": "semester break winter break summer break",
+    "holiday": "holiday holidays class holiday",
+}
+
+
+def expand_query(query: str) -> str:
+    extra = [v for k, v in QUERY_EXPANSIONS.items() if re.search(rf"\b{k}", query, re.I)]
+    return " ".join([query, *extra])
 
 
 def tokenize(text: str) -> list[str]:
@@ -68,10 +86,15 @@ class BM25:
         return [i for _, i in sorted(scores, reverse=True)[:k]]
 
 
+KEYWORDS_IN_HEADER = re.compile(r" \| keywords: [^|\]]*")
+
+
 @lru_cache(maxsize=1)
 def _bm25() -> BM25:
     data = _collection().get(include=["documents"])
-    return BM25(data["ids"], data["documents"])
+    # Document keywords help find the document (dense search) but are the same on every chunk,
+    # so keep them out of the keyword index, which should pick the right chunk inside it
+    return BM25(data["ids"], [KEYWORDS_IN_HEADER.sub("", d) for d in data["documents"]])
 
 
 def embed_query(text: str) -> list[float]:
@@ -116,7 +139,7 @@ def search(query: str, k: int = config.TOP_K, max_distance: float = config.MAX_D
                 "results": []}
 
     fused = Counter()
-    sparse = _bm25().top(query, CANDIDATES * 10 if allowed else CANDIDATES)
+    sparse = _bm25().top(expand_query(query), CANDIDATES * 10 if allowed else CANDIDATES)
     if allowed:
         sparse = [cid for cid in sparse if cid.split("-")[0] in allowed][:CANDIDATES]
     for ranking in (dense_ids, sparse):

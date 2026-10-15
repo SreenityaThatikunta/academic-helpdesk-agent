@@ -204,7 +204,10 @@ def chunk_document(row: pd.Series, amendments: pd.DataFrame | None = None, title
             # Contextual header: chunks rarely name their own document ("IH2", "PhD"),
             # so embed/index the title and date with every chunk
             where = f"page {pg.page}" if re.fullmatch(r"\d+(-\d+)?", pg.page) else f"sheet {pg.page}"
-            header = f"[{row.title} | {row.date} | {where}{note}]"
+            # Document-level keywords cover words students use but the document doesn't
+            # (the calendar never says "fest" or "vacation")
+            kw = f" | keywords: {row.keywords}" if getattr(row, "keywords", "") else ""
+            header = f"[{row.title} | {row.date} | {where}{kw}{note}]"
             chunks.append(
                 Chunk(
                     id=f"{row.doc_id}-{cid}",

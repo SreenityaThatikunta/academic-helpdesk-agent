@@ -77,3 +77,16 @@ def test_amendment_marks_old_passage_superseded(tmp_path, monkeypatch):
 
 def test_tokenize_normalizes_makeup_spellings():
     assert tokenize("make-up exam") == tokenize("Makeup exam") == tokenize("make up exam") == ["makeup", "exam"]
+
+
+def test_tokenize_normalizes_degree_abbreviations():
+    assert tokenize("Ph.D. students") == tokenize("PhD students") == ["phd", "students"]
+    assert "btech" in tokenize("B.Tech degree") and "mtech" in tokenize("M. Tech programme")
+
+
+def test_query_expansion_maps_student_words_to_document_terms():
+    from helpdesk.rag import expand_query
+
+    assert "prometeo" in expand_query("any fests this semester?")
+    assert "semester break" in expand_query("When is the vacation?")
+    assert expand_query("slot of CSL7650") == "slot of CSL7650"

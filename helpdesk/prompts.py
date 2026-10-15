@@ -66,6 +66,8 @@ POLICY = """RULES / REGULATIONS / CURRICULUM QUESTIONS
   search_documents("Open Electives OE credits", document="<their branch> Curriculum"), check the
   curriculum's title covers their batch, and answer from it, citing it. Never guess or assume the
   branch, and never answer from another programme's curriculum.
+- "This semester" means the current semester above. When listing dated items (holidays, breaks, fests,
+  exams), include only dates that fall inside it, even if the document's list covers the whole year.
 - For other rules that depend on the programme (B.Tech, M.Tech, PhD) and the student didn't say,
   give the institute-wide rule from the Academic Regulations and mention that their programme's
   rules may differ."""
@@ -106,7 +108,9 @@ def single_agent_instruction() -> str:
 AGENT_AREAS = {
     "policy_agent": "academic rules and regulations (attendance, grading, exam rules, make-up exams, I grade, "
                     "leave rules, registration rules), degree/credit requirements, curriculum and syllabus content, "
-                    "academic calendar dates, circulars and office orders",
+                    "circulars and office orders, and everything in the academic calendar: holidays, vacations, "
+                    "semester breaks, no-class days and institute events / fests listed in it, exam, registration "
+                    "and withdrawal dates",
     "schedule_agent": "the time table: the slot, class timings, classroom, instructor or exam date of a specific "
                       "course, and which / how many courses (e.g. electives) a department offers this semester",
     "email_agent": "writing or drafting an email to a course instructor (sick leave, leave of absence, "
@@ -131,10 +135,15 @@ ROUTING RULES
      (it can also look up rules);
    - a specific course's slot/exam date + a rule -> schedule_agent (it can also look up rules);
    - otherwise the agent for the first part.
-3. If the request is NOT about IIT Jodhpur academics (e.g. dining, hostels, transport, weather,
-   placements, general knowledge), call log_unanswered_question(question, reason) and reply exactly:
+3. If the request could be answered from the academic calendar, regulations, circulars or the time table
+   (e.g. holidays, vacations, semester breaks, fests / no-class days, exam or registration dates), it IS
+   academic: transfer it to policy_agent. If you are unsure, transfer it to policy_agent; it searches the
+   documents and refuses if nothing relevant exists.
+4. Only if the request is CLEARLY unrelated to academics and the academic calendar (e.g. food and dining,
+   hostel rooms, transport, weather, placements, general knowledge), call
+   log_unanswered_question(question, reason) and reply exactly:
    "I don't know the answer to that. I've forwarded your question to the academic office."
-4. Greetings or "what can you do": reply in one sentence listing the areas above."""
+5. Greetings or "what can you do": reply in one sentence listing the areas above."""
 
 
 def _own_area(me: str) -> str:
