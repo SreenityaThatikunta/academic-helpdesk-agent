@@ -1,7 +1,7 @@
 """Score the raw eval results and write summary tables.
 
 Usage: .venv/bin/python eval/score.py [--no-overrides]
-Reads  eval/questions.jsonl, eval/results/*/raw.jsonl, eval/overrides.csv (manual review)
+Reads  eval/questions.jsonl, eval/results/runs/*/raw.jsonl, eval/overrides.csv (manual review)
 Writes eval/results/scored.jsonl, eval/results/summary.md, eval/results/review.md
 """
 
@@ -77,18 +77,6 @@ def asked_facts(r: dict, exp: dict) -> str:
     return " | ".join(found) + (" | STALE" if stale else "")
 
 
-def key_facts(answer: str) -> str:
-    """All course codes and numbers in an answer (broad; used only in the detailed table)."""
-    if REFUSAL.search(answer):
-        return "REFUSED"
-    code_re = re.compile(r"\b[A-Z]{2,4}\s?\d{4}\b")
-    codes = sorted({c.replace(" ", "") for c in code_re.findall(answer)})
-    rest = code_re.sub(" ", answer)  # so "CSL 7650" doesn't also count as the number 7650
-    nums = sorted({n.replace(" ", "") for n in re.findall(r"\b\d+(?:\.\d+)?(?:\s?%)?", rest)}
-                  - {"2026", "2027", "2024", "2019", "2025"})
-    return f"codes={','.join(codes)} nums={','.join(nums)}"
-
-
 def score_record(r: dict, exp: dict) -> dict:
     ans = r["answer"] or ""
     calls = [c["name"] for c in r["tool_calls"]]
@@ -140,8 +128,7 @@ def score_record(r: dict, exp: dict) -> dict:
         routed = first in want if isinstance(want, list) else first == want
 
     return {"correct": correct, "reason": reason, "grounded": grounded, "refused": refused, "routed": routed,
-            "first_agent": next((a for a in r["agents"] if a != ROUTER), ROUTER), "facts": asked_facts(r, exp),
-            "all_numbers": key_facts(ans)}
+            "first_agent": next((a for a in r["agents"] if a != ROUTER), ROUTER), "facts": asked_facts(r, exp)}
 
 
 def pct(n, d):
@@ -156,7 +143,7 @@ def main() -> None:
     overrides = {} if args.no_overrides else load_overrides()
 
     rows = []
-    for raw in sorted(RESULTS.glob("*/raw.jsonl")):
+    for raw in sorted((RESULTS / "runs").glob("*/raw.jsonl")):
         for line in raw.read_text().splitlines():
             r = json.loads(line)
             exp = qs[(r["id"], r["turn"])]

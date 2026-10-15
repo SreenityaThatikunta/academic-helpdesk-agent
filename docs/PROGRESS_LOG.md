@@ -632,3 +632,52 @@ Accuracy by category:
 - [x] `run_eval.py`: 3 repeats × 2 models × 2 modes; raw answers, tool calls, routing, latency, drafts, logging
 - [x] `score.py`: accuracy, groundedness, refusals, routing, consistency (+ manual review: 3 answer-key fixes, 0 per-answer overrides)
 - [x] Summary tables (`summary.md`, `summary.csv`, `review.md`)
+
+---
+
+## Cleanup: folder structure and redundant code
+
+**Date:** 2026-10-15
+
+**Principle:** nothing that changes the **evaluated agent's behaviour** is removed or rewritten (prompts, guards, tools, retrieval). Phase 6 measured exactly this code. Only dead code, superseded scripts and file locations change. Example: `drop_transfer_noise` showed no measurable effect while I was debugging, but it was active during the eval, so it stays.
+
+### Dead / redundant code found (static check: names defined but never referenced)
+| Item | Decision |
+|---|---|
+| `config.DOCS_DIR` | Remove: never read (the loaders use `manifest.csv` paths) |
+| `tools/unanswered.read_unanswered()` | **Wire up instead of deleting**: the assignment says unanswered questions are "referred to the human". The CLI gets an `/unanswered` command that lists open questions, so the helper is used |
+| `eval/score.py::key_facts` (+ `all_numbers` field + its test) | Remove: replaced by `asked_facts` for the consistency metric |
+| `scripts/smoke_test.py` | Remove: Phase 0 check, now covered by the CLI (`--ask`), the unit tests and the eval |
+| `scripts/manual_check.py` + `eval/results/manual_*.json` | Remove: Phase 4/5 development harness, replaced by `eval/run_eval.py --only <ids>` (same questions + conversations, with scoring). The manual-check results are summarised in this log and stay in git history |
+| `scripts/check_retrieval.py` | Keep, **move to `eval/`**: it is the retrieval-only evaluation (hit@k, threshold) |
+
+### New layout
+```
+docs/            PROBLEM_STATEMENT.md, PLAN.md, PROGRESS_LOG.md   (README.md stays at the root)
+data/raw/        all 33 source documents (merges data/docs + data/raw_html; manifest paths updated)
+data/ocr/        OCR text of scanned PDFs           (derived)
+data/csv/        courses / slots / exam_schedule / faculty   (derived)
+data/index/      ChromaDB vector store (was ./chroma_db; git-ignored)
+data/manifest.csv, data/amendments.csv
+scripts/         data pipeline only: ocr_scanned.py, build_csvs.py
+helpdesk/        the package (agents/, tools/, ingest, rag, prompts, llm, runner, cli, config)
+agent/           ADK dev-UI entry point (adk web agent)
+eval/            questions + build_questions, run_eval, score, check_retrieval, overrides.csv
+eval/results/    summary.md/.csv, summary_auto.md, review.md, scored.jsonl, run.log
+eval/results/runs/<mode>__<model>__r<k>/   raw.jsonl, drafts/, unanswered.jsonl
+tests/
+logs/, drafts/   runtime outputs (git-ignored; local test leftovers deleted)
+```
+
+### Done
+- Moved with `git mv` (history kept): docs → `docs/`; `data/docs/*` + `data/raw_html/*` → `data/raw/` (33 files; `manifest.csv` paths rewritten `docs/…`/`raw_html/…` → `raw/…`); `scripts/check_retrieval.py` → `eval/`; run folders → `eval/results/runs/`. `chroma_db/` → `data/index/` (`config.CHROMA_DIR` default, `.env`, `.env.example` and `.gitignore` updated).
+- Removed: `scripts/smoke_test.py`, `scripts/manual_check.py`, `eval/results/manual_*.json`, `config.DOCS_DIR` (and `DOCS_DIR` from `.env*`), `score.key_facts` + its test.
+- Added: CLI `/unanswered` lists the open questions forwarded to a human (uses `read_unanswered`).
+- Deleted local runtime leftovers from development: 11 test drafts in `drafts/`, `logs/unanswered.jsonl` (git-ignored, not part of the eval; the eval keeps its own per-run copies). `.gitignore` gains `.pytest_cache/` and `data/index/`.
+- Path updates: `scripts/build_csvs.py` and `scripts/ocr_scanned.py` read `data/raw/`; `run_eval.py` writes and `score.py` reads `eval/results/runs/`; `PLAN.md` now shows the layout as built (it replaces the original target layout).
+
+### Checks that nothing changed in behaviour or results
+- `scripts/build_csvs.py` from `data/raw/` → `data/csv/*` **byte-identical** (empty `git diff`).
+- Ingestion dry run from the new manifest paths: **1,134 chunks from 33 documents** (same as before). The moved index answers queries ("attendance…" → Circular 51 first).
+- `eval/score.py` reading `runs/` → `summary.md` / `summary.csv` **identical** to before the move.
+- No references to the old paths remain outside this log (`git grep`). Unit tests: **35/35 pass** (36 before, minus the removed `key_facts` test).

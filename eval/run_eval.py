@@ -5,7 +5,7 @@ Usage:
     .venv/bin/python eval/run_eval.py --models ollama_chat/qwen3:8b --modes multi --repeats 1
     .venv/bin/python eval/run_eval.py --only P01 S01          # subset of question ids
 
-Each run writes eval/results/<mode>__<model>__r<k>/raw.jsonl (one line per turn) plus that run's
+Each run writes eval/results/runs/<mode>__<model>__r<k>/raw.jsonl (one line per turn) plus that run's
 own drafts/ and unanswered.jsonl. Finished runs are skipped, so an interrupted eval can resume.
 """
 
@@ -26,7 +26,7 @@ from helpdesk.agents import build_agent  # noqa: E402
 from helpdesk.runner import Helpdesk  # noqa: E402
 
 QUESTIONS = ROOT / "eval" / "questions.jsonl"
-RESULTS = ROOT / "eval" / "results"
+RESULTS = ROOT / "eval" / "results" / "runs"
 MODELS = ["ollama_chat/qwen3:8b", "ollama_chat/llama3.1:8b"]
 MODES = ["single", "multi"]
 

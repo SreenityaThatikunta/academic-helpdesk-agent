@@ -20,9 +20,8 @@ MODE = os.getenv("HELPDESK_MODE", "single")  # single | multi
 OLLAMA_API_BASE = os.getenv("OLLAMA_API_BASE", "http://localhost:11434")
 EMBED_MODEL = os.getenv("EMBED_MODEL", "nomic-embed-text")
 
-DOCS_DIR = _path("DOCS_DIR", "data/docs")
 CSV_DIR = _path("CSV_DIR", "data/csv")
-CHROMA_DIR = _path("CHROMA_DIR", "chroma_db")
+CHROMA_DIR = _path("CHROMA_DIR", "data/index")
 CHROMA_COLLECTION = os.getenv("CHROMA_COLLECTION", "academic_docs")
 UNANSWERED_LOG = _path("UNANSWERED_LOG", "logs/unanswered.jsonl")
 DRAFTS_DIR = _path("DRAFTS_DIR", "drafts")

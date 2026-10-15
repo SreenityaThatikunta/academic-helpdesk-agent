@@ -10,58 +10,38 @@ See [PROBLEM_STATEMENT.md](PROBLEM_STATEMENT.md) for the full assignment.
 | Agent framework  | Google ADK (`google-adk`)                                     |
 | LLM connector    | ADK `LiteLlm` → Ollama (`ollama_chat/qwen3:8b`, `ollama_chat/llama3.1:8b`) |
 | Embeddings       | Ollama `nomic-embed-text` (fallback: `mxbai-embed-large`)     |
-| Vector store     | ChromaDB (persistent, local `chroma_db/`)                     |
+| Vector store     | ChromaDB (persistent, local `data/index/`)                    |
 | Doc parsing      | `pypdf` / `pymupdf` for PDFs, `python-docx`, plain text/HTML  |
 | Structured data  | CSV files + `pandas`                                          |
 | Eval / report    | Python scripts + JSONL results, Markdown report               |
 
 Everything runs locally and fits in 16GB RAM (8B model at Q4 ≈ 5–6GB, plus embeddings and Chroma).
 
-## Target Repository Layout
+## Repository Layout (as built)
 
 ```
 academic-helpdesk-agent/
 ├── README.md
-├── PROBLEM_STATEMENT.md
-├── PLAN.md
-├── requirements.txt
-├── .env.example                 # MODEL, OLLAMA_API_BASE, EMBED_MODEL, paths
+├── requirements.txt, .env.example
+├── docs/            PROBLEM_STATEMENT.md · PLAN.md · PROGRESS_LOG.md
 ├── data/
-│   ├── docs/                    # 20–30 source documents (PDF/DOCX/TXT/MD)
-│   ├── csv/
-│   │   ├── timetable.csv        # course_code, course_name, slot, days, time, room, semester
-│   │   ├── courses.csv          # course_code, name, dept, level, credits, type (core/elective/OE), instructor_id
-│   │   └── faculty.csv          # instructor_id, name, dept, email (dummy)
-│   └── manifest.csv             # doc_id, filename, title, category, source_url, date
+│   ├── raw/         33 source documents (PDF / XLSX / HTML / TXT)
+│   ├── ocr/         OCR text for scanned PDFs
+│   ├── csv/         courses · slots · exam_schedule · faculty (dummy emails)
+│   ├── index/       ChromaDB vector store (generated, git-ignored)
+│   ├── manifest.csv   one row per document (id, title, category, source, date, status)
+│   └── amendments.csv passages superseded by a newer document
+├── scripts/         data pipeline: ocr_scanned.py → build_csvs.py  (then python -m helpdesk.ingest)
 ├── helpdesk/
-│   ├── config.py                # env-driven settings
-│   ├── ingest.py                # load → chunk → embed → store in Chroma
-│   ├── tools/
-│   │   ├── retrieval.py         # search_documents
-│   │   ├── timetable.py         # lookup_course, get_slot, list_courses (filters)
-│   │   ├── faculty.py           # get_instructor_email
-│   │   ├── email_draft.py       # draft_email (writes to drafts/)
-│   │   └── unanswered.py        # log_unanswered_question
-│   ├── agents/
-│   │   ├── single_agent.py      # baseline: one agent with all tools
-│   │   ├── policy_agent.py
-│   │   ├── schedule_agent.py
-│   │   ├── email_agent.py
-│   │   └── orchestrator.py      # root agent, routes via sub_agents / transfer
-│   ├── prompts.py               # system instructions (citation + refusal rules)
-│   └── cli.py                   # interactive chat: `python -m helpdesk.cli --mode multi`
-├── agent/                       # ADK entry point for `adk web` / `adk run`
-│   └── __init__.py / agent.py   # exposes root_agent
-├── logs/
-│   └── unanswered.jsonl         # questions referred to a human
-├── drafts/                      # generated email drafts
-├── eval/
-│   ├── questions.jsonl          # 20–30 prompts with expected answer, source doc, category
-│   ├── run_eval.py              # runs N repeats × M models, saves raw outputs
-│   ├── score.py                 # accuracy, groundedness, refusal metrics
-│   └── results/                 # per-run JSONL + summary CSV
-└── report/
-    └── REPORT.md                # findings
+│   ├── config.py · llm.py · prompts.py · runner.py · cli.py
+│   ├── ingest.py (load → chunk → embed → Chroma) · rag.py (hybrid dense + BM25 search)
+│   ├── tools/       retrieval · timetable · faculty · email_draft · unanswered
+│   └── agents/      single_agent · multi_agent · guards
+├── agent/           ADK dev-UI entry point (`adk web agent`)
+├── eval/            questions (build_questions.py → questions.jsonl) · run_eval · score · check_retrieval
+│   └── results/     summary.md/.csv · review.md · scored.jsonl · runs/<mode>__<model>__r<k>/
+├── tests/
+└── logs/, drafts/   runtime outputs (unanswered questions, email drafts; git-ignored)
 ```
 
 ## Design Notes

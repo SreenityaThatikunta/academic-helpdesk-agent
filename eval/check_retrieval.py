@@ -1,7 +1,7 @@
 """Phase 2 retrieval check: does the right document come back, and where
 should the "not found" distance threshold sit?
 
-Usage: .venv/bin/python scripts/check_retrieval.py [k]
+Usage: .venv/bin/python eval/check_retrieval.py [k]
 """
 
 import sys

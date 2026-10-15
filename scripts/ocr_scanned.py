@@ -1,4 +1,4 @@
-"""OCR scanned PDFs (no text layer) in data/docs/ into data/ocr/<name>.txt.
+"""OCR scanned PDFs (no text layer) in data/raw/ into data/ocr/<name>.txt.
 
 Pages are rendered at 300 dpi with PyMuPDF and read with the tesseract CLI.
 Page breaks are kept as form feeds so ingestion can still cite page numbers.
@@ -13,7 +13,7 @@ from pathlib import Path
 import pymupdf
 
 ROOT = Path(__file__).resolve().parent.parent
-DOCS, OUT = ROOT / "data" / "docs", ROOT / "data" / "ocr"
+DOCS, OUT = ROOT / "data" / "raw", ROOT / "data" / "ocr"
 
 
 def needs_ocr(pdf: Path) -> bool:

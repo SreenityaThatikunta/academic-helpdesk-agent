@@ -4,7 +4,7 @@ Usage:
     .venv/bin/python -m helpdesk.cli                       # REPL, mode/model from .env
     .venv/bin/python -m helpdesk.cli --model ollama_chat/llama3.1:8b
     .venv/bin/python -m helpdesk.cli --ask "What is the slot for Autonomous Systems?"
-Commands inside the REPL: /new (fresh session), /quit
+Commands inside the REPL: /new (fresh session), /unanswered (questions forwarded to a human), /quit
 """
 
 import argparse
@@ -19,6 +19,7 @@ from rich.markdown import Markdown
 from helpdesk import config
 from helpdesk.agents import build_agent
 from helpdesk.runner import Helpdesk
+from helpdesk.tools.unanswered import read_unanswered
 
 console = Console()
 
@@ -49,7 +50,8 @@ async def main() -> None:
         return
 
     console.print(f"[bold]IIT Jodhpur Academic Helpdesk[/bold]  [dim]{args.mode} · {args.model}[/dim]")
-    console.print("[dim]Ask about regulations, courses, slots, exams, or ask me to draft an email. /new, /quit[/dim]\n")
+    console.print("[dim]Ask about regulations, courses, slots, exams, or ask me to draft an email. "
+                  "/new, /unanswered, /quit[/dim]\n")
     while True:
         try:
             q = console.input("[bold cyan]you>[/bold cyan] ").strip()
@@ -59,6 +61,12 @@ async def main() -> None:
             continue
         if q in ("/quit", "/exit"):
             break
+        if q == "/unanswered":
+            open_qs = read_unanswered()
+            for e in open_qs:
+                console.print(f"  [yellow]{e['id']}[/yellow] {e['timestamp']}  {e['question']}  [dim]({e['reason']})[/dim]")
+            console.print(f"[dim]{len(open_qs)} open question(s) in {config.UNANSWERED_LOG}[/dim]")
+            continue
         if q == "/new":
             await desk.new_session()
             console.print("[dim]new session[/dim]")

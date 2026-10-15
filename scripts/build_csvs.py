@@ -1,5 +1,5 @@
 """Build the structured CSVs used by the schedule/email tools from the
-Semester-I AY 2026-27 spreadsheets in data/docs/.
+Semester-I AY 2026-27 spreadsheets in data/raw/.
 
 Outputs (data/csv/):
   courses.csv  - one row per course offering (all departments)
@@ -17,7 +17,7 @@ from pathlib import Path
 import pandas as pd
 
 ROOT = Path(__file__).resolve().parent.parent
-DOCS = ROOT / "data" / "docs"
+DOCS = ROOT / "data" / "raw"
 OUT = ROOT / "data" / "csv"
 COURSES_XLSX = DOCS / "25_Finalized_Courses_List_AY2026-27_SemI.xlsx"
 SLOTS_XLSX = DOCS / "26_Slot_System_AY2026-27_SemI.xlsx"

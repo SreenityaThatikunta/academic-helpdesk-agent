@@ -4,7 +4,7 @@ import sys
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "eval"))
-from score import key_facts, score_record  # noqa: E402
+from score import asked_facts, score_record  # noqa: E402
 
 
 def rec(answer, calls=(), mode="single", agents=("academic_helpdesk",), drafts=(), logged=False, error=""):
@@ -68,14 +68,7 @@ def test_routing_uses_first_specialist():
     assert s["routed"] and s["correct"]
 
 
-def test_key_facts_ignore_years_and_detect_refusal():
-    assert key_facts("CSL7650 slot E on 22 Nov 2026") == key_facts("Slot E for CSL 7650, 22 November 2026")
-    assert key_facts("I don't know the answer") == "REFUSED"
-
-
 def test_asked_facts_ignore_incidental_numbers():
-    from score import asked_facts
-
     exp = {"behavior": "answer", "must_include": [r"\bE\b"]}
     a = rec("Slot E, Tue 11:00-11:50, LHC 106. Source: p. 3")
     b = rec("CSL7650 is in slot E (Tue/Thu/Fri). Source: sheet")
