@@ -9,7 +9,7 @@ from helpdesk.tools._data import normalize_code, source_of, table
 
 # Words students use for a department -> department_code in courses.csv
 DEPT_ALIASES = {
-    "SoLA": ["humanities", "hss", "liberal arts", "sola", "social science", "economics", "digital humanities"],
+    "SoLA": ["humanities", "hss", "liberal arts", "sola", "social science", "economics", "digital humanities", " ih "],
     "CSE": ["cse", "computer science", "cs department"],
     "AIDE": ["aide", "artificial intelligence", "data science", "ai department"],
     "EE": ["electrical", "ee "],
@@ -50,6 +50,7 @@ def _offerings(rows: pd.DataFrame) -> list[dict]:
                 "slot_codes": uniq("slot_code"),
                 "classrooms": uniq("classroom"),
                 "category": first["category"],
+                "ih_group": first["ih_group"],
                 "sections": len(g),
             }
         )
@@ -158,7 +159,8 @@ def list_courses(department: str = "", level: str = "", course_type: str = "") -
     filtered by department, course level, and/or course type.
 
     Args:
-        department: Department or school, e.g. "Humanities", "SoLA", "CSE", "Mathematics". Empty for all.
+        department: Department or school, e.g. "Humanities" (= Institute Humanities / IH courses,
+            including IH bouquet courses taught by AIDE), "CSE", "Mathematics". Empty for all.
         level: Course level, e.g. "400" or "4" for 400-level (course number 4xxx). Empty for all.
         course_type: Category text such as "PE", "OE", "PC", "Elective" (only some departments record it). Empty for all.
 
@@ -171,8 +173,15 @@ def list_courses(department: str = "", level: str = "", course_type: str = "") -
     applied = {}
     if department:
         codes = _match_department(department)
-        df = df[df["department_code"].isin(codes)]
-        applied["department"] = codes or f"no department matches '{department}'"
+        mask = df["department_code"].isin(codes)
+        if "SoLA" in codes:
+            # "Humanities" means Institute Humanities (IH): SoLA courses plus the IH2/IH3
+            # bouquet courses taught by other departments (e.g. AIDE economics)
+            mask |= df["ih_group"] != ""
+            applied["department"] = "Humanities (IH): SoLA courses + IH2/IH3 bouquet courses from other departments"
+        else:
+            applied["department"] = codes or f"no department matches '{department}'"
+        df = df[mask]
     if level:
         m = re.search(r"\d", str(level))
         if m:
@@ -187,7 +196,8 @@ def list_courses(department: str = "", level: str = "", course_type: str = "") -
         "count": len(offerings),
         "filters": applied,
         "courses": [
-            {k: o[k] for k in ("course_code", "course_name", "department", "slots", "instructors")} for o in offerings
+            {k: o[k] for k in ("course_code", "course_name", "department", "ih_group", "slots", "instructors")}
+            for o in offerings
         ],
         "source": source_of(df),
     }

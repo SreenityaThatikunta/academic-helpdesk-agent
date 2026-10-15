@@ -54,11 +54,19 @@ def test_get_slot_autonomous_systems():
     assert major and major[0]["date"].startswith("22 November 2026")
 
 
-def test_list_humanities_400_level():
+def test_list_humanities_400_level_includes_ih_courses_from_aide():
     r = list_courses(department="Humanities", level="400")
-    assert r["count"] == 2
-    assert {c["course_code"] for c in r["courses"]} == {"LAL4070", "LAL4850"}
+    assert r["count"] == 3
+    assert {c["course_code"] for c in r["courses"]} == {"LAL4070", "LAL4850", "AIL4070"}
     assert r["source"]
+
+
+def test_ih_groups_tagged_from_syllabi():
+    r = list_courses(department="HSS")
+    groups = {c["course_code"]: c["ih_group"] for c in r["courses"]}
+    assert groups["LAL3080"] == "IH2" and groups["AIL7380"] == "IH3"
+    # a SoLA course outside the IH bouquets is still Humanities, just untagged
+    assert groups["LAL1080"] == ""
 
 
 def test_list_courses_unknown_department_is_empty():

@@ -221,3 +221,11 @@ All are plain functions with type hints and Google-style docstrings (ADK builds 
 ### Status
 - [x] `search_documents`, `lookup_course`, `get_slot`, `list_courses`, `get_instructor_email`, `draft_email`, `log_unanswered_question`
 - [x] Unit tests for every tool (pure Python, no LLM)
+
+### Decision update (user, 2026-10-15): "Humanities" = IH (Institute Humanities)
+This **replaces** the earlier "400-level Humanities = 2" decision.
+- "Humanities" / "HSS" / "IH" now means **every course that counts as IH**: all SoLA courses (including the Digital Humanities and Economics groups) **plus** the IH2/IH3 bouquet courses taught by other departments, i.e. the six AIDE economics courses AIL4070, AIL6010, AIL6110, AIL7160, AIL7320, AIL7380.
+- New `courses.csv` column `ih_group` (IH2/IH3), filled by `build_csvs.py` from the course codes in the IH2/IH3 syllabus PDFs (D28/D29), so the tag can be traced to its source. All 15 IH codes exist in this semester's allocation.
+- `list_courses(department="Humanities")` → **60 courses** (54 SoLA + 6 AIDE IH).
+- **"How many 400-level electives has Humanities floated?" → 3**: LAL4070 Health Economics (Alok Ranjan, D), LAL4850 Introduction to Climate Change Economics (Souryabrata Mohapatra, D), **AIL4070 Fundamentals of Economics** (Souryabrata Mohapatra, I; AIDE, IH3). The eval answer key uses 3.
+- Tests updated: Humanities 400-level = 3, plus a new test that IH2/IH3 tags come from the syllabi and that untagged SoLA courses still count as Humanities. **22/22 pass.**

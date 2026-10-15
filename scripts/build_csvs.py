@@ -15,6 +15,7 @@ import sys
 from pathlib import Path
 
 import pandas as pd
+import pymupdf
 
 ROOT = Path(__file__).resolve().parent.parent
 DOCS = ROOT / "data" / "docs"
@@ -22,6 +23,10 @@ OUT = ROOT / "data" / "csv"
 COURSES_XLSX = DOCS / "25_Finalized_Courses_List_AY2026-27_SemI.xlsx"
 SLOTS_XLSX = DOCS / "26_Slot_System_AY2026-27_SemI.xlsx"
 MAJOR_XLSX = DOCS / "30_Major_Exam_Timetable_AY2026-27_SemI.xlsx"
+# Institute Humanities (IH) bouquets offered this semester: every course code in these
+# syllabus PDFs counts as IH, whichever department teaches it (e.g. AIDE economics courses)
+IH_SYLLABI = {"IH2": DOCS / "28_IH2_Courses_Syllabus_AY2026-27_SemI.pdf",
+              "IH3": DOCS / "29_IH3_Courses_Syllabus_AY2026-27_SemI.pdf"}
 SEMESTER = "AY 2026-27 Semester I"
 DUMMY_DOMAIN = "iitj.example"
 
@@ -163,6 +168,17 @@ def build_allocation() -> pd.DataFrame:
     return pd.DataFrame(rows)
 
 
+def ih_groups() -> dict[str, str]:
+    """Course code -> IH bouquet ("IH2"/"IH3") from the IH syllabus PDFs."""
+    out = {}
+    for group, pdf in IH_SYLLABI.items():
+        with pymupdf.open(pdf) as d:
+            text = "".join(p.get_text() for p in d)
+        for code in re.findall(r"\b[A-Z]{3}\d{4}\b", text):
+            out.setdefault(code, group)
+    return out
+
+
 def build_courses() -> pd.DataFrame:
     """Classroom allocation first (final); finalized-list rows fill in category / offered_for
     and add courses the allocation doesn't have."""
@@ -174,8 +190,11 @@ def build_courses() -> pd.DataFrame:
     missing["slot_code"] = missing["slot"].map(_slot_code)
     missing["classroom"] = missing["registered"] = ""
     cols = ["department_code", "department", "course_code", "course_name", "level", "ltp", "credits", "instructor",
-            "slot", "slot_code", "classroom", "registered", "category", "offered_for", "remarks", "semester", "source"]
-    return pd.concat([alloc, missing], ignore_index=True)[cols].fillna("")
+            "slot", "slot_code", "classroom", "registered", "category", "ih_group", "offered_for", "remarks", "semester",
+            "source"]
+    courses = pd.concat([alloc, missing], ignore_index=True)
+    courses["ih_group"] = courses["course_code"].map(ih_groups())
+    return courses[cols].fillna("")
 
 
 def build_finalized() -> pd.DataFrame:
