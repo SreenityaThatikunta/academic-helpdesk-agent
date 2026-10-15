@@ -33,3 +33,28 @@ def log_refusals(callback_context: CallbackContext, llm_response: LlmResponse) -
     log_unanswered_question(question, f"auto-logged by {callback_context.agent_name}: refused without calling the tool")
     callback_context.state[LOGGED_FLAG] = True
     return None
+
+
+def drop_transfer_noise(callback_context: CallbackContext, llm_request) -> None:
+    """before_model_callback for specialists: remove transfer_to_agent bookkeeping from the context.
+
+    After a transfer ADK shows the specialist the router's `transfer_to_agent` call and its
+    `None` result as extra "For context: ..." user messages, so the newest user turn the model
+    sees is noise instead of the student's question. 8B models then skip instructions such as
+    "ask for the programme first". Real messages from other agents are kept.
+    """
+    contents = llm_request.contents or []
+
+    def text(c):
+        return "".join(p.text or "" for p in (c.parts or []))
+
+    drop = set()
+    for i, c in enumerate(contents):
+        if c.role == "user" and "`transfer_to_agent`" in text(c):
+            drop.add(i)
+            # the "For context: ..." preamble ADK puts right before each quoted block
+            if i > 0 and text(contents[i - 1]).startswith("For context:"):
+                drop.add(i - 1)
+    if drop:
+        llm_request.contents = [c for i, c in enumerate(contents) if i not in drop]
+    return None

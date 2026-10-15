@@ -1,0 +1,289 @@
+[
+ {
+  "question": "What is the attendance requirement to sit in the Major exam?",
+  "answer": "According to the current attendance policy, a student is expected to have full attendance in each course unless they take a leave of absence for valid medical or bonafide reasons. In any case, the attendance of a student should not fall below 75% in a course. However, the student will be allowed to appear for the exams even if their attendance falls below 75%. Students not meeting the attendance criterion of 75% will be required to score at least a C grade to pass a course.\n\nSource: Circular 51: Amendment in the Attendance Policy, pp. 1-2",
+  "tool_calls": [
+   {
+    "agent": "helpdesk_orchestrator",
+    "name": "transfer_to_agent",
+    "args": {
+     "agent_name": "policy_agent"
+    }
+   },
+   {
+    "agent": "policy_agent",
+    "name": "search_documents",
+    "args": {
+     "top_k": "5",
+     "query": "attendance requirement for Major exam"
+    }
+   }
+  ],
+  "agents": [
+   "helpdesk_orchestrator",
+   "policy_agent"
+  ],
+  "seconds": 36.71,
+  "error": ""
+ },
+ {
+  "question": "What is the slot for the course Autonomous Systems?",
+  "answer": "The slot for the course Autonomous Systems is E, and the class timings are Tuesday, Thursday, and Friday, 11:00 AM - 11:50 AM. The classroom is LHC 106. The exams are on September 18, 2026 (Minor) and November 22, 2026 (Major), both tentative.\n\nSource: 26_Slot_System_AY2026-27_SemI.xlsx",
+  "tool_calls": [
+   {
+    "agent": "helpdesk_orchestrator",
+    "name": "transfer_to_agent",
+    "args": {
+     "agent_name": "schedule_agent"
+    }
+   },
+   {
+    "agent": "schedule_agent",
+    "name": "get_slot",
+    "args": {
+     "course": "Autonomous Systems"
+    }
+   }
+  ],
+  "agents": [
+   "helpdesk_orchestrator",
+   "schedule_agent"
+  ],
+  "seconds": 13.0,
+  "error": ""
+ },
+ {
+  "question": "How many 400 level electives have been floated by the Humanities department in this semester?",
+  "answer": "There are 3 400-level electives floated by the Humanities department in this semester: LAL4070 (Health Economics), LAL4850 (Introduction to Climate Change Economics), and AIL4070 (Fundamentals of Economics).\n\nSource: 26_Slot_System_AY2026-27_SemI.xlsx (Classroom Allocation)",
+  "tool_calls": [
+   {
+    "agent": "helpdesk_orchestrator",
+    "name": "transfer_to_agent",
+    "args": {
+     "agent_name": "schedule_agent"
+    }
+   },
+   {
+    "agent": "schedule_agent",
+    "name": "list_courses",
+    "args": {
+     "department": "Humanities",
+     "level": "400"
+    }
+   }
+  ],
+  "agents": [
+   "helpdesk_orchestrator",
+   "schedule_agent"
+  ],
+  "seconds": 8.89,
+  "error": ""
+ },
+ {
+  "question": "How many Open Elective credits do I need to earn in order to get a B.Tech. Degree?",
+  "answer": "According to the B.Tech AIDE Curriculum (2026 onwards), p. 4, students in the regular B.Tech programme are required to complete 12 credits of open elective courses.\n\nSource: [B.Tech AIDE Curriculum (2026 onwards) | 2026-06 | page 4]",
+  "tool_calls": [
+   {
+    "agent": "helpdesk_orchestrator",
+    "name": "transfer_to_agent",
+    "args": {
+     "agent_name": "policy_agent"
+    }
+   },
+   {
+    "agent": "policy_agent",
+    "name": "search_documents",
+    "args": {
+     "query": "Open Elective credits for B.Tech degree",
+     "top_k": "5",
+     "document": ""
+    }
+   }
+  ],
+  "agents": [
+   "helpdesk_orchestrator",
+   "policy_agent"
+  ],
+  "seconds": 17.68,
+  "error": ""
+ },
+ {
+  "question": "Write an email to the course instructor of CSL7570 that I need leave for 2 days",
+  "answer": "It seems that CSL7570 is not a course offered in Semester I, AY 2026-27. However, based on the suggestions provided, it is possible that you meant to ask about CSL7650 (Autonomous Systems), CSL7560 (Advanced Data Structure and Algorithms), or CSL7350 (Selected Topics in AI). Could you please confirm which course you are referring to?\n\nIf you confirm the course, I can draft an email to the instructor on your behalf.\n\n(If you meant one of the suggested courses, please let me know and I will draft an email accordingly.)\n\nDraft Email (To be saved for review, not sent):\n\nTo: [Not available]\nSubject: Leave Request for 2 days\n\nDear Prof. [surname],\n\nI am writing to request leave for 2 days for CSL[course code]. I will be unavailable from [start date] to [end date]. I will ensure that I catch up on any missed work as soon as possible.\n\nPlease let me know if there are any supporting documents that I need to submit.\n\nThank you.\n\nRegards,\n[Your Name]\n[Roll No.]\n\nPlease confirm the course code and I will draft the email accordingly.",
+  "tool_calls": [
+   {
+    "agent": "helpdesk_orchestrator",
+    "name": "transfer_to_agent",
+    "args": {
+     "agent_name": "email_agent"
+    }
+   },
+   {
+    "agent": "email_agent",
+    "name": "get_instructor_email",
+    "args": {
+     "course_or_instructor": "CSL7570"
+    }
+   }
+  ],
+  "agents": [
+   "helpdesk_orchestrator",
+   "email_agent"
+  ],
+  "seconds": 18.08,
+  "error": ""
+ },
+ {
+  "question": "What are the available dining options on the campus?",
+  "answer": "I don't know the answer to that. I've forwarded your question to the academic office.",
+  "tool_calls": [
+   {
+    "agent": "helpdesk_orchestrator",
+    "name": "log_unanswered_question",
+    "args": {
+     "question": "What are the available dining options on the campus?",
+     "reason": "out of scope: campus dining"
+    }
+   }
+  ],
+  "agents": [
+   "helpdesk_orchestrator"
+  ],
+  "seconds": 2.76,
+  "error": ""
+ },
+ {
+  "question": "What is the best way to reach the campus from Jodhpur city center?",
+  "answer": "I don't know the answer to that. I've forwarded your question to the academic office.",
+  "tool_calls": [
+   {
+    "agent": "helpdesk_orchestrator",
+    "name": "log_unanswered_question",
+    "args": {
+     "question": "What is the best way to reach the campus from Jodhpur city center?",
+     "reason": "out of scope: campus transportation"
+    }
+   }
+  ],
+  "agents": [
+   "helpdesk_orchestrator"
+  ],
+  "seconds": 3.89,
+  "error": ""
+ },
+ {
+  "question": "How many Open Elective credits do I need to earn in order to get a B.Tech. Degree?",
+  "conversation_turn": 1,
+  "answer": "According to the B.Tech AIDE Curriculum (2026 onwards), p. 4, students in the regular B.Tech programme are required to complete 12 credits of open elective courses.\n\nSource: [B.Tech AIDE Curriculum (2026 onwards) | 2026-06 | page 4]",
+  "tool_calls": [
+   {
+    "agent": "helpdesk_orchestrator",
+    "name": "transfer_to_agent",
+    "args": {
+     "agent_name": "policy_agent"
+    }
+   },
+   {
+    "agent": "policy_agent",
+    "name": "search_documents",
+    "args": {
+     "query": "Open Elective credits for B.Tech degree",
+     "top_k": "5",
+     "document": ""
+    }
+   }
+  ],
+  "agents": [
+   "helpdesk_orchestrator",
+   "policy_agent"
+  ],
+  "seconds": 18.73,
+  "error": ""
+ },
+ {
+  "question": "I am in B.Tech CSE, joined in 2023.",
+  "conversation_turn": 2,
+  "answer": "According to the B.Tech CSE Curriculum (batches before 2026), p. 18, students in the B.Tech CSE programme are required to complete 10 credits of open elective courses.\n\nSource: [B.Tech CSE Curriculum (batches before 2026) | 2025-07 | page 18]",
+  "tool_calls": [
+   {
+    "agent": "helpdesk_orchestrator",
+    "name": "transfer_to_agent",
+    "args": {
+     "agent_name": "policy_agent"
+    }
+   },
+   {
+    "agent": "policy_agent",
+    "name": "search_documents",
+    "args": {
+     "document": "CSE Curriculum",
+     "query": "Open Elective credits for B.Tech CSE degree",
+     "top_k": "5"
+    }
+   }
+  ],
+  "agents": [
+   "helpdesk_orchestrator",
+   "policy_agent"
+  ],
+  "seconds": 34.06,
+  "error": ""
+ },
+ {
+  "question": "I missed my minor exam of CSL7650 because I was ill. What is the rule for a make-up exam? Also write an email to the instructor asking for a make-up exam.",
+  "conversation_turn": 1,
+  "answer": "The rule for a make-up exam is as follows:\n\n* A student who has missed a minor or major examination due to genuine reasons like illness can be permitted to write a make-up examination for the missed components.\n* The student should make an application to the Dean (Academics) through the course instructor within ten days from the date of the missed examination, explaining the reasons for their absence.\n* Applications received after this period need not be entertained.\n* The permission to take a make-up examination will be given under exceptional circumstances such as admission to a hospital due to illness.\n* A student needs to produce the necessary document subject to one of the following categories:\n\t+ Students residing in the Hostels should produce a Medical Certificate issued by the Medical Officer of the Institute that he/she was admitted in the Hospital during the period of the missed quiz/exam.\n\t+ Students residing in the Hostels and taking medical consultation with outside Doctors are required to obtain written permission from the Medical Officer of the Institute Hospital before they proceed for such consultation.\n\t+ Students residing in the hostels but taking medical consultation with outside Doctors are required to obtain an endorsement on the certificate of treatment by the Medical Officer of the Institute Hospital.\n\t+ A student staying outside the Campus permanently / temporarily must produce a medical certificate from the Registered Medical Practitioner and the same should be duly endorsed by the parent/guardian.\n\nSource: [Academic Regulations (web page) | 2026 | page 1]\n\nNow, let's draft an email to the instructor asking for a make-up exam:\n\nSubject: Request for Make-up Exam for CSL7650\n\nDear [Instructor's Name],\n\nI am writing to request a make-up exam for the minor exam of CSL7650 that I missed due to illness. I was admitted to the hospital during the period of the missed quiz/exam and have attached a medical certificate issued by the Medical Officer of the Institute.\n\nI would like to request a make-up exam for the missed minor exam as soon as possible. Please let me know the date and time of the make-up exam and any other necessary details.\n\nThank you for your understanding and support.\n\nSincerely,\n[Your Name]\n\nPlease note that you should attach the medical certificate to the email and make sure to include the instructor's name and your name in the email.",
+  "tool_calls": [
+   {
+    "agent": "helpdesk_orchestrator",
+    "name": "transfer_to_agent",
+    "args": {
+     "agent_name": "policy_agent"
+    }
+   },
+   {
+    "agent": "policy_agent",
+    "name": "search_documents",
+    "args": {
+     "document": "",
+     "top_k": "5",
+     "query": "make-up exam rule"
+    }
+   }
+  ],
+  "agents": [
+   "helpdesk_orchestrator",
+   "policy_agent"
+  ],
+  "seconds": 39.38,
+  "error": ""
+ },
+ {
+  "question": "When is the major exam for Autonomous Systems, and what is the attendance requirement to sit in it?",
+  "conversation_turn": 1,
+  "answer": "The major exam for Autonomous Systems is not mentioned in the search results. However, the exam dates in the time tables are tentative.\n\nThe attendance requirement to sit in the exam is not linked to the course attendance. According to the revised policy, a student is expected to have full attendance in each course unless the student takes a leave of absence for valid medical or bonafide reasons. In any case, the attendance of a student should not fall below 75% in a course.\n\nSource: [Circular 51: Amendment in the Attendance Policy | 2024-07-08 | page 1-2]",
+  "tool_calls": [
+   {
+    "agent": "helpdesk_orchestrator",
+    "name": "transfer_to_agent",
+    "args": {
+     "agent_name": "schedule_agent"
+    }
+   },
+   {
+    "agent": "schedule_agent",
+    "name": "search_documents",
+    "args": {
+     "query": "attendance requirement for Autonomous Systems major exam",
+     "top_k": "5"
+    }
+   }
+  ],
+  "agents": [
+   "helpdesk_orchestrator",
+   "schedule_agent"
+  ],
+  "seconds": 21.1,
+  "error": ""
+ }
+]

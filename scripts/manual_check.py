@@ -28,6 +28,15 @@ QUESTIONS = [
     "What is the best way to reach the campus from Jodhpur city center?",
 ]
 
+# Each conversation runs in one session (later turns depend on earlier ones)
+CONVERSATIONS = [
+    ["How many Open Elective credits do I need to earn in order to get a B.Tech. Degree?",
+     "I am in B.Tech CSE, joined in 2023."],
+    ["I missed my minor exam of CSL7650 because I was ill. What is the rule for a make-up exam? "
+     "Also write an email to the instructor asking for a make-up exam."],
+    ["When is the major exam for Autonomous Systems, and what is the attendance requirement to sit in it?"],
+]
+
 
 async def run(mode: str, model: str) -> list[dict]:
     desk = Helpdesk(build_agent(mode, model))
@@ -35,10 +44,20 @@ async def run(mode: str, model: str) -> list[dict]:
     for q in QUESTIONS:
         t = await desk.ask(q, fresh=True)
         calls = ", ".join(f"{c['name']}({json.dumps(c['args'], ensure_ascii=False)[:70]})" for c in t.tool_calls)
-        print(f"\n### Q: {q}\n[{t.seconds}s] tools: {calls or '-'}")
+        print(f"\n### Q: {q}\n[{t.seconds}s] route: {' → '.join(t.agents)}\n  tools: {calls or '-'}")
         print(t.error or t.answer)
         out.append({"question": q, "answer": t.answer, "tool_calls": t.tool_calls, "agents": t.agents,
                     "seconds": t.seconds, "error": t.error})
+    for conv in CONVERSATIONS:
+        await desk.new_session()
+        for turn_no, q in enumerate(conv):
+            t = await desk.ask(q)
+            calls = ", ".join(f"{c['name']}({json.dumps(c['args'], ensure_ascii=False)[:70]})" for c in t.tool_calls)
+            print(f"\n### [conversation, turn {turn_no + 1}] {q}\n[{t.seconds}s] route: {' → '.join(t.agents)}\n"
+                  f"  tools: {calls or '-'}")
+            print(t.error or t.answer)
+            out.append({"question": q, "conversation_turn": turn_no + 1, "answer": t.answer,
+                        "tool_calls": t.tool_calls, "agents": t.agents, "seconds": t.seconds, "error": t.error})
     return out
 
 

@@ -71,5 +71,9 @@ def test_amendment_marks_old_passage_superseded(tmp_path, monkeypatch):
                            "note": "replaced"}])
     chunks = ingest.chunk_document(row, amend, {"D02": "Circular 51"})
     hit = [c for c in chunks if "allowed to appear" in c.text]
-    assert hit and all(c.meta["status"] == "superseded" and "SUPERSEDED by Circular 51" in c.text for c in hit)
+    assert hit and all(c.meta["status"] == "amended" and "SUPERSEDED by Circular 51" in c.text for c in hit)
     assert any(c.meta["status"] == "current" for c in chunks)
+
+
+def test_tokenize_normalizes_makeup_spellings():
+    assert tokenize("make-up exam") == tokenize("Makeup exam") == tokenize("make up exam") == ["makeup", "exam"]

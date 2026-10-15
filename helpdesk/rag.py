@@ -27,8 +27,15 @@ STOPWORDS = set(
 )
 
 
+# Spelling variants that would otherwise split into different tokens ("make-up" -> make, up)
+VARIANTS = [(re.compile(r"\bmake[\s-]?ups?\b"), "makeup"), (re.compile(r"\bre[\s-]exam"), "reexam")]
+
+
 def tokenize(text: str) -> list[str]:
-    return [t for t in re.findall(r"[a-z0-9]+", text.lower()) if t not in STOPWORDS and len(t) > 1]
+    text = text.lower()
+    for pat, repl in VARIANTS:
+        text = pat.sub(repl, text)
+    return [t for t in re.findall(r"[a-z0-9]+", text) if t not in STOPWORDS and len(t) > 1]
 
 
 @lru_cache(maxsize=1)
@@ -119,10 +126,15 @@ def search(query: str, k: int = config.TOP_K, max_distance: float = config.MAX_D
     doc_of = {}
     for cid, meta in zip(pool["ids"], pool["metadatas"]):
         doc_of[cid] = meta["doc_id"]
-        if meta.get("status") == "superseded":
+        if meta.get("status") == "amended":
+            # replaced by a named newer document (data/amendments.csv): never show it
+            del fused[cid]
+        elif meta.get("status") == "superseded":
             fused[cid] *= SUPERSEDED_WEIGHT
     top_ids, per_doc = [], Counter()
     for cid, _ in fused.most_common():
+        if cid not in doc_of:
+            continue
         if allowed or per_doc[doc_of[cid]] < MAX_PER_DOC:
             top_ids.append(cid)
             per_doc[doc_of[cid]] += 1

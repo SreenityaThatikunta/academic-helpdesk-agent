@@ -404,3 +404,115 @@ Two-turn check ("How many OE credits…?" → "I am in B.Tech CSE, joined in 202
 - [x] `cli.py` REPL (`--ask`, `--mode`, `--model`) + `adk web agent` entry point
 - [x] Manually checked the 5 example questions + 2 out-of-scope on qwen3:8b and llama3.1:8b
 - 25/25 unit tests pass
+
+---
+
+## Phase 5: Multi-Agent Version (in progress)
+
+**Date:** 2026-10-15
+
+### Design
+- **`helpdesk_orchestrator`** (root `LlmAgent`) with `sub_agents=[policy_agent, schedule_agent, email_agent]`. It routes with ADK's built-in `transfer_to_agent` (generated from `sub_agents`; each sub-agent's `description` is its area). Its only tool is `log_unanswered_question`, so it never answers academic questions itself: out of scope → refuse + log.
+- **`policy_agent`**: `search_documents`. Handles regulations, credits/curriculum (including the programme/batch clarification), calendar, circulars.
+- **`schedule_agent`**: `get_slot`, `lookup_course`, `list_courses`, `search_documents`. Handles course slots/timings/rooms/instructors/exam dates and course counts.
+- **`email_agent`**: `get_instructor_email`, `lookup_course`, `draft_email`, plus `search_documents`. The plan listed only the first three; search was added so a make-up request can quote the make-up vs I-grade rule, which the email prompt asks for.
+- Every agent also has `log_unanswered_question` and the `log_refusals` guard (`after_model_callback`), so a refusal is logged whichever agent makes it.
+- **Mixed requests:** the orchestrator transfers to the agent for the first part. Specialists may transfer to a peer (ADK allows peer transfer by default) after finishing their part; each specialist's prompt has a "HANDING OVER" block listing the other specialists.
+- One `LiteLlm` model object is shared by all four agents (same Ollama model, with `think=False` for qwen3).
+
+### Prompts (`helpdesk/prompts.py`)
+- `TOOLS_FIRST` is now built by `tools_first(*areas)` from one line per area, so each specialist only sees the routing lines for its own tools. The single-agent prompt is textually unchanged (5,683 characters).
+- `AGENT_AREAS`: one description per specialist, used as the ADK `description` (what the router reads) and in the prompts.
+- `orchestrator_instruction()` (2.1k characters): router rules (transfer, don't answer; mixed → first part; out of scope → refuse + log; greetings).
+- `policy_instruction()` / `schedule_instruction()` / `email_instruction()` (3.8–4.2k characters): SCOPE + their own tools-first block + GROUNDING + their section + HANDING OVER.
+- `build_agent("multi")` now returns the orchestrator; `--mode multi` works in the CLI and `manual_check.py`; `HELPDESK_MODE=multi` works for `adk web`.
+
+### Manual check, multi run 1 (qwen3:8b)
+**Routing: 7/7 correct.** Attendance → policy_agent; Autonomous Systems slot → schedule_agent; Humanities 400-level → schedule_agent; OE credits → policy_agent; CSL7570 email → email_agent; dining and transport → the orchestrator refused them itself.
+
+**Answers:** same as single mode (attendance ✅ Circular 51; slot ✅ plus the minor/major exam dates; Humanities ✅ 3; CSL7570 ✅ "Did you mean CSL7650…?"; refusals ✅). **One exception:** for OE credits the policy_agent answered "12" (AIDE curriculum) instead of asking for the programme. 0/3 over repeated runs.
+
+### Debugging "ask for programme/batch" in multi mode
+| Attempt | Result (3 runs each) |
+|---|---|
+| Add a "clarify" exception line to the tools-first block (the generic "call search_documents FIRST" line came before the ask rule) | single 3/3 ask; **multi 0/3** (policy agent assumed `document="CSE Curriculum"`, copying the prompt's example) |
+| Make the example generic (`"<their branch> Curriculum"`, "never assume the branch") | multi 0/3 (searched everything, answered 12) |
+| Put a `STEP 0` clarification rule at the very top of the policy prompt | multi 0/3 |
+| Dumped the policy agent's actual LLM request | After a transfer ADK (a) **appends its own transfer instructions to the end of the system prompt** ("If you are the best to answer the question according to your description, you can answer it… call `transfer_to_agent`…"), (b) adds a `transfer_to_agent` tool, and (c) adds the router's `transfer_to_agent` call and its `None` result as extra "For context:" **user** messages after the student's question |
+| `drop_transfer_noise` before_model_callback: remove (c) from specialists' context | multi 0/3 |
+| **Isolation:** the policy prompt + tools as a standalone root agent | **3/3 ask** |
+| Multi-agent with specialists that **can't transfer** (`disallow_transfer_to_parent/peers=True`; ADK then adds neither (a) nor (b)) | **3/3 ask** |
+
+**Root cause:** ADK's auto-appended transfer instructions (a/b) sit at the end of the system prompt and tell the agent it may simply answer. For an 8B model these generic lines override the agent's own "ask first" rule.
+
+### Design change
+- **Specialists don't transfer** (`disallow_transfer_to_parent=True`, `disallow_transfer_to_peers=True`). Only the orchestrator routes. Because a specialist can't keep control, ADK's runner sends **every new student message back to the orchestrator**, which re-routes it, so multi-turn follow-ups ("I'm CSE, 2023") still work.
+- **Mixed requests** go to the one specialist that can do all of it: email_agent and schedule_agent also have `search_documents`. Rule + email → email_agent; course slot + rule → schedule_agent. A specialist answers what it can and tells the student to ask anything else separately.
+- `drop_transfer_noise` stays on the specialists (it removes bookkeeping messages that carry no information).
+- The prompts' "HANDING OVER" blocks are replaced by an "outside your area" line, and the orchestrator's mixed-request rule changes as above.
+
+**Implemented:** specialists have `disallow_transfer_to_parent/peers=True`; `_own_area()` replaces the HANDING OVER block; orchestrator rule 2 now sends mixed requests to the specialist that can do all of it. (An edit accidentally deleted `CLARIFY_FIRST`; the next run crashed and briefly showed stale JSON before this was noticed and fixed.) OE question in multi mode: **5/5 ask** for programme and year.
+
+`manual_check.py` gained `CONVERSATIONS`, each run in one session: the two-turn OE flow and two mixed requests.
+
+### Manual check, multi run 2 (qwen3:8b)
+**Routing 11/11 correct**, including the OE follow-up being re-routed by the orchestrator to policy_agent, and both mixed requests going to the specialist that can do all of it.
+| Request | Route | Result |
+|---|---|---|
+| Attendance | → policy | ✅ 75% / de-registration (Circular 51) |
+| Slot | → schedule | ✅ |
+| 400-level Humanities | → schedule | ✅ 3 |
+| OE credits | → policy | ✅ asks for branch + year |
+| Email to the CSL7570 instructor | → email | ❌ "I don't know the answer…" (it called `lookup_course`, which returned suggestions, but the generic refusal rule won) |
+| Dining / transport | orchestrator | ✅ refused + logged |
+| OE turn 2 "B.Tech CSE, joined 2023" | → policy (re-routed) | ✅ **10**, CSE curriculum p. 10 |
+| Mixed: make-up rule + email (CSL7650, ill) | → email | ⚠️ `search_documents` → `get_instructor_email` → `draft_email` ✅ (draft saved), but the reply **didn't state the rule or show the draft**, and cited the course list instead of the exam guidelines |
+| Mixed: major exam date + attendance rule | → schedule | ⚠️ date ✅ (22 Nov, tentative), but it **didn't search** for the attendance rule ("not provided… consult the regulations") |
+
+**Fixes:**
+- GROUNDING: "a course that isn't found but comes with suggestions is **not** an 'I don't know': offer the suggestions".
+- The email and schedule specialists also get the `policy` tools-first line, so they search when part of the request is about a rule.
+- EMAIL: if the student also asked a question, answer it first with its source, then show the full draft text.
+
+**Fixes after run 2 (implemented):** GROUNDING exception (a course that isn't found but has suggestions → "Did you mean…", not a refusal); email/schedule specialists get the `policy` tools-first line; EMAIL answers the student's question first, then shows the full draft.
+
+### Manual check, multi run 3 and follow-ups (qwen3:8b)
+- CSL7570 → "Did you mean CSL7650…?" ✅. The make-up mixed request shows the full draft ✅.
+- **Exam date + attendance:** the answer said "75%", but the tool calls showed **no `search_documents`**. The number came from the model's own knowledge (right by luck, ungrounded, cited to the exam timetable). **Fix:** a "MULTI-PART REQUESTS" rule in every specialist's `_own_area`: each part needs its own tool call; rule parts must call `search_documents` and get their own Source line. Re-check 3/3: `get_slot` + `search_documents` for both mixed requests.
+- **But** the schedule agent then used `search_documents(document="Exam Guidelines")` and presented a passage about *online-exam camera rules* as "the attendance requirement" ❌. This is the **second time the `document` filter was misused**. **Fix:** schedule_agent and email_agent get `search_documents_all`, the same tool name for the model but **without** the `document` parameter (checked: ADK schema `['query', 'top_k']`). Only policy_agent keeps the scoped version, for curricula.
+- **Make-up rule:** grounded, but taken from the **2019 regulations** (application to the Dean, make-up week of the *next* semester). The **2024 Examination Guidelines (D31)** changed this. Fixes:
+  1. Amendment register: 2019 §8 make-up passages in D01, D21 **and the PG Regulations D05** (which repeat the same text) → superseded by D31.
+  2. **New status `amended`**: a passage replaced by a specific named document is **dropped from search results**. Whole superseded documents (D04/D18/D20/D32) stay at 0.5× weight, because they are sometimes the only source.
+  3. **Keyword-search spelling normalisation:** "make-up" / "make up" / "makeup" → `makeup` (and "re-exam" → `reexam`). The guidelines spell it "Makeup", so keyword search had never matched the query "make-up exam"; **D31 wasn't in the top 5 at all.** Now D31 pp. 10 and 8 rank 1st and 2nd. New test.
+  - Retrieval check after these changes: hit@1 12/18, hit@5 18/18.
+  - Make-up mixed request: multi **2/2** cite the 2024 Guidelines and save a draft. **Single mode 2/2 answers the rule but skips the email part.**
+
+### Manual check, final (multi mode)
+| Request | qwen3:8b | llama3.1:8b (before the last retrieval fixes) |
+|---|---|---|
+| Attendance | ✅ policy, Circular 51 | ❌ policy, mixed old and new rules ("allowed to appear… need C grade") |
+| Slot | ✅ schedule | ✅ schedule, + timings, room, exams |
+| 400-level Humanities | ✅ schedule, 3 | ✅ schedule, 3 with names |
+| OE credits | ✅ policy, asks for branch + year | ❌ policy, "12" (AIDE) |
+| Email to the CSL7570 instructor | ✅ email, "Did you mean CSL7650…?" | ✅ email, "Did you mean…?" |
+| Dining / transport | ✅ orchestrator refusal | ✅ orchestrator refusal, tool called |
+| OE turn 2 (CSE, 2023) | ✅ policy, 10 (CSE p. 10) | ✅ policy, 10 (cites p. 18) |
+| Make-up rule + email | ✅ email, 2024 Guidelines + draft | ❌ **mis-routed to policy**, no draft |
+| Exam date + attendance | ✅ schedule, 22 Nov + Circular 51 | ❌ schedule, skipped `get_slot` ("not mentioned") |
+| **Routing** | **11/11** | 10/11 |
+
+### Observations for the report
+- **ADK's auto-appended transfer instructions override specialist prompts for 8B models.** This was the key multi-agent finding. Router-only transfer (specialists can't transfer) fixed it, and every new message still gets re-routed, so multi-turn works.
+- **Multi-agent helps mixed requests:** with qwen3, the make-up rule + email request was fully handled in multi mode (2/2) but only half in single mode (2/2 skipped the email). Specialists have shorter, focused prompts.
+- **Multi-agent costs latency:** every request takes an extra router call (~1–2 s) before the specialist starts. Out-of-scope refusals are *faster* (~0.9 s, the router answers directly).
+- **Tool parameters that small models can misuse should be removed, not explained** (`course_type`, then `document` twice).
+- **Conflicting versions of a rule are the main source of wrong-but-grounded answers.** An amendment register plus dropping amended passages worked better than prompt rules like "the newest source wins".
+
+### Status
+- [x] Policy agent (`search_documents` with document scoping, `log_unanswered_question`)
+- [x] Schedule agent (`get_slot`, `lookup_course`, `list_courses`, `search_documents` (unscoped), `log_unanswered_question`)
+- [x] Email agent (`get_instructor_email`, `lookup_course`, `draft_email`, `search_documents` (unscoped), `log_unanswered_question`)
+- [x] Orchestrator root agent with `sub_agents` and a routing/refusal prompt
+- [x] Mixed questions (routed to the specialist that can do all of it; each part has its own tool call + source)
+- [x] `--mode single|multi` in the CLI, `manual_check.py`, `HELPDESK_MODE` for `adk web` (the eval runner in Phase 6 uses `build_agent(mode, model)`)
+- 26/26 unit tests pass

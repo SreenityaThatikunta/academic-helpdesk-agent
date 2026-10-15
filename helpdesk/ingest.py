@@ -196,7 +196,9 @@ def chunk_document(row: pd.Series, amendments: pd.DataFrame | None = None, title
             note = ""
             for a in getattr(amends, "itertuples", lambda: [])():
                 if _norm_ws(a.match) in _norm_ws(piece):
-                    status = "superseded"
+                    # "amended": a specific newer document replaces this passage (search drops it);
+                    # "superseded" (whole old document) is only down-weighted
+                    status = "amended"
                     note = f" | SUPERSEDED by {titles.get(a.superseded_by, a.superseded_by)}: {a.note}"
             cid = hashlib.sha1(f"{row.doc_id}|{pg.page}|{i}|{piece}".encode()).hexdigest()[:16]
             # Contextual header: chunks rarely name their own document ("IH2", "PhD"),

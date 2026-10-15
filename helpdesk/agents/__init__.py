@@ -9,4 +9,8 @@ def build_agent(mode: str | None = None, model: str | None = None):
         from helpdesk.agents.single_agent import build_single_agent
 
         return build_single_agent(model)
-    raise ValueError(f"Unknown mode {mode!r} (multi-agent mode arrives in Phase 5)")
+    if mode == "multi":
+        from helpdesk.agents.multi_agent import build_multi_agent
+
+        return build_multi_agent(model)
+    raise ValueError(f"Unknown mode {mode!r} (use 'single' or 'multi')")

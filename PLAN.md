@@ -128,12 +128,12 @@ academic-helpdesk-agent/
 - [x] Manually check the 5 example questions + the 2 out-of-scope ones
 
 ### Phase 5: Multi-Agent Version
-- [ ] Policy agent (tools: `search_documents`, `log_unanswered_question`)
-- [ ] Schedule agent (tools: `lookup_course`, `get_slot`, `list_courses`, `search_documents`)
-- [ ] Email agent (tools: `lookup_course`, `get_instructor_email`, `draft_email`)
-- [ ] Orchestrator root agent with `sub_agents` and a routing/refusal prompt
-- [ ] Handle mixed questions (e.g. "what's the leave rule, and email my CSL7650 instructor (CSL7570 in the assignment is a typo)")
-- [ ] `--mode single|multi` switch in the CLI and the eval runner
+- [x] Policy agent (tools: `search_documents`, `log_unanswered_question`)
+- [x] Schedule agent (tools: `lookup_course`, `get_slot`, `list_courses`, `search_documents`)
+- [x] Email agent (tools: `lookup_course`, `get_instructor_email`, `draft_email`)
+- [x] Orchestrator root agent with `sub_agents` and a routing/refusal prompt
+- [x] Handle mixed questions (e.g. "what's the leave rule, and email my CSL7650 instructor (CSL7570 in the assignment is a typo)")
+- [x] `--mode single|multi` switch in the CLI and the eval runner
 
 ### Phase 6: Evaluation
 - [ ] Write `eval/questions.jsonl` with 20–30 prompts, each tagged with category (`policy`, `schedule`, `count`, `email`, `out_of_scope`), expected answer and expected source doc
