@@ -95,6 +95,14 @@ cp .env.example .env            # model, mode, paths; defaults work
 
 REPL commands: `/new` (new session), `/unanswered` (questions forwarded to a human), `/quit`.
 
+**Web UI** (chat, new chat, sources panel, document graph)
+
+```bash
+.venv/bin/python -m helpdesk.web.server              # http://localhost:8000, mode/model from .env
+```
+
+The graph (Quartz-style) shows the 33 documents grouped by category, "amended by" links from `data/amendments.csv`, and the current chat's questions linked to the documents behind each answer. Chats are kept in the browser.
+
 **ADK dev UI** (mode/model from `.env`, e.g. `HELPDESK_MODE=multi`)
 
 ```bash
