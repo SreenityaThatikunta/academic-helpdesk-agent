@@ -1,0 +1,21 @@
+\begin{tikzpicture}[font=\small]
+\draw[gray!60] (0,0) -- (13.2,0);
+\draw[gray!20] (0,1.00) -- (13.2,1.00); \node[left,font=\scriptsize,gray] at (0,1.00) {25\%};
+\draw[gray!20] (0,2.00) -- (13.2,2.00); \node[left,font=\scriptsize,gray] at (0,2.00) {50\%};
+\draw[gray!20] (0,3.00) -- (13.2,3.00); \node[left,font=\scriptsize,gray] at (0,3.00) {75\%};
+\draw[gray!20] (0,4.00) -- (13.2,4.00); \node[left,font=\scriptsize,gray] at (0,4.00) {100\%};
+\fill[accent] (0.60,0) rectangle (1.50,3.48); \node[above,font=\scriptsize] at (1.05,3.48) {87};
+\fill[accent!40] (1.65,0) rectangle (2.55,2.78); \node[above,font=\scriptsize] at (2.10,2.78) {70};
+\node[below] at (1.57,0) {single / qwen3};
+\fill[accent] (3.80,0) rectangle (4.70,3.35); \node[above,font=\scriptsize] at (4.25,3.35) {84};
+\fill[accent!40] (4.85,0) rectangle (5.75,3.13); \node[above,font=\scriptsize] at (5.30,3.13) {78};
+\node[below] at (4.77,0) {multi / qwen3};
+\fill[accent] (7.00,0) rectangle (7.90,2.58); \node[above,font=\scriptsize] at (7.45,2.58) {65};
+\fill[accent!40] (8.05,0) rectangle (8.95,1.86); \node[above,font=\scriptsize] at (8.50,1.86) {46};
+\node[below] at (7.97,0) {single / llama3.1};
+\fill[accent] (10.20,0) rectangle (11.10,2.75); \node[above,font=\scriptsize] at (10.65,2.75) {69};
+\fill[accent!40] (11.25,0) rectangle (12.15,2.49); \node[above,font=\scriptsize] at (11.70,2.49) {62};
+\node[below] at (11.17,0) {multi / llama3.1};
+\fill[accent] (4.0,4.6) rectangle (4.3,4.85); \node[right] at (4.3,4.72) {Accuracy};
+\fill[accent!40] (6.6,4.6) rectangle (6.9,4.85); \node[right] at (6.9,4.72) {Groundedness};
+\end{tikzpicture}
