@@ -103,3 +103,42 @@ def route_empty_router_reply(callback_context: CallbackContext, llm_response: Ll
     target = next((agent for pat, agent in FALLBACK_ROUTES if pat.search(question)), "policy_agent")
     call = types.FunctionCall(name="transfer_to_agent", args={"agent_name": target})
     return LlmResponse(content=types.Content(role="model", parts=[types.Part(function_call=call)]))
+
+
+# ADK's transcript of another agent's tool result: "[agent] `tool` tool returned result: {...}"
+TOOL_RESULT_TRANSCRIPT = re.compile(r"tool returned result:?", re.I)
+
+
+def trim_history(callback_context: CallbackContext, llm_request) -> None:
+    """before_model_callback: shrink earlier turns. Their tool results (retrieved passages, course
+    lists) are replaced by a short placeholder; the tool calls, user messages and agent answers stay.
+    In a long CLI session the old results were re-sent on every question, pushing prompts past the
+    8k context window (truncation, ~70 s answers). Tool calls must stay visible: when they were
+    removed too, the model imitated the history and answered without calling tools (made-up facts).
+    The current turn (from the latest student message) is untouched."""
+    contents = llm_request.contents or []
+    user = callback_context.user_content
+    question = "".join(p.text or "" for p in (user.parts if user else [])).strip()
+
+    def text(c):
+        return "".join(p.text or "" for p in (c.parts or [])).strip()
+
+    current = next((i for i in range(len(contents) - 1, -1, -1)
+                    if contents[i].role == "user" and question and text(contents[i]) == question), None)
+    if not current:
+        return None
+    trimmed = []
+    for c in contents[:current]:
+        parts = []
+        for p in c.parts or []:
+            if p.function_response:
+                parts.append(types.Part(function_response=types.FunctionResponse(
+                    id=p.function_response.id, name=p.function_response.name,
+                    response={"note": "result omitted from history; call the tool again if you need it"})))
+            elif p.text and TOOL_RESULT_TRANSCRIPT.search(p.text):
+                parts.append(types.Part(text=TOOL_RESULT_TRANSCRIPT.split(p.text)[0] + "tool returned result: (omitted)"))
+            else:
+                parts.append(p)
+        trimmed.append(types.Content(role=c.role, parts=parts))
+    llm_request.contents = trimmed + list(contents[current:])
+    return None

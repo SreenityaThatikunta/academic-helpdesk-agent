@@ -16,6 +16,7 @@ from helpdesk.agents.guards import (
     log_refusals,
     route_empty_router_reply,
     standardize_router_refusal,
+    trim_history,
 )
 from helpdesk.llm import make_model
 from helpdesk.tools import (
@@ -40,7 +41,7 @@ def build_multi_agent(model: str | None = None) -> LlmAgent:
             model=llm,
             instruction=instruction,
             tools=[*tools, log_unanswered_question],
-            before_model_callback=drop_transfer_noise,
+            before_model_callback=[trim_history, drop_transfer_noise],
             after_model_callback=log_refusals,
             disallow_transfer_to_parent=True,
             disallow_transfer_to_peers=True,
@@ -60,5 +61,6 @@ def build_multi_agent(model: str | None = None) -> LlmAgent:
         instruction=prompts.orchestrator_instruction(),
         tools=[log_unanswered_question],
         sub_agents=[policy, schedule, email],
+        before_model_callback=trim_history,
         after_model_callback=[route_empty_router_reply, log_refusals, standardize_router_refusal],
     )

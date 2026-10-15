@@ -804,3 +804,25 @@ Cloned the GitHub repo into a scratch folder and followed the README steps, reus
 ### Follow-ups from live use
 - User asked to clear the earlier questions from `/unanswered`: the vacation / holidays / fests entries in the local `logs/unanswered.jsonl` were marked `status: resolved` (with a note) rather than deleted; `/unanswered` lists only open questions. The health-centre / campus-address question stays open (correctly out of scope).
 - **Refusals no longer carry a source line:** policy_agent answered a refusal with "Source: I don't know the answer to that…". `log_refusals` (all agents) now strips any `Source:` line from a reply that contains the refusal sentence; normal answers keep theirs. Test added (41/41 pass).
+
+### Why interactive answers took 23–74 s (user question)
+Measured (eval average for multi qwen3 was 12.2 s per question, one fresh session per question):
+- **Memory pressure:** 13.8 of 14 GB swap in use, 8.3 M swap-outs, 19% memory free (qwen3 with an 8k context takes 6.2 GB of unified memory; Claude, Chrome, the CLI and the web-UI server also running). Warm generation is fine (39 tok/s), but **prompt processing runs at ~240 tok/s**: a specialist prompt of ~4,400 tokens takes ~18 s before the first output token.
+- **Three model calls per multi-agent question** (router → specialist tool call → specialist answer), each with a different system prompt, so Ollama can't reuse its prompt cache between them.
+- **History growth (main cause in the CLI):** the CLI keeps one session, so every earlier question's retrieved passages and tool results are re-sent. Measured in one 4-question session: prompt tokens per call went from [1.3k, 1.9k, 4.7k] (36 s) to [4.5k, 4.8k, 7.8k] (50 s) to **[8.0k, 7.9k, 5.5k] (71 s)**. From the third question **the prompt hits the 8,192-token context window**, so Ollama truncates the oldest tokens, which is slow and can cut off the system instructions.
+
+**Fix:** `trim_history` (before_model_callback, all agents in both modes). For earlier turns, keep the user's messages and the agents' text answers, so follow-ups like "how many for CSE?" still have context, but drop tool calls, tool results and the "For context: … called tool / tool returned result" transcripts. The current turn is untouched. The evaluation is unaffected (fresh session per question; the one two-turn item has no tool results in its first turn).
+- **First version of `trim_history` was wrong and was not shipped:** it removed old tool calls *and* results. Measured: fast (71 s → 4–7 s), but after the first question **the specialist stopped calling tools** (2 model calls instead of 3) and answered from its own knowledge with made-up facts and citations ("Diwali 25 October", an invented "IITJ Tech Fest 23–25 October", "Academic Regulations, p. 12"). The model imitated a history in which answers carried a `Source:` line but no tool use was visible.
+- **Final version:** earlier turns keep their tool *calls*, user messages and agent answers; each old tool *result* is replaced by a placeholder ("result omitted from history; call the tool again if you need it"), including ADK's "tool returned result" transcripts. Test updated (42/42).
+- **Measured, same 4-question session:**
+
+| Turn | Before (calls' prompt tokens → time) | After |
+|---|---|---|
+| 1 semester end | 1.3k / 1.9k / 4.7k → 36 s | 1.3k / 1.9k / 4.7k → 20 s |
+| 2 holidays | 4.5k / 4.8k / 7.8k → 50 s | 1.7k / 2.0k / 5.1k → 27 s |
+| 3 fests | **8.0k / 7.9k** / 5.5k → 71 s (context full) | 2.4k / 2.3k / 5.8k → 31 s |
+| 4 attendance | 5.6k / 5.8k / 5.0k → 66 s | 3.0k / 2.6k / 5.5k → 24 s |
+
+  Every turn now calls `search_documents` again and stays grounded (fests → Varchas; attendance → Circular 51). Prompts still grow slowly (by the length of earlier answers); `/new` resets them.
+- Remaining time per question (~20–30 s here vs 12 s in the eval) is mostly memory pressure: prompt processing at ~240 tok/s while the machine swaps. Practical advice: close unused apps and the second helpdesk process (web UI server), use `/new` between unrelated topics, or `--mode single` (one model call fewer).
+- **Open answer-quality issue found:** "When does this semester end?" → "29 July 2026" (wrong). The calendar's "Last Day of classes" is **17 Nov 2026**, followed by Major exams 19–26 Nov. Not fixed yet.

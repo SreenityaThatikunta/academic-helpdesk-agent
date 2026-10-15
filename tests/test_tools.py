@@ -222,3 +222,31 @@ def test_refusal_source_line_is_removed(tmp_outputs):
     ok = LlmResponse(content=types.Content(role="model", parts=[types.Part(text="Slot E.\nSource: Slot System")]))
     log_refusals(SimpleNamespace(state={}, agent_name="t", user_content=None), ok)
     assert "Source: Slot System" in ok.content.parts[0].text
+
+
+def test_trim_history_stubs_old_tool_results_keeps_calls():
+    from types import SimpleNamespace
+
+    from google.genai import types
+
+    from helpdesk.agents.guards import trim_history
+
+    def c(role, *parts):
+        return types.Content(role=role, parts=list(parts))
+
+    call = types.Part(function_call=types.FunctionCall(name="search_documents", args={"query": "x"}))
+    resp = types.Part(function_response=types.FunctionResponse(name="search_documents", response={"r": "long " * 500}))
+    contents = [
+        c("user", types.Part(text="How many credits?")),
+        c("model", call), c("user", resp),
+        c("model", types.Part(text="Which branch and year?")),
+        c("user", types.Part(text="CSE, 2023")),          # current turn starts here
+        c("model", call), c("user", resp),
+    ]
+    req = SimpleNamespace(contents=contents)
+    trim_history(SimpleNamespace(user_content=types.Content(role="user", parts=[types.Part(text="CSE, 2023")])), req)
+    old_resp = req.contents[2].parts[0].function_response
+    assert req.contents[1].parts[0].function_call.name == "search_documents"   # old call kept
+    assert "omitted" in old_resp.response["note"]                               # old result stubbed
+    assert req.contents[3].parts[0].text == "Which branch and year?"            # old answer kept
+    assert req.contents[6].parts[0].function_response.response["r"].startswith("long")  # current turn intact
