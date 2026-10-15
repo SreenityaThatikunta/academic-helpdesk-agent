@@ -27,6 +27,106 @@ def pct(n, d):
     return f"{100 * n / d:.0f}\\% ({n}/{d})" if d else "--"
 
 
+# ----------------------------------------------------------------- figures (plain TikZ)
+REASON_GROUPS = [
+    ("Missing / wrong facts", {"missing expected facts", "missing rule facts"}),
+    ("No draft saved", {"no draft", "wrong recipient"}),
+    ("False refusal", {"refused"}),
+    ("Outdated rule used", {"superseded/forbidden content"}),
+    ("Did not clarify", {"gave a credit number", "did not ask for branch/year"}),
+]
+OUTCOMES = [  # (label, colour)
+    ("correct + grounded", "good"),
+    ("correct (refuse / clarify / suggest)", "good!45"),
+    ("correct, not grounded", "warn"),
+    ("false refusal", "bad!55"),
+    ("wrong", "bad"),
+]
+AGENTS = ["policy_agent", "schedule_agent", "email_agent", "helpdesk_orchestrator"]
+AGENT_SHORT = {"policy_agent": "policy", "schedule_agent": "schedule", "email_agent": "email",
+               "helpdesk_orchestrator": "router"}
+
+
+def outcome_of(x) -> int:
+    if x["correct"]:
+        if x["grounded"] is True:
+            return 0
+        if x["grounded"] is None:
+            return 1
+        return 2
+    return 3 if (x["refused"] and x["behavior"] != "refuse") else 4
+
+
+def figures(by, rows, items) -> None:
+    # outcome table: how all turns of a configuration ended
+    lines = []
+    for c in CONFIGS:
+        counts = [0] * len(OUTCOMES)
+        for x in by[c]:
+            counts[outcome_of(x)] += 1
+        lines.append(f"{SHORT[c]} & " + " & ".join(str(n) for n in counts) + r" \\")
+    (OUT / "outcomes.tex").write_text("\n".join(lines) + "\n")
+
+    # 3. failure reasons: grouped horizontal bars (reason x config)
+    bar_cols = ["accent", "accent!45", "warn", "warn!45"]
+    scale = 0.38  # cm per failure
+    pic = [r"\begin{tikzpicture}[font=\small]"]
+    y = 0.0
+    for label, reasons in REASON_GROUPS:
+        pic.append(rf"\node[anchor=east] at (-0.1,{y - 0.42:.2f}) {{{label}}};")
+        for k, c in enumerate(CONFIGS):
+            n = sum(1 for x in by[c] if not x["correct"] and x["reason"] in reasons)
+            yy = y - k * 0.21
+            pic.append(rf"\fill[{bar_cols[k]}] (0,{yy - 0.09:.2f}) rectangle ({max(n * scale, 0.02):.2f},{yy + 0.09:.2f});")
+            if n:
+                pic.append(rf"\node[anchor=west, font=\tiny] at ({n * scale:.2f},{yy:.2f}) {{{n}}};")
+        y -= 1.15
+    lx = 0.0
+    for k, c in enumerate(CONFIGS):
+        pic.append(rf"\fill[{bar_cols[k]}] ({lx:.2f},{y + 0.1:.2f}) rectangle ({lx + 0.3:.2f},{y + 0.32:.2f}); "
+                   rf"\node[anchor=west, font=\scriptsize] at ({lx + 0.32:.2f},{y + 0.21:.2f}) {{{SHORT[c]}}};")
+        lx += 3.2
+    pic.append(r"\end{tikzpicture}")
+    (OUT / "fig_failures.tex").write_text("\n".join(pic) + "\n")
+
+    # 5. routing matrices (multi): expected agent (rows) x routed-to (cols), per model
+    expected = {}
+    for it in items:
+        for t, e in enumerate(it["expect"]):
+            a = e.get("agent", "helpdesk_orchestrator")
+            expected[(it["id"], t)] = a[0] if isinstance(a, list) else a
+    pics = []
+    for c in [c for c in CONFIGS if c.startswith("multi")]:
+        m = {(a, b): 0 for a in AGENTS for b in AGENTS}
+        for x in by[c]:
+            ok = x["routed"]
+            exp = expected[(x["id"], x["turn"])]
+            got = exp if ok else x["first_agent"]
+            m[(exp, got)] += 1
+        s_ = 1.25
+        pic = [r"\begin{tikzpicture}[font=\scriptsize]",
+               rf"\node[font=\small\bfseries] at ({1.2 + 2 * s_:.2f},0.85) {{{SHORT[c]}}};",
+               rf"\node[font=\scriptsize\itshape] at ({1.2 + 2 * s_:.2f},0.47) {{routed to}};"]
+        for j, b in enumerate(AGENTS):
+            pic.append(rf"\node[font=\tiny] at ({1.2 + j * s_ + s_ / 2:.2f},0.12) {{{AGENT_SHORT[b]}}};")
+        for i, a in enumerate(AGENTS):
+            y = -(i + 1) * 0.5
+            pic.append(rf"\node[anchor=east] at (1.15,{y + 0.25:.2f}) {{{AGENT_SHORT[a]}}};")
+            row_total = sum(m[(a, b)] for b in AGENTS) or 1
+            for j, b in enumerate(AGENTS):
+                n = m[(a, b)]
+                v = 100 * n / row_total
+                col = f"good!{int(v)}!white" if a == b else (f"bad!{int(min(100, v * 3))}!white" if n else "gray!8")
+                x0 = 1.2 + j * s_
+                pic.append(rf"\fill[{col}] ({x0:.2f},{y:.2f}) rectangle ({x0 + s_ - 0.05:.2f},{y + 0.45:.2f});")
+                if n:
+                    pic.append(rf"\node at ({x0 + s_ / 2 - 0.025:.2f},{y + 0.225:.2f}) {{{n}}};")
+        pic.append(rf"\node[font=\scriptsize\itshape, rotate=90] at (-0.35,{-1.0:.2f}) {{expected}};")
+        pic.append(r"\end{tikzpicture}")
+        pics.append("\n".join(pic))
+    (OUT / "fig_routing.tex").write_text("\n\\hspace{0.6cm}\n".join(pics) + "\n")
+
+
 def main() -> None:
     OUT.mkdir(parents=True, exist_ok=True)
     rows = [json.loads(line) for line in (ROOT / "eval/results/scored.jsonl").read_text().splitlines() if line]
@@ -138,7 +238,8 @@ def main() -> None:
             mis[(r["config"], r["id"], r["first_agent"])] += 1
     lines = [f"{SHORT[c]} & {i} & {tex(a)} & {n}/3 \\\\" for (c, i, a), n in sorted(mis.items())]
     (OUT / "misroutes.tex").write_text("\n".join(lines) + "\n")
-    print(f"wrote {len(list(OUT.glob('*.tex')))} tables to {OUT}")
+    figures(by, rows, items)
+    print(f"wrote {len(list(OUT.glob('*.tex')))} tables/figures to {OUT}")
 
 
 if __name__ == "__main__":

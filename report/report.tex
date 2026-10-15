@@ -11,6 +11,7 @@
 \usepackage{pifont}
 \usepackage{enumitem}
 \usepackage{caption}
+\usepackage{float}
 \usepackage[hidelinks]{hyperref}
 \usepackage{amsmath}
 
@@ -18,6 +19,7 @@
 \definecolor{soft}{HTML}{DCE6F1}
 \definecolor{bad}{HTML}{B00020}
 \definecolor{good}{HTML}{2E7D32}
+\definecolor{warn}{HTML}{D98E04}
 \newcommand{\cmark}{\textcolor{good}{\ding{51}}}
 \newcommand{\xmark}{\textcolor{bad}{\ding{55}}}
 \newcommand{\code}[1]{\texttt{\small #1}}
@@ -64,7 +66,7 @@ major-exam time table and the examination guidelines. Three scanned circulars we
 Every document is tagged with a title, category, date and status; 29 are \emph{current} and 4 are
 \emph{superseded} by newer versions (older regulations, calendar, slot chart and IH list).
 
-\begin{table}[h]
+\begin{table}[H]
 \centering\small
 \begin{tabularx}{\linewidth}{l c X}
 \toprule
@@ -101,7 +103,27 @@ were collected.
 Institutional rules are amended by later circulars, but the old text stays in the regulations. For example,
 Circular~51 (2024) replaced the 2019 attendance rule, and the 2024 Examination Guidelines replaced the make-up
 rules of the 2019 and 2022 regulations. We keep a small register of passages that a named newer document
-replaces; matching chunks are marked \emph{amended} and are never retrieved.
+replaces; matching chunks are marked \emph{amended} and are never retrieved (Figure~\ref{fig:amend}).
+
+\begin{figure}[H]
+\centering
+\resizebox{\linewidth}{!}{%
+\begin{tikzpicture}[font=\small,
+  old/.style={draw=bad, fill=bad!8, rounded corners=2pt, align=left, inner sep=4pt, text width=5.6cm},
+  new/.style={draw=good, fill=good!10, rounded corners=2pt, align=left, inner sep=4pt, text width=5.6cm},
+  arr/.style={-{Stealth[length=2mm]}, thick}]
+\draw[-{Stealth[length=2mm]}, gray, thick] (0,0) -- (13.6,0);
+\foreach \x/\y in {0.9/2019, 4.1/2022, 9.3/2024, 12.9/2026} {\fill[gray] (\x,0) circle (2pt); \node[below, gray] at (\x,-0.05) {\y};}
+\node[old, anchor=south west] (a19) at (0,0.45) {\textbf{Regulations 2019, \S4.1.9}\\ below 75\%: may still sit exams, needs a C grade};
+\node[new, anchor=south west] (c51) at (7.4,0.45) {\textbf{Circular 51 (Jul 2024)}\\ attendance must not fall below 75\%, else de-registration};
+\node[old, anchor=north west] (m19) at (0,-0.75) {\textbf{Regulations 2019 / PG 2022, \S8}\\ make-up via the Dean, in the make-up week of the next semester};
+\node[new, anchor=north west] (g24) at (7.4,-0.75) {\textbf{Examination Guidelines (2024)}\\ make-up only for a missed Minor, apply within 10 days; missed Major $\rightarrow$ I grade};
+\draw[arr, good!70!black] (a19.east) -- node[above, font=\scriptsize] {supersedes} (c51.west);
+\draw[arr, good!70!black] (m19.east) -- node[above, font=\scriptsize] {supersedes} (g24.west);
+\end{tikzpicture}}
+\caption{Amendment register: passages on the left are marked \emph{amended} and dropped from search; only the newer rule (right) reaches the model.}
+\label{fig:amend}
+\end{figure}
 
 %=====================================================================
 \section{System design}
@@ -119,7 +141,7 @@ replaces; matching chunks are marked \emph{amended} and are never retrieved.
 \item \textbf{Scoped search:} optional filter to one document (e.g.\ a programme's curriculum).
 \end{itemize}
 
-\begin{figure}[h]
+\begin{figure}[H]
 \centering
 \resizebox{\linewidth}{!}{%
 \begin{tikzpicture}[node distance=5mm and 7mm, font=\small,
@@ -181,7 +203,7 @@ own tools and rules. All models run at temperature 0.2 with an 8{,}192-token con
 disabled (\code{think=False}), which stopped it from leaking its reasoning into answers and made it about ten times
 faster.
 
-\begin{figure}[h]
+\begin{figure}[H]
 \centering
 \begin{tikzpicture}[node distance=6mm and 10mm, font=\small,
   box/.style={draw=accent, fill=soft, rounded corners=2pt, minimum height=8mm, align=center, inner sep=4pt},
@@ -245,6 +267,13 @@ Open Elective credits are 10 in the 2019 regulations and the CSE curriculum but 
 curricula, so there is no single right answer. The agent asks for the branch and year of joining and then searches
 only that curriculum (``B.Tech CSE, joined 2023'' $\rightarrow$ 10 credits).
 
+\paragraph{Shrinking the history must keep the tool calls.}
+To stop long chats from overflowing the context (Section~\ref{sec:post}), our first attempt removed earlier turns'
+tool calls and results. It was fast, but after the first question the agent \emph{stopped searching}: it copied the
+trimmed history, where answers had a source line but no visible tool use, and invented facts with fake citations
+(``Diwali on 25 October'', a non-existent ``IITJ Tech Fest''). Keeping the old tool calls and replacing only their
+results with a short placeholder kept every answer grounded.
+
 %=====================================================================
 \section{Evaluation setup}
 %=====================================================================
@@ -271,10 +300,13 @@ which we fixed for all configurations: the PhD maximum duration \emph{is} given 
 registered semesters) although we had marked the question unanswerable, and two patterns were too literal (``two
 exams: Minor and Major'' and a quoted ``I''~grade were rejected).
 
+The results below describe the system as evaluated. Section~\ref{sec:post} lists improvements made afterwards;
+they were checked live but not re-measured with the full evaluation.
+
 %=====================================================================
 \section{Results}
 %=====================================================================
-\begin{table}[h]
+\begin{table}[H]
 \centering\small
 \resizebox{\linewidth}{!}{%
 \begin{tabular}{l c c c c c c}
@@ -289,13 +321,13 @@ groundedness; 18 out-of-scope turns). All refused out-of-scope questions were lo
 \label{tab:headline}
 \end{table}
 
-\begin{figure}[h]
+\begin{figure}[H]
 \centering
 \input{tables/chart.tex}
 \caption{Accuracy and groundedness per configuration.}
 \end{figure}
 
-\begin{table}[h]
+\begin{table}[H]
 \centering\small
 \begin{tabular}{l c c c c c c c}
 \toprule
@@ -304,38 +336,40 @@ Config & Policy & Schedule & Count & Email & Out of scope & Multi-intent & Conve
 \inputrows{tables/category.tex}
 \bottomrule
 \end{tabular}
-\caption{Accuracy (\%) by category.}
+\caption{Accuracy (\%) by question category. Out-of-scope refusals are perfect everywhere; Llama~3.1 fails the
+email tasks (it never saves a draft) and both models struggle with multi-intent requests.}
+\label{tab:category}
 \end{table}
 
-\begin{table}[h]
+\begin{table}[H]
 \centering\small
-\begin{tabular}{l c c}
+\resizebox{\linewidth}{!}{%
+\begin{tabular}{l c c c c c}
 \toprule
-Config & Unstable correctness & Answer changed \\
+& \multicolumn{3}{c}{Correct} & \multicolumn{2}{c}{Wrong} \\
+\cmidrule(lr){2-4}\cmidrule(lr){5-6}
+Config & grounded & refuse / clarify / suggest & not grounded & false refusal & other \\
 \midrule
-\inputrows{tables/consistency.tex}
+\inputrows{tables/outcomes.tex}
 \bottomrule
-\end{tabular}
-\caption{Consistency across the 3 repeats (31 turns). \emph{Answer changed}: the facts the question asks for differ
-between repeats.}
+\end{tabular}}
+\caption{Outcome of all 93 turns per configuration. \emph{Not grounded}: right answers without a relevant tool call
+or a correct citation.}
+\label{tab:outcomes}
 \end{table}
 
-Qwen3 gave the same answer in every repeat in both modes. Llama~3.1 changed its answer on 8 questions as a
-single agent and on 3 as a multi-agent system; for example, it asked for the programme in two repeats but not in
-the third, and answered ``14 semesters'' twice and an invented ``4--5 years'' once.
+\textbf{Consistency:} Qwen3 gave the same answer to every question in all three repeats in both modes; Llama~3.1
+changed its answer on 8 of 31 questions as a single agent and 3 as a multi-agent system.
 
-\noindent\begin{minipage}{\linewidth}
-\centering\small
-\begin{tabular}{l l l c}
-\toprule
-Config & Item & Routed to & Repeats \\
-\midrule
-\inputrows{tables/misroutes.tex}
-\bottomrule
-\end{tabular}
-\captionof{table}{Routing errors (multi-agent). All systematic (same item in every repeat). For Qwen3 P09 and S02 the
-router handled the request itself: a refusal and an empty reply.}
-\end{minipage}
+\begin{figure}[H]
+\centering
+\input{tables/fig_routing.tex}
+\caption{Routing in multi-agent mode (expected specialist vs.\ where the router sent the request, 93 turns each).
+All errors are systematic, the same item in every repeat: Qwen3 kept the PhD question (P09) and returned an empty
+reply for S02; Llama~3.1 sent ``how do I \emph{apply} for a make-up exam'' to the email agent and the make-up
+rule + email request to the policy agent.}
+\label{fig:routing}
+\end{figure}
 
 %=====================================================================
 \section{Analysis}
@@ -344,7 +378,14 @@ router handled the request itself: a refusal and an empty reply.}
 Qwen3 (with thinking off) beats Llama~3.1 by 15--22 accuracy points in both modes, is faster as a single agent,
 and is fully stable across repeats. Llama~3.1 never called \code{draft\_email} in any of its 24 draft requests; it
 either asked again for details the student had already given or wrote the email into the chat. It also answered the
-attendance question with the \emph{old} policy quoted inside Circular~51 in all six runs.
+attendance question with the \emph{old} policy quoted inside Circular~51 in all six runs (Figure~\ref{fig:failures}).
+
+\begin{figure}[H]
+\centering
+\input{tables/fig_failures.tex}
+\caption{Why answers were wrong (number of failed turns per configuration).}
+\label{fig:failures}
+\end{figure}
 
 \paragraph{Multi-agent improves grounding, not always accuracy.}
 Focused specialists search and cite more consistently, so groundedness rises by 8 points for Qwen3 and 16 for
@@ -371,6 +412,107 @@ answered from the model's own knowledge. Reporting groundedness separately catch
 \item \textbf{make-up rule + email}: the single agent skipped the draft, while the multi-agent Qwen3 drafted correctly
   but left out the 10-day deadline.
 \end{itemize}
+
+%=====================================================================
+\section{Improvements after the evaluation}\label{sec:post}
+%=====================================================================
+Using the helpdesk interactively after the evaluation exposed problems the question set had not covered. We fixed
+them and checked each fix live (the evaluation numbers above were not re-measured).
+
+\paragraph{Calendar questions were refused.} The router treated ``when is the vacation?'', ``any holidays?'' and
+``any fests this semester?'' as campus life and refused them, although the academic calendar answers all three. Two
+reasons: the policy agent's description only said ``academic calendar dates'', and the calendar itself never uses
+the words ``fest'' or ``vacation''. Fixes:
+\begin{itemize}
+\item the policy agent's area names holidays, breaks, no-class days and fests; the router refuses only requests
+  \emph{clearly} unrelated to academics and sends anything uncertain to the policy agent;
+\item document-level keywords on the calendars (used by dense search only) and a small query expansion for keyword
+  search (``fest'' $\rightarrow$ IGNUS, Prometeo, Varchas, Spandan, ``no class day''; ``vacation'' $\rightarrow$ breaks);
+\item ``Ph.D.'', ``B.Tech'' and ``M.Tech'' normalised so they match ``PhD'', ``BTech'', ``MTech''.
+\end{itemize}
+The retrieval check improved to 19/19 in the top 5 (from 18/19).
+
+\paragraph{New safety checks.} The router sometimes returned a completely empty message (evaluation item S02); a
+fallback now routes it by keywords. Refusals are forced to the fixed sentence and lose any ``Source:'' line
+(a model once cited its own refusal). Figure~\ref{fig:guards} shows all checks around a model call.
+
+\begin{figure}[H]
+\centering
+\resizebox{\linewidth}{!}{%
+\begin{tikzpicture}[node distance=4mm and 5mm, font=\small,
+  chk/.style={draw=accent, fill=soft, rounded corners=2pt, align=center, inner sep=3pt, minimum height=11mm, text width=2.35cm},
+  newchk/.style={chk, draw=warn, fill=warn!12, dashed},
+  llm/.style={draw=accent, fill=accent!25, rounded corners=2pt, align=center, minimum height=11mm, inner sep=4pt},
+  arr/.style={-{Stealth[length=2mm]}, thick, accent}]
+\node[newchk] (trim) {trim old tool results};
+\node[chk, right=of trim] (noise) {drop transfer messages};
+\node[llm, right=of noise] (llm) {\textbf{LLM}\\call};
+\node[newchk, right=of llm] (empty) {empty router reply $\rightarrow$ route by keywords};
+\node[chk, right=of empty] (json) {strip tool calls printed as text};
+\node[newchk, right=of json] (src) {refusal: fixed sentence, no Source line};
+\node[chk, right=of src] (log) {refused but not logged $\rightarrow$ log it};
+\draw[arr] (trim)--(noise); \draw[arr] (noise)--(llm); \draw[arr] (llm)--(empty); \draw[arr] (empty)--(json);
+\draw[arr] (json)--(src); \draw[arr] (src)--(log);
+\node[above=1mm of trim, font=\scriptsize\itshape] {before the call};
+\node[above=1mm of empty, font=\scriptsize\itshape] {after the call};
+\end{tikzpicture}}
+\caption{Deterministic checks around every model call (dashed amber: added after the evaluation).}
+\label{fig:guards}
+\end{figure}
+
+\paragraph{Response time.} In the command-line chat, answers took 23--74\,s and got slower with every question,
+against 12\,s per question in the evaluation. Two things drive the time: a multi-agent question needs three model
+calls (Figure~\ref{fig:sequence}), and most of each call is spent reading the prompt. The prompts kept growing because
+the chat keeps one session, so every earlier answer's retrieved passages were sent again with each new question; by
+the third question the prompt reached the 8{,}192-token context limit and was being truncated.
+
+What we did to make answers faster:
+\begin{itemize}
+\item \textbf{Trim old tool results:} earlier turns keep their messages and tool calls, but their tool results are
+  replaced by a short placeholder. Prompts now stay small and answers take 20--31\,s instead of growing to 71\,s
+  (Table~\ref{tab:latency}).
+\item \textbf{Disable Qwen3's thinking mode} (\code{think=False}): it no longer writes out its reasoning before every
+  reply, which made a simple tool question about ten times faster (19\,s $\rightarrow$ 1.9\,s).
+\item \textbf{Keep the retrieved context small:} five passages per search, at most two from the same document.
+\end{itemize}
+
+\begin{figure}[H]
+\centering
+\resizebox{\linewidth}{!}{%
+\begin{tikzpicture}[node distance=4mm and 6mm, font=\small,
+  box/.style={draw=accent, fill=soft, rounded corners=2pt, align=center, inner sep=4pt, minimum height=12mm},
+  llm/.style={box, fill=accent!25},
+  arr/.style={-{Stealth[length=2mm]}, thick, accent}]
+\node[box] (q) {student\\question};
+\node[llm, right=of q] (c1) {\textbf{call 1}: router\\$\sim$1.3k tokens};
+\node[llm, right=of c1] (c2) {\textbf{call 2}: transfer to\\policy agent, which\\picks a tool, $\sim$1.9k};
+\node[box, right=of c2] (s) {search\_documents\\hybrid search, $<$1\,s};
+\node[llm, right=of s] (c3) {\textbf{call 3}: policy agent\\answers with 5 passages\\$\sim$4.7k tokens};
+\node[box, right=of c3] (a) {answer +\\Source line};
+\draw[arr] (q)--(c1); \draw[arr] (c1)--(c2); \draw[arr] (c2)--(s);
+\draw[arr] (s)--(c3); \draw[arr] (c3)--(a);
+\end{tikzpicture}}
+\caption{One multi-agent question: three model calls. The last one, with the retrieved passages, has the longest prompt.}
+\label{fig:sequence}
+\end{figure}
+
+\begin{table}[H]
+\centering\small
+\begin{tabular}{l l c l c}
+\toprule
+& \multicolumn{2}{c}{Before trimming} & \multicolumn{2}{c}{After trimming} \\
+Question in one session & prompt tokens per call & time & prompt tokens per call & time \\
+\midrule
+1: semester end & 1.3k / 1.9k / 4.7k & 36\,s & 1.3k / 1.9k / 4.7k & 20\,s \\
+2: holidays & 4.5k / 4.8k / 7.8k & 50\,s & 1.7k / 2.0k / 5.1k & 27\,s \\
+3: fests & \textcolor{bad}{8.0k / 7.9k} / 5.5k & 71\,s & 2.4k / 2.3k / 5.8k & 31\,s \\
+4: attendance & 5.6k / 5.8k / 5.0k & 66\,s & 3.0k / 2.6k / 5.5k & 24\,s \\
+\bottomrule
+\end{tabular}
+\caption{Prompt size and response time over one four-question chat (multi-agent, Qwen3, command-line chat).
+Red: the prompt filled the 8k context window and was truncated.}
+\label{tab:latency}
+\end{table}
 
 %=====================================================================
 \section{Limitations and future work}
