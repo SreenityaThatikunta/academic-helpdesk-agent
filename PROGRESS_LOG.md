@@ -516,3 +516,44 @@ Two-turn check ("How many OE credits…?" → "I am in B.Tech CSE, joined in 202
 - [x] Mixed questions (routed to the specialist that can do all of it; each part has its own tool call + source)
 - [x] `--mode single|multi` in the CLI, `manual_check.py`, `HELPDESK_MODE` for `adk web` (the eval runner in Phase 6 uses `build_agent(mode, model)`)
 - 26/26 unit tests pass
+
+---
+
+## Phase 6: Evaluation (in progress)
+
+**Date:** 2026-10-15
+
+### Design decisions
+1. **Question set (`eval/questions.jsonl`): 30 items** in 7 categories, close to the plan's mix:
+   - policy (9): rules, regulations, calendar, syllabus; includes **one in-scope question that is not in the documents** (PhD maximum duration), to test honest refusal on academic topics
+   - schedule (5): slot, instructor, classroom, exam date of a course; includes **one non-existent course code**
+   - count (3): courses floated by department/level
+   - email (4): drafts, an unknown course code (CSL7570 → suggest CSL7650), lookup by instructor name
+   - out_of_scope (6): the 2 assignment examples + 4 more (weather, hostel, cricket, placements)
+   - multi_intent (2): rule + email; exam date + rule
+   - conversation (1, two turns): OE credits → clarifying question → "B.Tech CSE, joined 2023" → 10
+   All 5 example questions from the assignment are included. **Every expected answer is checked against the data before it goes into the file** (tool output or document text), not written from memory.
+2. **Each item records:** `expected_behavior` (answer | clarify | refuse | suggest | draft), `expected_answer` (human-readable), `must_include` (regex groups; all must match, alternatives inside a group), `must_not_include` (e.g. the superseded attendance rule), `expected_sources` (strings that must appear in the answer's citation), `expected_agent` (for routing in multi mode), and for drafts `expected_to` (recipient address).
+3. **Runs:** 2 models (qwen3:8b, llama3.1:8b) × 2 modes (single, multi) × **3 repeats** = 12 runs of the set (≈ 372 question-turns). Each question gets a **fresh session**; the conversation item runs its turns in one session. Temperature stays at 0.2 (the configured default), so differences between repeats reflect realistic sampling, not forced randomness.
+4. **Isolation:** each run writes drafts and unanswered-question logs to its own folder under `eval/results/<run>/`, by pointing `config.DRAFTS_DIR` / `config.UNANSWERED_LOG` there. The tools read config at call time, so this works without touching the real `logs/` and `drafts/`. "Logged" for a question = the run's unanswered log grew during that question. This counts the guard's auto-logging too, which tool calls alone would miss.
+5. **Metrics (`eval/score.py`):**
+   - **Accuracy:** the expected behaviour is met. answer → all `must_include` groups match, no `must_not_include`; refuse → the refusal sentence is present; clarify → asks for branch/programme and year, gives no credit number; suggest → mentions CSL7650 and does not call `draft_email`; draft → `draft_email` called with the expected recipient.
+   - **Groundedness** (answer/draft items): the answer cites at least one expected source, **and** the relevant tool was called. An answer that is right but cites nothing, or cites the wrong document, is accurate but not grounded.
+   - **Refusals:** correct-refusal rate on out-of-scope + unanswerable items; false-refusal rate on in-scope items; logging rate for refusals.
+   - **Routing** (multi): the first specialist the orchestrator transfers to = `expected_agent` (orchestrator itself for out-of-scope).
+   - **Consistency:** per model × mode × question, whether the correctness label differs across the 3 repeats, and whether the **key facts** in the answer (numbers, course codes, dates) differ. These are "the questions whose answers changed across runs" that the assignment asks for.
+   - Latency (mean, p90) per model × mode.
+6. **Manual review:** regex scoring can misjudge paraphrases. Every answer the script marks wrong gets read by hand. Overrides go in `eval/overrides.csv` with a reason, and the report shows the numbers both before and after review.
+
+### Building the question set
+- Checked candidate facts with the tools and search before writing them as expected answers: Health Economics = LAL4070, Alok Ranjan, slot D (Mon/Wed 11:00–11:50, Fri 10:00–10:50), LHC 204; Digital Society = LAL3080, Rachel Philip, slot N, LHC 105; CSE 700-level courses = 16; CSL9999 → not offered, no suggestions; Minor exams Sem I = 15–20 Sep 2026 (calendar + slot system); Circular 52 = one Minor and one Major exam per course; the Autonomous Systems syllabus covers multi-agent systems, navigation / obstacle avoidance, planning (CSE course details p. 58, M.Tech AI curriculum p. 7).
+- **Dropped candidate:** "last date for course withdrawal". The calendar row reads "Course withdrawal from the instructors and adding courses in lieu of dropped courses: 10 Aug 2026", which is ambiguous, and the PG regulations say withdrawal is "typically within four weeks". An item with no clear ground truth would test the answer key, not the agent.
+- **`eval/build_questions.py` → `eval/questions.jsonl`**, generated from a Python script so the regexes are readable and the file is always valid JSON. **30 items / 31 turns**: policy 9, schedule 5, count 3, email 4, out_of_scope 6, multi_intent 2, conversation 1 (2 turns). Expected behaviours: 18 answer, 7 refuse (6 out of scope + PhD duration), 4 draft (3 email + the make-up multi-intent), 1 suggest (CSL7570), 1 clarify (OE turn 1).
+- **Routing ambiguity:** "When are the minor exams?" (P07) and "How many IH2 courses…?" (C02) can reasonably go to either the policy or the schedule agent (both have the needed tools). For these two, `agent` is a list and either route counts as correct.
+- `must_not` guards against **superseded rules** (attendance: "C grade" / "allowed to appear"; make-up: "supplementary week"; B.Tech duration: "8 years"; OE for CSE: "12"), so a fluent but outdated answer scores as wrong.
+- **`eval/run_eval.py`**: runs the item list for each (repeat, model, mode) in **repeat-major order**, so if the eval is interrupted every configuration has the same number of repeats. Each run gets its own folder `eval/results/<mode>__<model>__r<k>/` with `raw.jsonl` (one line per turn: answer, error, latency, agent path, tool calls, truncated tool results, `logged`, new drafts with their text), `drafts/` and `unanswered.jsonl`. Finished runs are skipped, so the eval can resume.
+- Smoke test (qwen3, multi, P01/E02/O01): routing recorded, the E02 draft captured in the run's own `drafts/`, O01 `logged=True`. The smoke-test folder was deleted before the full run.
+- **Full run started** in the background: 2 models × 2 modes × 3 repeats = 12 runs × 31 turns = 372 turns; console log in `eval/results/run.log`.
+- **`eval/score.py`**: scores every turn (accuracy, the reason it was marked wrong, groundedness, refused, routed, key facts) and writes `results/scored.jsonl`, `results/summary.md` (headline metrics per model × mode, accuracy by category, a per-question k/3 table, consistency) and `results/review.md` (every turn scored wrong or ungrounded, with question, expected answer, route, tools and full answer, for manual review). `eval/overrides.csv` (run, id, turn, field, value, reason) is applied on top; `--no-overrides` gives the raw automatic scores.
+  - Scoring rules as decided above. For draft items without a source requirement, "grounded" = the recipient came from `get_instructor_email` (not made up). Routing = the first non-router agent in the event sequence. Key facts = course codes + numbers (excluding years) or `REFUSED`.
+- **`tests/test_score.py`**: 9 tests for the scoring rules (superseded content → wrong; right but uncited → not grounded; false refusal; clarification can't contain a credit number; suggest must not draft; draft recipient check; routing; key facts). **It caught a bug in `key_facts`**: "CSL 7650" also added 7650 to the numbers, and numbers kept a trailing space, so identical answers would have counted as "changed across runs". Fixed. 35/35 tests pass.
