@@ -243,3 +243,29 @@ This **replaces** the earlier "400-level Humanities = 2" decision.
 - `build_csvs.py` now takes `ih_group` **from D33** instead of pulling course codes out of the syllabus PDFs (D28/D29 stay as the syllabus documents). The rebuilt CSVs are byte-identical, which confirms the two sources agree.
 - Re-ingested: 33 documents → 1,143 chunks. "Which IH3 courses are offered this semester?" now cites the IH Course List (D33) first.
 - Unchanged: Humanities (IH) = 60 courses; 400-level = 3 (LAL4070, LAL4850, AIL4070). 22/22 tests pass.
+
+---
+
+## Phase 4: Single-Agent Baseline (in progress)
+
+**Date:** 2026-10-15
+
+### Fixing the qwen3 reasoning leak (carried over from Phase 0)
+Tested ways to pass options through ADK `LiteLlm(..., **kwargs)` → LiteLLM → Ollama, with a one-tool agent asked "What is the slot for CSL7650?":
+| Setting | Time | Final answer |
+|---|---|---|
+| default | 19.1 s | "Okay, the user asked for the slot of CSL7650. I called the get_course_slot function…" (**reasoning leaked**) |
+| `think=False` | **1.9 s** | "The slot for CSL7650 is E." |
+| `think=False, num_ctx=8192` | 6.1 s | "The slot for CSL7650 is E." |
+| `reasoning_effort="none"` | 5.5 s | "The slot for CSL7650 is E." |
+
+**Decision:** pass Ollama's `think=False` for qwen3. It is clean and about 10× faster than leaving thinking on. It is only sent to qwen3, because Ollama rejects `think` for models without thinking support (llama3.1).
+
+### Done so far
+- `helpdesk/llm.py`: `make_model(name)` returns `LiteLlm` with `num_ctx=8192` (the system prompt + 7 tool schemas + 5 retrieved passages overflow Ollama's default context), `temperature` (default 0.2), and `think=False` for qwen3.
+- `config.py` / `.env.example`: new `TEMPERATURE`, `HELPDESK_MODE` (single | multi) and `CURRENT_SEMESTER` (included in the prompt so "this semester" has a meaning).
+
+### Next
+- `helpdesk/prompts.py`: the system prompt as reusable blocks (scope, grounding/refusal, policy, schedule, email) so the Phase 5 sub-agents can share the rules. It must encode the Phase 2 findings: a passage on a related topic is not an answer, the newest source wins, ask or flag when the answer depends on the programme. It must also encode the CSL7570 → "did you mean CSL7650" behaviour.
+- `helpdesk/agents/single_agent.py`, a shared runner, `helpdesk/cli.py`, and an `agent/` entry point for `adk web`.
+- Manual check: the 5 example questions + the 2 out-of-scope questions, on qwen3:8b and llama3.1:8b.
