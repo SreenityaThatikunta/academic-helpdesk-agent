@@ -15,7 +15,6 @@ import sys
 from pathlib import Path
 
 import pandas as pd
-import pymupdf
 
 ROOT = Path(__file__).resolve().parent.parent
 DOCS = ROOT / "data" / "docs"
@@ -23,10 +22,9 @@ OUT = ROOT / "data" / "csv"
 COURSES_XLSX = DOCS / "25_Finalized_Courses_List_AY2026-27_SemI.xlsx"
 SLOTS_XLSX = DOCS / "26_Slot_System_AY2026-27_SemI.xlsx"
 MAJOR_XLSX = DOCS / "30_Major_Exam_Timetable_AY2026-27_SemI.xlsx"
-# Institute Humanities (IH) bouquets offered this semester: every course code in these
-# syllabus PDFs counts as IH, whichever department teaches it (e.g. AIDE economics courses)
-IH_SYLLABI = {"IH2": DOCS / "28_IH2_Courses_Syllabus_AY2026-27_SemI.pdf",
-              "IH3": DOCS / "29_IH3_Courses_Syllabus_AY2026-27_SemI.pdf"}
+# Institute Humanities (IH) list for this semester (Registration Cell email, 1 Jun 2026): every
+# course on it counts as IH, whichever department teaches it (e.g. AIDE economics courses)
+IH_LIST = DOCS / "33_IH_Course_List_AY2026-27_SemI.txt"
 SEMESTER = "AY 2026-27 Semester I"
 DUMMY_DOMAIN = "iitj.example"
 
@@ -169,13 +167,16 @@ def build_allocation() -> pd.DataFrame:
 
 
 def ih_groups() -> dict[str, str]:
-    """Course code -> IH bouquet ("IH2"/"IH3") from the IH syllabus PDFs."""
-    out = {}
-    for group, pdf in IH_SYLLABI.items():
-        with pymupdf.open(pdf) as d:
-            text = "".join(p.get_text() for p in d)
-        for code in re.findall(r"\b[A-Z]{3}\d{4}\b", text):
-            out.setdefault(code, group)
+    """Course code -> IH bouquet ("IH2"/"IH3") from the IH course list (D33)."""
+    out, group = {}, None
+    for line in IH_LIST.read_text().splitlines():
+        heading = re.match(r"^(IH[23]) Courses to be taken", line)
+        if heading:
+            group = heading.group(1)
+            continue
+        m = re.match(r"^\d+ \| ([A-Z]{3}) ?(\d{4}) \|", line)
+        if group and m:
+            out[m.group(1) + m.group(2)] = group
     return out
 
 

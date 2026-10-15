@@ -236,3 +236,10 @@ This **replaces** the earlier "400-level Humanities = 2" decision.
 - It does **not** feed `courses.csv`. The current-semester counts are unchanged: Humanities (IH) = 60 courses, 400-level = 3. Using the old list would have wrongly added LAL4090.
 - Check: "What IH3 courses are offered this semester?" → all top 5 results come from the 2026-27 IH3 syllabus (D29). The superseded D32 is down-weighted and doesn't push in.
 - Open point: **AIL7310 Machine Learning for Economics** was IH3 last year and is offered this semester (AIDE, slot G), but it is not in the 2026-27 IH3 syllabus, so it is **not** tagged IH.
+
+### D33: current IH course list (user-provided)
+- The user pasted the Registration Cell email of **1 Jun 2026**: the official IH2 (6 courses, 5th-semester students) and IH3 (9 courses, 7th-semester students) lists for **Semester I, AY 2026-27**, with credits, L-T-P, instructor and slot. Saved as `data/docs/33_IH_Course_List_AY2026-27_SemI.txt` (pipe tables), manifest D33, `status=current`.
+- Checked against our data first: all 15 courses match `courses.csv` on IH group, slot and instructor, and the IH-tagged set was exactly this list.
+- `build_csvs.py` now takes `ih_group` **from D33** instead of pulling course codes out of the syllabus PDFs (D28/D29 stay as the syllabus documents). The rebuilt CSVs are byte-identical, which confirms the two sources agree.
+- Re-ingested: 33 documents → 1,143 chunks. "Which IH3 courses are offered this semester?" now cites the IH Course List (D33) first.
+- Unchanged: Humanities (IH) = 60 courses; 400-level = 3 (LAL4070, LAL4850, AIL4070). 22/22 tests pass.

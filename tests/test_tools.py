@@ -61,7 +61,7 @@ def test_list_humanities_400_level_includes_ih_courses_from_aide():
     assert r["source"]
 
 
-def test_ih_groups_tagged_from_syllabi():
+def test_ih_groups_tagged_from_ih_list():
     r = list_courses(department="HSS")
     groups = {c["course_code"]: c["ih_group"] for c in r["courses"]}
     assert groups["LAL3080"] == "IH2" and groups["AIL7380"] == "IH3"
