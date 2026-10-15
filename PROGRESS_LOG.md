@@ -265,7 +265,142 @@ Tested ways to pass options through ADK `LiteLlm(..., **kwargs)` → LiteLLM →
 - `helpdesk/llm.py`: `make_model(name)` returns `LiteLlm` with `num_ctx=8192` (the system prompt + 7 tool schemas + 5 retrieved passages overflow Ollama's default context), `temperature` (default 0.2), and `think=False` for qwen3.
 - `config.py` / `.env.example`: new `TEMPERATURE`, `HELPDESK_MODE` (single | multi) and `CURRENT_SEMESTER` (included in the prompt so "this semester" has a meaning).
 
-### Next
-- `helpdesk/prompts.py`: the system prompt as reusable blocks (scope, grounding/refusal, policy, schedule, email) so the Phase 5 sub-agents can share the rules. It must encode the Phase 2 findings: a passage on a related topic is not an answer, the newest source wins, ask or flag when the answer depends on the programme. It must also encode the CSL7570 → "did you mean CSL7650" behaviour.
-- `helpdesk/agents/single_agent.py`, a shared runner, `helpdesk/cli.py`, and an `agent/` entry point for `adk web`.
-- Manual check: the 5 example questions + the 2 out-of-scope questions, on qwen3:8b and llama3.1:8b.
+- `helpdesk/prompts.py`: the system prompt built from reusable blocks, so the Phase 5 sub-agents can share them:
+  - `SCOPE`: IIT Jodhpur academic matters only; the current semester is included.
+  - `GROUNDING`: never answer from the model's own knowledge. Out of scope or not found → the exact sentence "I don't know the answer to that. I've forwarded your question to the academic office." plus `log_unanswered_question`. **A passage on a related topic is not an answer.** **The newest source wins**; superseded documents are used only as a fallback; amendments override the base rules. End every answer with `Source: <citation>`. Keep answers concise.
+  - `POLICY`: search, and search again with other wording before giving up. If the answer depends on the programme, give the institute-wide rule and flag it.
+  - `SCHEDULE`: which tool for slot / lookup / counts. "Humanities" = IH. For an unknown code, ask "Did you mean CSL7650 (Autonomous Systems)?". Exam dates are tentative.
+  - `EMAIL`: `get_instructor_email` → `draft_email`. Never invent an address. If the course isn't found, **don't draft**; offer the suggestion and wait. Formal body; placeholders for missing dates/name/roll number. Mention the make-up vs I-grade rule. Say the draft is NOT sent.
+- `helpdesk/agents/`: `build_agent(mode, model)`, and `single_agent.py` with one `LlmAgent` holding all 7 tools.
+- `helpdesk/runner.py`: a `Helpdesk` wrapper around ADK's `InMemoryRunner`. `ask()` returns a `Turn` with the answer, tool calls (agent, name, args), tool results, the **sequence of agents that produced events** (for routing accuracy in Phase 5), latency and any error. It strips stray `<think>` blocks. One long session for the CLI, `fresh=True` per question for the eval.
+- `helpdesk/cli.py`: rich REPL (`/new`, `/quit`) that shows tool calls as they happen, `--ask` for a single question, `--mode` / `--model` overrides.
+- `agent/academic_helpdesk/agent.py`: `root_agent` for the ADK dev UI (`adk web agent`).
+
+- `scripts/manual_check.py`: runs the 7 assignment questions (5 in scope + 2 out of scope), each in a fresh session, and saves `eval/results/manual_<mode>_<model>.json`.
+
+### Manual check, run 1 (single agent, qwen3:8b)
+| Question | Tools called | Result |
+|---|---|---|
+| Attendance for the Major exam | **none** | ❌ Hallucinated "75%… Source: Academic Regulations, Page 12". It made up a citation without searching. |
+| Slot for Autonomous Systems | `get_slot` | ✅ CSL7650, slot E, Tue/Thu/Fri 11:00–11:50, LHC 106, cited |
+| 400-level Humanities electives | `list_courses(Humanities, 400, course_type="Elective")` | ❌ "0". `course_type="Elective"` filtered on the `category` column, which most departments leave blank |
+| OE credits for a B.Tech | **none** | ❌ Hallucinated "12 credits" (correct: 10) |
+| Email to the CSL7570 instructor | `get_instructor_email` | ✅ Not found → "Did you mean CSL7650 (Autonomous Systems)…? Please confirm" |
+| Dining options | `log_unanswered_question` | ✅ Exact refusal sentence, logged |
+| Reaching campus from the city | `log_unanswered_question` | ✅ Exact refusal sentence, logged |
+
+**Problems found:**
+1. **The model skips `search_documents` on policy questions** and answers from its own knowledge, with made-up citations. The rule "never answer from your own knowledge" wasn't strong enough for an 8B model.
+2. **The `course_type` filter is a trap.** "Elective" is in the question, so the model passes it, but categories are only recorded for a few departments.
+
+**Fixes after run 1:**
+- The prompt now starts with a `TOOLS_FIRST` block: "YOU MUST CALL A TOOL BEFORE EVERY ANSWER", with a question-type → tool map and "Never write a Source: you did not get from a tool".
+- `list_courses`: generic `course_type` values ("elective", "course"…) are ignored, with a note. Test added (23/23 pass).
+
+### Manual check, run 2 (qwen3:8b)
+| Question | Tools | Result |
+|---|---|---|
+| Attendance | `search_documents` | ⚠️ Searched, but answered with the **old** rule ("below 75% may still appear, needs ≥C"). Circular 51 quotes the "Existing policy" before the "Revised Policy", and the model used the wrong paragraph. It also cited 5 sources. |
+| Slot | `get_slot` | ✅ |
+| 400-level Humanities | `list_courses(..., course_type="OE")` | ❌ "0". The model now passes "OE" instead of "Elective". |
+| OE credits | `search_documents` | ❌ "12 credits", taken from the **AIDE curriculum**, which outranks the institute-wide Table 11.3 (10) |
+| Email CSL7570 | `get_instructor_email` | ✅ Suggests CSL7650 |
+| Dining / transport | **none** | ⚠️ Correct refusal sentence, but **it didn't call `log_unanswered_question`** (regression) |
+
+**Fixes for run 3:**
+- Remove `course_type` from `list_courses` entirely. Categories aren't recorded for most departments, so an 8B model keeps using the filter wrongly. Counting questions are answered by department + level.
+- **Make logging refusals deterministic in code** instead of relying on the prompt. An ADK `after_model_callback` notices the refusal sentence in the model's final answer and logs the question if the tool wasn't called during that turn (the tool sets a `temp:` state flag).
+- Prompt: "circulars quote the existing policy before the revised one; only the revised policy applies"; "for degree credit requirements prefer the institute Academic Regulations (Table 11.3) over a single programme's curriculum unless the student names their programme"; "cite only the 1–2 sources you actually used".
+
+**Fixes after run 2:** `course_type` removed from `list_courses`. Refusal guard `helpdesk/agents/guards.py::log_refusals` added as an `after_model_callback`; `log_unanswered_question` now takes ADK's injected `tool_context` and sets the `temp:unanswered_logged` flag. Prompt: revised-vs-existing policy rule, "use the Academic Regulations table for degree credits", cite only 1–2 sources.
+
+### Manual check, run 3 (qwen3:8b)
+| Question | Tools | Result |
+|---|---|---|
+| Attendance | `search_documents` | ❌ Still the old "may appear with ≥C" rule, now citing only Circular 51 |
+| Slot | `get_slot` | ✅ |
+| 400-level Humanities | `list_courses(Humanities, 400)` | ✅ **3** (it doesn't list the names) |
+| OE credits | `search_documents` (once) | ❌ Still "12" from the AIDE curriculum; it didn't search again |
+| Email CSL7570 | `get_instructor_email` | ✅ Suggests CSL7650 |
+| Dining | `log_unanswered_question` | ✅, but **logged twice** (see below) |
+| Transport | none | ✅ Refused; **the guard auto-logged it** ("auto-logged by academic_helpdesk: refused without calling the tool") |
+
+**Root causes:**
+- **Double logging:** qwen3 returned the refusal text *and* the `log_unanswered_question` call in the **same** response, so the guard fired before the tool ran. Fix: the guard ignores responses that contain a function call.
+- **Attendance:** 3 of the 5 passages state the *old* rule: the 2019 regulations web page and PDF (§4.1.9), plus the "Existing policy" paragraph that Circular 51 quotes. The circular's "Revised Policy" starts 1,072 characters into the chunk and its de-registration bullets spill into a second chunk. Facing three statements of the old rule, the 8B model follows the majority.
+- **OE credits:** curriculum chunks for one programme crowd the top 5.
+
+**Fixes for run 4 (retrieval and data, not just the prompt):**
+1. **Amendment register** `data/amendments.csv` (doc_id, text that identifies the passage, superseded_by, note). At ingestion, chunks containing the amended text get `status=superseded` and a header saying what replaces them. First entries: 2019 regulations §4.1.9 attendance (D01 PDF + D21 web page) → Circular 51. Circular 51 itself says "This policy supersedes the earlier policy in totality."
+2. **Short documents stay whole:** a document of ≤ 3,200 characters is one chunk, so Circular 51's revised rule and its bullets stay together.
+3. **Per-document cap in search results:** at most 2 chunks per document in the top k, so one curriculum can't fill all 5 slots.
+
+**Fixes after run 3 (implemented):**
+- Guard: ignores model responses that contain a function call, which fixes the double logging.
+- `data/amendments.csv` + ingestion: chunks matching an amended passage get `status=superseded` and the header note `SUPERSEDED by <title>: <note>`. Exactly one chunk each in D01/D21 (old §4.1.9) is marked. New test.
+- Documents of ≤ 3,200 characters are kept as **one chunk** (D02, D03, D27 → 1 chunk each; citations show "pp. 1-2"). Collection: 1,134 chunks.
+- `rag.search`: at most **2 chunks per document** in the top k.
+- Retrieval check after these changes: hit@1 12/18, **hit@5 18/18** (was 17/18).
+
+### Manual check, run 4 (both models)
+| Question | qwen3:8b | llama3.1:8b |
+|---|---|---|
+| Attendance | ✅ "≥75%; below 75% without valid reason → instructor may recommend de-registration" (Circular 51) | ✅ "should not fall below 75%" (Circular 51) |
+| Slot | ✅ E, Tue/Thu/Fri 11:00–11:50, LHC 106 | ✅ E, LHC 106, + minor/major exam dates |
+| 400-level Humanities | ✅ 3 (no names listed) | ✅ 3, lists LAL4070, LAL4850, AIL4070 |
+| OE credits | ⚠️ 12 (AIDE curriculum) | ⚠️ 12 (AIDE curriculum; searched with `top_k=1`) |
+| Email CSL7570 | ✅ Suggests CSL7650, waits for confirmation | ⚠️ Suggests CSL7650, but **also writes 3 inline drafts** (not saved) despite "don't draft" |
+| Dining | ✅ tool called, logged once | ⚠️ **Wrote the tool call as JSON text** in the answer instead of calling it; the guard logged it |
+| Transport | ✅ the guard logged it | ✅ tool called |
+| Latency (avg) | ~8 s | ~14 s |
+
+Both models logged exactly 2 unanswered questions (no duplicates).
+
+### Open question: the OE credits answer key
+This is **not a retrieval bug**: the documents disagree depending on the batch. Regulations 2019 Table 11.3 = **10**, CSE curriculum (pre-2026) = **10**, EE curriculum 2025+ = **12**, AIDE curriculum 2026+ (4 × 3 credits) = **12**. Both models answer 12 from the AIDE curriculum, and the prompt's "newest source wins" rule pushes them that way. Waiting for the user to decide the expected answer.
+
+### Next fix
+- The guard strips tool calls written as JSON text (`{"name": "...", "parameters": {...}}`) from llama3.1 answers.
+
+**Fix after run 4:** the guard also strips tool calls written as JSON text (test added).
+
+### Decision (user, 2026-10-15): OE credits → **ask the student**
+For degree credit requirements (OE / PE / IH / total) the agent must **ask for the B.Tech programme (branch) and the year of joining before answering**, then answer from *that* curriculum. The eval expects a clarifying question to "How many OE credits do I need for a B.Tech?"; after "B.Tech CSE, joined 2023" it expects **10** (CSE curriculum, batches before 2026, p. 10).
+
+To make the follow-up work:
+- **Document-scoped search:** `search_documents(query, top_k, document="CSE Curriculum")` searches only documents whose title contains those words. When scoped, it skips the out-of-scope distance guard (that guard is for the whole collection; inside one curriculum the best match was 0.38, which hid the credit table) and the 2-per-document cap. Without scoping, the CSE credit table (p. 10, a table) never reached the top 5, because the AIDE curriculum's prose section "Open Elective (OE) Courses" matched the query better.
+- Manifest: D09 renamed **"B.Tech CSE Curriculum (batches before 2026)"** so the agent can match it to a batch.
+- Prompt: ask for programme + year; then search only that curriculum and check that its title covers the batch; never answer from another programme's curriculum; **never quote credit numbers that weren't retrieved**. My first version of this rule included example numbers (10/12), and qwen3 repeated them in its clarifying question, so they were removed.
+- New test: the scoped search finds "Open Electives (OE) 10" in the CSE curriculum.
+
+Two-turn check ("How many OE credits…?" → "I am in B.Tech CSE, joined in 2023."):
+| | Turn 1 | Turn 2 |
+|---|---|---|
+| qwen3:8b | ✅ asks for branch + year (no tool call) | ✅ **10**, "B.Tech CSE Curriculum (batches before 2026), p. 10" |
+| llama3.1:8b | ❌ answers directly (10, then 12 on a later run) | ❌ "12", citing p. 18, which doesn't support it |
+
+### Manual check, run 5 (final)
+**One more regression, from the new `document` parameter:** qwen3 used `document="Academic Regulations"` on its own for the attendance question. That excluded Circular 51, and it answered about make-up exams. **Fix:** the tool docstring and prompt now say to leave `document` empty unless the student named their programme, because amendments live in separate circulars. Re-check: attendance on qwen3 **3/3 correct** (≥75%, de-registration; Circular 51), with no document filter.
+
+| Question | qwen3:8b | llama3.1:8b |
+|---|---|---|
+| Attendance for the Major exam | ✅ 75% / de-registration (Circular 51), 3/3 after the fix | ✅ 75% (Circular 51) |
+| Slot for Autonomous Systems | ✅ CSL7650, E, Tue/Thu/Fri 11:00–11:50, LHC 106 | ✅ E, Tue/Thu/Fri, Gaurav Harit |
+| 400-level Humanities | ✅ 3, lists all three with instructors and slots | ✅ 3 (no names) |
+| OE credits | ✅ asks for programme + year | ⚠️ guessed CSE, searched only that, then refused + "check the website" |
+| Email to the CSL7570 instructor | ✅ "Did you mean CSL7650…?", waits | ✅ "Did you mean CSL7650…?", waits (no inline drafts this time) |
+| Dining | ✅ refused (logged by the guard) | ✅ refused, tool called |
+| Transport | ✅ refused (logged by the guard) | ✅ refused (logged by the guard) |
+
+### Observations for the report (Phase 6/7)
+- **Prompt-only grounding is not enough for 8B models.** The fixes that worked best changed the *data and tools*: the amendment register, whole short circulars, a per-document cap, document-scoped search, removing the misleading `course_type` parameter. These held up better than extra prompt wording.
+- **Fixes can cause regressions** (`course_type` "Elective" → "OE"; the `document` parameter used unprompted). This is why Phase 6 needs repeated runs.
+- **Logging refusals has to be enforced in code:** qwen3 often writes the refusal sentence without calling the tool (≈50% here); the `after_model_callback` guard catches every case.
+- **llama3.1 is weaker at multi-step instructions** (asking for clarification, not drafting before confirmation) and sometimes prints tool calls as text. qwen3 (with `think=False`) follows the rules better and is faster (~6 s vs ~13 s per question).
+
+### Status
+- [x] System prompt: scope, tools-first policy, citation format, refusal rule (+ newest-source, amendments, programme/batch clarification)
+- [x] `single_agent.py`: one `LlmAgent` with all tools + the refusal/JSON-text guard
+- [x] `cli.py` REPL (`--ask`, `--mode`, `--model`) + `adk web agent` entry point
+- [x] Manually checked the 5 example questions + 2 out-of-scope on qwen3:8b and llama3.1:8b
+- 25/25 unit tests pass

@@ -1,6 +1,7 @@
 """Unit tests for the agent tools (CSV-backed tools need no Ollama; search_documents is excluded)."""
 
 import json
+import re
 
 import pytest
 
@@ -116,3 +117,30 @@ def test_all_tools_build_adk_declarations():
         decl = FunctionTool(fn)._get_declaration()
         assert decl.name == fn.__name__
         assert decl.description
+
+
+def test_guard_strips_text_tool_calls_and_logs_refusal(tmp_outputs):
+    from types import SimpleNamespace
+
+    from google.adk.models import LlmResponse
+    from google.genai import types
+
+    from helpdesk.agents.guards import log_refusals
+
+    text = ("I don't know the answer to that. I've forwarded your question to the academic office.\n"
+            '{"name": "log_unanswered_question", "parameters": {"question": "Dining?", "reason": "out of scope"}}')
+    resp = LlmResponse(content=types.Content(role="model", parts=[types.Part(text=text)]))
+    ctx = SimpleNamespace(state={}, agent_name="t",
+                          user_content=types.Content(role="user", parts=[types.Part(text="Dining?")]))
+    log_refusals(ctx, resp)
+    assert '"parameters"' not in resp.content.parts[0].text
+    assert config.UNANSWERED_LOG.read_text().count("Dining?") == 1
+
+
+def test_search_scoped_to_document_finds_cse_oe_credits():
+    from helpdesk.tools import search_documents
+
+    r = search_documents("Open Electives OE credits", 5, document="CSE Curriculum")
+    assert r["found"]
+    assert all("CSE" in x["citation"] for x in r["results"])
+    assert any(re.search(r"Open Electives \(OE\)\s+10", x["text"]) for x in r["results"])

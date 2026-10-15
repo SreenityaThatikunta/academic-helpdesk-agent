@@ -53,3 +53,23 @@ def test_bm25_prefers_exact_code_match():
         ],
     )
     assert bm.top("LAL4070 syllabus", 3)[0] == "a"
+
+
+def test_amendment_marks_old_passage_superseded(tmp_path, monkeypatch):
+    import pandas as pd
+
+    from helpdesk import ingest
+
+    doc = tmp_path / "docs" / "regs.txt"
+    doc.parent.mkdir()
+    doc.write_text("4.1.9 Attendance. Even below 75% the student will be allowed to appear for the exams.\n\n"
+                   + "Unrelated grading text. " * 200)
+    monkeypatch.setattr(ingest, "DATA", tmp_path)
+    row = pd.Series({"doc_id": "D01", "filename": "docs/regs.txt", "title": "Regs", "category": "regulations",
+                     "date": "2019", "source": "x", "status": "current"})
+    amend = pd.DataFrame([{"doc_id": "D01", "match": "allowed to appear for the exams", "superseded_by": "D02",
+                           "note": "replaced"}])
+    chunks = ingest.chunk_document(row, amend, {"D02": "Circular 51"})
+    hit = [c for c in chunks if "allowed to appear" in c.text]
+    assert hit and all(c.meta["status"] == "superseded" and "SUPERSEDED by Circular 51" in c.text for c in hit)
+    assert any(c.meta["status"] == "current" for c in chunks)

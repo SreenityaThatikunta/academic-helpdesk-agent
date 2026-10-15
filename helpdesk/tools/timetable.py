@@ -154,19 +154,18 @@ def _match_department(department: str) -> list[str]:
     return sorted(set(hit["department_code"]))
 
 
-def list_courses(department: str = "", level: str = "", course_type: str = "") -> dict:
+def list_courses(department: str = "", level: str = "") -> dict:
     """List and count the courses offered (floated) in Semester I, AY 2026-27,
-    filtered by department, course level, and/or course type.
+    filtered by department and/or course level.
 
     Args:
         department: Department or school, e.g. "Humanities" (= Institute Humanities / IH courses,
             including IH bouquet courses taught by AIDE), "CSE", "Mathematics". Empty for all.
         level: Course level, e.g. "400" or "4" for 400-level (course number 4xxx). Empty for all.
-        course_type: Category text such as "PE", "OE", "PC", "Elective" (only some departments record it). Empty for all.
 
     Returns:
         count: number of distinct courses matching the filters.
-        courses: code, name, department, slot, instructors for each.
+        courses: code, name, department, IH group, slot, instructors for each.
         source: document to cite.
     """
     df = table("courses")
@@ -187,10 +186,6 @@ def list_courses(department: str = "", level: str = "", course_type: str = "") -
         if m:
             df = df[df["level"] == f"{m.group()}00"]
             applied["level"] = f"{m.group()}00-level (course numbers {m.group()}xxx)"
-    if course_type:
-        t = course_type.strip().lower()
-        df = df[df["category"].str.lower().str.contains(re.escape(t)) | df["offered_for"].str.lower().str.contains(re.escape(t))]
-        applied["course_type"] = course_type
     offerings = _offerings(df)
     return {
         "count": len(offerings),

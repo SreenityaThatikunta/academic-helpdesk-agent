@@ -4,10 +4,15 @@ import json
 import uuid
 from datetime import datetime
 
+from google.adk.tools import ToolContext
+
 from helpdesk import config
 
+# Invocation-scoped ("temp:") flag so the refusal guard knows the tool already ran this turn
+LOGGED_FLAG = "temp:unanswered_logged"
 
-def log_unanswered_question(question: str, reason: str) -> dict:
+
+def log_unanswered_question(question: str, reason: str, tool_context: ToolContext | None = None) -> dict:
     """Record a question the helpdesk cannot answer so a human can follow up.
     Call this whenever you tell the student you don't know.
 
@@ -29,6 +34,8 @@ def log_unanswered_question(question: str, reason: str) -> dict:
     config.UNANSWERED_LOG.parent.mkdir(parents=True, exist_ok=True)
     with config.UNANSWERED_LOG.open("a") as f:
         f.write(json.dumps(entry) + "\n")
+    if tool_context is not None:
+        tool_context.state[LOGGED_FLAG] = True
     return {"status": "logged", "ticket_id": entry["id"], "message": "Forwarded to the academic office for a human answer."}
 
 

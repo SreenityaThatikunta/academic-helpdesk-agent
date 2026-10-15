@@ -18,6 +18,7 @@ from helpdesk.ingest import QUERY_PREFIX
 
 RRF_K = 60  # standard RRF constant
 CANDIDATES = 30  # per-retriever pool before fusion
+MAX_PER_DOC = 2  # keep one long document (e.g. a programme curriculum) from filling every slot
 SUPERSEDED_WEIGHT = 0.5  # older versions of a rule still answer some questions, but rank below current ones
 STOPWORDS = set(
     "a an the of to in on for and or is are was be by with as at from that this it i my me do does can what which "
@@ -71,32 +72,62 @@ def embed_query(text: str) -> list[float]:
 
 
 def _citation(meta: dict) -> str:
-    where = f"p. {meta['page']}" if str(meta["page"]).isdigit() else f"sheet '{meta['page']}'"
+    page = str(meta["page"])
+    where = f"p. {page}" if page.isdigit() else (f"pp. {page}" if re.fullmatch(r"\d+-\d+", page) else f"sheet '{page}'")
     return f"{meta['title']}, {where}"
 
 
-def search(query: str, k: int = config.TOP_K, max_distance: float = config.MAX_DISTANCE) -> dict:
+@lru_cache(maxsize=1)
+def _titles() -> dict[str, str]:
+    data = _collection().get(include=["metadatas"])
+    return {m["doc_id"]: m["title"] for m in data["metadatas"]}
+
+
+def search(query: str, k: int = config.TOP_K, max_distance: float = config.MAX_DISTANCE, document: str = "") -> dict:
     """Return the top-k chunks for `query` with citation metadata.
 
     `found` is False when even the closest chunk by embedding is farther than
     `max_distance`; the agent then has nothing to build an answer from.
+    `document` restricts the search to documents whose title contains every word of it
+    (e.g. "CSE Curriculum").
     """
     col = _collection()
-    dense = col.query(query_embeddings=[embed_query(query)], n_results=CANDIDATES, include=["distances"])
+    where, allowed = None, None
+    if document.strip():
+        words = document.lower().split()
+        allowed = {d for d, t in _titles().items() if all(w in t.lower() for w in words)}
+        if not allowed:
+            return {"found": False, "query": query, "best_distance": None, "results": [],
+                    "message": f"No document title matches '{document}'"}
+        where = {"doc_id": {"$in": sorted(allowed)}}
+    dense = col.query(query_embeddings=[embed_query(query)], n_results=CANDIDATES, include=["distances"], where=where)
     dense_ids, dists = dense["ids"][0], dict(zip(dense["ids"][0], dense["distances"][0]))
-    if not dense_ids or dists[dense_ids[0]] > max_distance:
+    # The distance guard detects off-topic questions across the whole collection; once the
+    # agent has picked a document it would only hide that document's tables
+    if not dense_ids or (not allowed and dists[dense_ids[0]] > max_distance):
         return {"found": False, "query": query, "best_distance": round(dists[dense_ids[0]], 4) if dense_ids else None,
                 "results": []}
 
     fused = Counter()
-    for ranking in (dense_ids, _bm25().top(query, CANDIDATES)):
+    sparse = _bm25().top(query, CANDIDATES * 10 if allowed else CANDIDATES)
+    if allowed:
+        sparse = [cid for cid in sparse if cid.split("-")[0] in allowed][:CANDIDATES]
+    for ranking in (dense_ids, sparse):
         for rank, cid in enumerate(ranking):
             fused[cid] += 1 / (RRF_K + rank + 1)
     pool = col.get(ids=list(fused), include=["metadatas"])
+    doc_of = {}
     for cid, meta in zip(pool["ids"], pool["metadatas"]):
+        doc_of[cid] = meta["doc_id"]
         if meta.get("status") == "superseded":
             fused[cid] *= SUPERSEDED_WEIGHT
-    top_ids = [cid for cid, _ in fused.most_common(k)]
+    top_ids, per_doc = [], Counter()
+    for cid, _ in fused.most_common():
+        if allowed or per_doc[doc_of[cid]] < MAX_PER_DOC:
+            top_ids.append(cid)
+            per_doc[doc_of[cid]] += 1
+        if len(top_ids) == k:
+            break
 
     got = col.get(ids=top_ids, include=["documents", "metadatas"])
     by_id = {i: (doc, meta) for i, doc, meta in zip(got["ids"], got["documents"], got["metadatas"])}

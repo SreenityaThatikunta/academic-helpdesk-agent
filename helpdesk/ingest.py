@@ -24,11 +24,15 @@ from helpdesk import config
 
 DATA = config.ROOT / "data"
 MANIFEST = DATA / "manifest.csv"
+AMENDMENTS = DATA / "amendments.csv"
 OCR_DIR = DATA / "ocr"
 
 CHUNK_CHARS = 1800  # ~450 tokens
 OVERLAP_CHARS = 250
 MIN_CHUNK_CHARS = 80
+# Short documents (circulars, notices) are kept as one chunk so e.g. a "revised policy"
+# is never separated from the "existing policy" it replaces
+WHOLE_DOC_CHARS = 3200
 EMBED_BATCH = 32
 # nomic-embed-text is trained with task prefixes
 DOC_PREFIX, QUERY_PREFIX = "search_document: ", "search_query: "
@@ -163,20 +167,42 @@ def split_text(text: str, size: int = CHUNK_CHARS, overlap: int = OVERLAP_CHARS)
     return [c for c in chunks if c]
 
 
-def chunk_document(row: pd.Series) -> list[Chunk]:
+def load_amendments() -> pd.DataFrame:
+    if not AMENDMENTS.exists():
+        return pd.DataFrame(columns=["doc_id", "match", "superseded_by", "note"])
+    return pd.read_csv(AMENDMENTS, dtype=str).fillna("")
+
+
+def _norm_ws(text: str) -> str:
+    return re.sub(r"\s+", " ", text).lower()
+
+
+def chunk_document(row: pd.Series, amendments: pd.DataFrame | None = None, titles: dict | None = None) -> list[Chunk]:
     path = DATA / row.filename
     pages = LOADERS[path.suffix.lower()](path)
+    texts = [mask_emails(clean(pg.text)) for pg in pages]
+    whole = sum(len(t) for t in texts) <= WHOLE_DOC_CHARS
+    if whole and len(pages) > 1:
+        pages = [Page("\n\n".join(texts), f"1-{len(pages)}")]
+        texts = [pages[0].text]
+    amends = amendments[amendments["doc_id"] == row.doc_id] if amendments is not None else []
+    titles = titles or {}
     chunks = []
-    for pg in pages:
-        text = mask_emails(clean(pg.text))
-        for i, piece in enumerate(split_text(text)):
+    for pg, text in zip(pages, texts):
+        for i, piece in enumerate([text] if whole else split_text(text)):
             if len(piece) < MIN_CHUNK_CHARS:
                 continue
+            status = row.status or "current"
+            note = ""
+            for a in getattr(amends, "itertuples", lambda: [])():
+                if _norm_ws(a.match) in _norm_ws(piece):
+                    status = "superseded"
+                    note = f" | SUPERSEDED by {titles.get(a.superseded_by, a.superseded_by)}: {a.note}"
             cid = hashlib.sha1(f"{row.doc_id}|{pg.page}|{i}|{piece}".encode()).hexdigest()[:16]
             # Contextual header: chunks rarely name their own document ("IH2", "PhD"),
             # so embed/index the title and date with every chunk
-            where = f"page {pg.page}" if pg.page.isdigit() else f"sheet {pg.page}"
-            header = f"[{row.title} | {row.date} | {where}]"
+            where = f"page {pg.page}" if re.fullmatch(r"\d+(-\d+)?", pg.page) else f"sheet {pg.page}"
+            header = f"[{row.title} | {row.date} | {where}{note}]"
             chunks.append(
                 Chunk(
                     id=f"{row.doc_id}-{cid}",
@@ -187,7 +213,7 @@ def chunk_document(row: pd.Series) -> list[Chunk]:
                         "filename": Path(row.filename).name,
                         "category": row.category,
                         "date": str(row.date),
-                        "status": row.status or "current",
+                        "status": status,
                         "source": str(row.source),
                         "page": pg.page,
                         "chunk": i,
@@ -220,10 +246,12 @@ def get_collection(reset: bool = False):
 
 def ingest(reset: bool = False) -> None:
     manifest = pd.read_csv(MANIFEST, dtype=str).fillna("")
+    amendments = load_amendments()
+    titles = dict(zip(manifest.doc_id, manifest.title))
     col = get_collection(reset)
     total = 0
     for _, row in manifest.iterrows():
-        chunks = chunk_document(row)
+        chunks = chunk_document(row, amendments, titles)
         # Drop stale chunks for this doc so re-ingesting an edited file doesn't leave duplicates
         col.delete(where={"doc_id": row.doc_id})
         if chunks:

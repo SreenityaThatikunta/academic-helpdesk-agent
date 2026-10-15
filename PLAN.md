@@ -122,10 +122,10 @@ academic-helpdesk-agent/
 - [x] Unit tests for each tool (pure Python, no LLM)
 
 ### Phase 4: Single-Agent Baseline
-- [ ] System prompt with scope, tool-use policy, citation format and refusal rule
-- [ ] `single_agent.py`: one `LlmAgent` with all tools
-- [ ] `cli.py` REPL + `adk web` entry point
-- [ ] Manually check the 5 example questions + the 2 out-of-scope ones
+- [x] System prompt with scope, tool-use policy, citation format and refusal rule
+- [x] `single_agent.py`: one `LlmAgent` with all tools
+- [x] `cli.py` REPL + `adk web` entry point
+- [x] Manually check the 5 example questions + the 2 out-of-scope ones
 
 ### Phase 5: Multi-Agent Version
 - [ ] Policy agent (tools: `search_documents`, `log_unanswered_question`)
