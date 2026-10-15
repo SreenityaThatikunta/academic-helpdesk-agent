@@ -71,3 +71,13 @@ def test_routing_uses_first_specialist():
 def test_key_facts_ignore_years_and_detect_refusal():
     assert key_facts("CSL7650 slot E on 22 Nov 2026") == key_facts("Slot E for CSL 7650, 22 November 2026")
     assert key_facts("I don't know the answer") == "REFUSED"
+
+
+def test_asked_facts_ignore_incidental_numbers():
+    from score import asked_facts
+
+    exp = {"behavior": "answer", "must_include": [r"\bE\b"]}
+    a = rec("Slot E, Tue 11:00-11:50, LHC 106. Source: p. 3")
+    b = rec("CSL7650 is in slot E (Tue/Thu/Fri). Source: sheet")
+    assert asked_facts(a, exp) == asked_facts(b, exp) == "e"
+    assert asked_facts(rec("I don't know"), exp) == "REFUSED"

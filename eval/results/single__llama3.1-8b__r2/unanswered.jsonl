@@ -1,0 +1,6 @@
+{"id": "36fc2b1e", "timestamp": "2026-10-15T13:29:58", "question": "What are the available dining options on the campus?", "reason": "out of scope: campus dining", "status": "open"}
+{"id": "71ce024b", "timestamp": "2026-10-15T13:30:05", "question": "What is the best way to reach the campus from Jodhpur city center?", "reason": "out of scope: campus transport", "status": "open"}
+{"id": "9f83a11f", "timestamp": "2026-10-15T13:30:13", "question": "What will the weather be like in Jodhpur tomorrow?", "reason": "out of scope: weather", "status": "open"}
+{"id": "0ba19c6e", "timestamp": "2026-10-15T13:30:21", "question": "How do I apply for a hostel room change?", "reason": "out of scope: hostel room change", "status": "open"}
+{"id": "0845c9ba", "timestamp": "2026-10-15T13:30:28", "question": "Who won the cricket World Cup in 2023?", "reason": "out of scope: cricket World Cup result", "status": "open"}
+{"id": "0f828b84", "timestamp": "2026-10-15T13:30:36", "question": "What is the average placement package for CSE students?", "reason": "out of scope: placement information", "status": "open"}

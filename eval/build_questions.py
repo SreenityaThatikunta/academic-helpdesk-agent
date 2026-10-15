@@ -51,13 +51,14 @@ ITEMS = [
     ("P04", "policy", ["What should I do if I miss the Major exam due to illness?"],
      [ans("Apply for an I grade (not a make-up); the I grade application must reach the Office of Academic Affairs "
           "before the last day of the examinations, with a verified medical certificate.",
-          [r"\bI[ -]?grade"], EXAM_GUIDE, ["search_documents"], "policy_agent")]),
+          [r"\bI['\"\u201c\u201d]?[ -]?grade"], EXAM_GUIDE, ["search_documents"], "policy_agent")]),
     ("P05", "policy", ["What is the maximum duration allowed to complete a B.Tech programme?"],
      [ans("14 registered semesters (2019 Academic Regulations §11.4; supersedes the older 8-year rule).",
           [r"\b14\b"], REGS, ["search_documents"], "policy_agent", must_not=[r"\b8 years"])]),
     ("P06", "policy", ["How many examinations are held for a course in a semester?"],
      [ans("One Minor and one Major examination (Circular 52, Jul 2024; Examination Guidelines 2024).",
-          [r"one minor", r"one major"], ["Circular 52"] + EXAM_GUIDE, ["search_documents"], "policy_agent")]),
+          [r"\bminor\b", r"\bmajor\b"], ["Circular 52"] + EXAM_GUIDE, ["search_documents"], "policy_agent",
+          must_not=[r"two minor|three (exam|minor)"])]),
     ("P07", "policy", ["When are the minor examinations for Semester I of 2026-27?"],
      [ans("15-20 September 2026 (tentative).", [r"15", r"20", r"sep"],
           ["Academic Calendar AY 2026-27"] + ALLOC, ["search_documents", "get_slot"],
@@ -68,8 +69,12 @@ ITEMS = [
           [r"multi-?agent|navigation|obstacle|planning|robot"], ["Details of Courses Offered by Dept. of CSE",
                                                                  "M.Tech AI Curriculum"],
           ["search_documents"], "policy_agent")]),
+    # Answer key corrected after the first full run: PG Regulations §11.5 (p. 22) does state it
+    # (Phase 2 had wrongly concluded it was not in any document - see PROGRESS_LOG Phase 6)
     ("P09", "policy", ["What is the maximum duration allowed to complete a PhD?"],
-     [{**REFUSE, "answer": "Not stated in the documents -> I don't know + logged", "agent": "policy_agent"}]),
+     [ans("14 registered semesters, which may include up to 6 semesters of Registration kept Alive (RKA) "
+          "(PG Regulations 2022 onwards, §11.5).", [r"\b14\b"], ["PG Regulations"], ["search_documents"],
+          "policy_agent")]),
     # ---------------- schedule ----------------
     ("S01", "schedule", ["What is the slot for the course Autonomous Systems?"],
      [ans("CSL7650, slot E (Tue/Thu/Fri 11:00-11:50), LHC 106.", [r"\bE\b"], ALLOC, ["get_slot", "lookup_course"],

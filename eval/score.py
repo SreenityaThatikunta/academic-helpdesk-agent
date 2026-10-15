@@ -51,8 +51,34 @@ def _matches_any(patterns, text) -> bool:
     return any(re.search(p, text, re.I) for p in patterns or [])
 
 
+def asked_facts(r: dict, exp: dict) -> str:
+    """The facts the question asks for, as found in this answer - used to detect answers that
+    changed across repeats without counting incidental numbers (pages, extra timings)."""
+    ans = r["answer"] or ""
+    beh = exp["behavior"]
+    if r["error"]:
+        return "ERROR"
+    if REFUSAL.search(ans):
+        return "REFUSED"
+    if beh == "refuse":
+        return "ANSWERED"
+    if beh == "draft":
+        to = sorted({str(c["args"].get("to", "")).lower() for c in r["tool_calls"] if c["name"] == "draft_email"})
+        return f"draft_to={','.join(to) or 'none'} saved={bool(r['drafts'])}"
+    if beh == "clarify":
+        return "ASKED" if all(p.search(ans) for p in CLARIFY) else "NOT_ASKED"
+    if beh == "suggest":
+        return "SUGGESTED_CSL7650" if re.search(r"CSL\s?7650", ans) else "NO_SUGGESTION"
+    found = []
+    for pat in exp.get("must_include") or []:
+        m = re.search(pat, ans, re.I)
+        found.append(re.sub(r"\s+", "", m.group().lower()) if m else "-")
+    stale = [p for p in exp.get("must_not") or [] if re.search(p, ans, re.I)]
+    return " | ".join(found) + (" | STALE" if stale else "")
+
+
 def key_facts(answer: str) -> str:
-    """Normalised facts used to detect answers that changed across repeats."""
+    """All course codes and numbers in an answer (broad; used only in the detailed table)."""
     if REFUSAL.search(answer):
         return "REFUSED"
     code_re = re.compile(r"\b[A-Z]{2,4}\s?\d{4}\b")
@@ -114,7 +140,8 @@ def score_record(r: dict, exp: dict) -> dict:
         routed = first in want if isinstance(want, list) else first == want
 
     return {"correct": correct, "reason": reason, "grounded": grounded, "refused": refused, "routed": routed,
-            "first_agent": next((a for a in r["agents"] if a != ROUTER), ROUTER), "facts": key_facts(ans)}
+            "first_agent": next((a for a in r["agents"] if a != ROUTER), ROUTER), "facts": asked_facts(r, exp),
+            "all_numbers": key_facts(ans)}
 
 
 def pct(n, d):
@@ -200,9 +227,10 @@ def main() -> None:
 
     # ---- consistency
     md += ["", "## Consistency across repeats", "",
-           "A question is **unstable** when its correctness differs between repeats; its **facts changed** when "
-           "the numbers / course codes in the answer differ between repeats (or it refused in some repeats only).",
-           "", "| Config | Unstable correctness | Facts changed |", "|---|---|---|"]
+           "A question is **unstable** when its correctness differs between repeats. Its **answer changed** when "
+           "the facts the question asks for differ between repeats: the values matched by the expected-fact "
+           "patterns, refused vs answered, the draft recipient, or asked vs not asked.",
+           "", "| Config | Unstable correctness | Answer changed |", "|---|---|---|"]
     changed_rows = []
     for c in configs:
         unstable = factchg = 0
@@ -219,12 +247,33 @@ def main() -> None:
                                      [x["facts"] for x in sorted(xs, key=lambda x: x["repeat"])]))
         md.append(f"| {c} | {unstable}/{len(keys)} | {factchg}/{len(keys)} |")
     md += ["", "### Questions whose answers changed across runs", "",
-           "| Config | Item | Correct per repeat | Key facts per repeat |", "|---|---|---|---|"]
+           "| Config | Item | Correct per repeat | Asked-for facts per repeat |", "|---|---|---|---|"]
     for c, k, cor, facts in changed_rows:
         md.append(f"| {c} | {k[0]}.{k[1] + 1} | {' '.join('✓' if v else '✗' for v in cor)} | "
                   f"{' ‖ '.join(facts)} |")
 
     (RESULTS / "summary.md").write_text("\n".join(md) + "\n")
+    with (RESULTS / "summary.csv").open("w", newline="") as f:
+        w = csv.writer(f)
+        w.writerow(["config", "turns", "accuracy", "grounded", "grounded_n", "correct_refusals", "refusal_n",
+                    "false_refusals", "routing", "mean_latency_s", "unstable_correctness", "answer_changed"])
+        for c in configs:
+            xs = by_cfg[c]
+            g = [x for x in xs if x["grounded"] is not None]
+            ref = [x for x in xs if x["behavior"] == "refuse"]
+            nonref = [x for x in xs if x["behavior"] != "refuse"]
+            rt = [x for x in xs if x["routed"] is not None]
+            per_q = defaultdict(list)
+            for x in xs:
+                per_q[(x["id"], x["turn"])].append(x)
+            w.writerow([c, len(xs), round(sum(x["correct"] for x in xs) / len(xs), 3),
+                        round(sum(x["grounded"] for x in g) / len(g), 3) if g else "", len(g),
+                        round(sum(x["refused"] for x in ref) / len(ref), 3) if ref else "", len(ref),
+                        round(sum(x["refused"] for x in nonref) / len(nonref), 3) if nonref else "",
+                        round(sum(x["routed"] for x in rt) / len(rt), 3) if rt else "",
+                        round(statistics.mean(x["seconds"] for x in xs), 2),
+                        sum(len({x["correct"] for x in v}) > 1 for v in per_q.values()),
+                        sum(len({x["facts"] for x in v}) > 1 for v in per_q.values())])
 
     # ---- review sheet: every turn scored wrong (or not grounded), for manual checking
     rv = ["# Turns to review", "", "Each entry was scored wrong or not grounded. Add a row to eval/overrides.csv "

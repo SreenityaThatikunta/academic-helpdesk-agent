@@ -136,16 +136,16 @@ academic-helpdesk-agent/
 - [x] `--mode single|multi` switch in the CLI and the eval runner
 
 ### Phase 6: Evaluation
-- [ ] Write `eval/questions.jsonl` with 20–30 prompts, each tagged with category (`policy`, `schedule`, `count`, `email`, `out_of_scope`), expected answer and expected source doc
-  - [ ] about 8 policy, 6 schedule/count, 4 email, 6 out-of-scope, 2–3 multi-intent
-- [ ] `run_eval.py`: run every question × N=3 repeats × each model (qwen3:8b, llama3.1:8b) × each mode (single, multi); save raw responses, tool calls, routed agent and latency
-- [ ] `score.py` metrics:
-  - [ ] **Accuracy**: key facts match (rule-based check, then manual review of borderline cases)
-  - [ ] **Groundedness**: cited doc matches the expected source
-  - [ ] **Refusal correctness**: out-of-scope questions refused + logged; no false refusals on in-scope ones
-  - [ ] **Routing accuracy** (multi-agent): routed to the right sub-agent
-  - [ ] **Consistency**: questions whose answers changed across repeats
-- [ ] Summary table (CSV + Markdown) per model × mode
+- [x] Write `eval/questions.jsonl` with 20–30 prompts, each tagged with category (`policy`, `schedule`, `count`, `email`, `out_of_scope`), expected answer and expected source doc
+  - [x] about 8 policy, 6 schedule/count, 4 email, 6 out-of-scope, 2–3 multi-intent
+- [x] `run_eval.py`: run every question × N=3 repeats × each model (qwen3:8b, llama3.1:8b) × each mode (single, multi); save raw responses, tool calls, routed agent and latency
+- [x] `score.py` metrics:
+  - [x] **Accuracy**: key facts match (rule-based check, then manual review of borderline cases)
+  - [x] **Groundedness**: cited doc matches the expected source
+  - [x] **Refusal correctness**: out-of-scope questions refused + logged; no false refusals on in-scope ones
+  - [x] **Routing accuracy** (multi-agent): routed to the right sub-agent
+  - [x] **Consistency**: questions whose answers changed across repeats
+- [x] Summary table (CSV + Markdown) per model × mode
 
 ### Phase 7: Report and Docs
 - [ ] `README.md`: setup, model pulls, ingestion, running CLI / `adk web`, running eval, repo layout

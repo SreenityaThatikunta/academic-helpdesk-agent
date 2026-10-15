@@ -1,0 +1,5 @@
+config,turns,accuracy,grounded,grounded_n,correct_refusals,refusal_n,false_refusals,routing,mean_latency_s,unstable_correctness,answer_changed
+single · qwen3:8b,93,0.871,0.696,69,1.0,18,0.04,,9.5,0,0
+multi · qwen3:8b,93,0.839,0.783,69,1.0,18,0.08,0.935,12.24,0,0
+single · llama3.1:8b,93,0.645,0.464,69,1.0,18,0.013,,14.24,6,8
+multi · llama3.1:8b,93,0.688,0.623,69,1.0,18,0.0,0.935,13.33,1,3

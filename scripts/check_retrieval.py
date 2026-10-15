@@ -26,6 +26,7 @@ IN_SCOPE = [
     ("How is the CGPA calculated?", {"D01", "D21", "D04"}),
     ("What is the minimum CGPA to avoid academic probation?", {"D01", "D21", "D04"}),
     ("What are the rules for grading and letter grades?", {"D01", "D21", "D04"}),
+    ("What is the maximum duration allowed to complete a PhD?", {"D05"}),  # PG Regulations §11.5
     ("What is the maximum duration of the B.Tech programme?", {"D01", "D21"}),  # 14 semesters (2019) supersedes 8 years (D04)
     ("What are the IH2 humanities electives offered this semester?", {"D28", "D23", "D25"}),
     ("How many Programme Elective (PE) credits are needed for B.Tech?", {"D01", "D21", "D09"}),
@@ -41,7 +42,6 @@ OUT_OF_SCOPE = [
     "What is the wifi password for the library?",
     "Recommend a good restaurant near IIT Jodhpur.",
     "What is the placement package of CSE students?",
-    "What is the maximum duration allowed to complete a PhD?",  # in scope, but not in any document
 ]
 
 

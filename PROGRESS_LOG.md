@@ -557,3 +557,78 @@ Two-turn check ("How many OE credits…?" → "I am in B.Tech CSE, joined in 202
 - **`eval/score.py`**: scores every turn (accuracy, the reason it was marked wrong, groundedness, refused, routed, key facts) and writes `results/scored.jsonl`, `results/summary.md` (headline metrics per model × mode, accuracy by category, a per-question k/3 table, consistency) and `results/review.md` (every turn scored wrong or ungrounded, with question, expected answer, route, tools and full answer, for manual review). `eval/overrides.csv` (run, id, turn, field, value, reason) is applied on top; `--no-overrides` gives the raw automatic scores.
   - Scoring rules as decided above. For draft items without a source requirement, "grounded" = the recipient came from `get_instructor_email` (not made up). Routing = the first non-router agent in the event sequence. Key facts = course codes + numbers (excluding years) or `REFUSED`.
 - **`tests/test_score.py`**: 9 tests for the scoring rules (superseded content → wrong; right but uncited → not grounded; false refusal; clarification can't contain a credit number; suggest must not draft; draft recipient check; routing; key facts). **It caught a bug in `key_facts`**: "CSL 7650" also added 7650 to the numbers, and numbers kept a trailing space, so identical answers would have counted as "changed across runs". Fixed. 35/35 tests pass.
+
+### Full run finished
+12 runs × 31 turns = **372 turns, 0 errors**, ~78 min total. Per run: single qwen3 ≈ 4.8 min, multi qwen3 ≈ 6.3 min, single llama3.1 ≈ 7.4 min, multi llama3.1 ≈ 6.9 min.
+
+### Automatic scores (before manual review; saved as `eval/results/summary_auto.md`)
+| Config | Accuracy | Grounded | Correct refusals | False refusals | Refusals logged | Routing | Mean latency |
+|---|---|---|---|---|---|---|---|
+| single · qwen3:8b | 90% (84/93) | 73% (48/66) | 100% (21/21) | 0% | 100% | – | 9.5 s |
+| multi · qwen3:8b | 87% (81/93) | 82% (54/66) | 100% (21/21) | 4% (3/72) | 100% | 94% (87/93) | 12.2 s |
+| single · llama3.1:8b | 60% (56/93) | 42% (28/66) | 86% (18/21) | 1% | 100% | – | 14.2 s |
+| multi · llama3.1:8b | 61% (57/93) | 55% (36/66) | 86% (18/21) | 0% | 100% | 94% (87/93) | 13.3 s |
+
+**Red flags to check in the manual review before trusting these numbers:**
+- **C02 (IH2 count) and M01 (make-up rule + email) score 0/3 in all four configurations.** When every configuration fails an item, the answer key or the scoring rule is the likely problem, so these are checked first.
+- Cells where one config is 0/3 and another is 3/3 on the same model: multi qwen3 S02 (0/3 vs single 3/3), P08 (0/3 vs 3/3), single qwen3 P03 (0/3 vs multi 3/3).
+- **The "facts changed" metric is noisy:** it counts every number in the answer, so incidental numbers (page numbers, extra times, citation dates) flag answers whose actual answer didn't change (e.g. single qwen3 S01: slot E in all three repeats, but the second-run answer omitted "30"). It needs to compare only the facts the question asks for.
+
+### Manual review, part 1: answer-key and scorer corrections (apply to all configurations equally)
+1. **P09 answer key was wrong. Correction to Phase 2.** PG Regulations §11.5 (D05 p. 22): "Ph.D. and M.Tech.-Ph.D. dual degree (Regular and Part-time/External) – **14 registered semesters**, which may include a maximum of 6 semesters of Registration kept Alive (RKA)". In Phase 2 I concluded "the PhD maximum duration is not stated in any document" from a regex that only looked for "maximum … *years*", and the text says "registered semesters". **llama3.1's "14 registered semesters, PG Regulations p. 22" was right, and qwen3's refusals were false refusals.** P09 is now an `answer` item (must include 14, source "PG Regulations"). The eval now has **6** refusal items (all out of scope) and no in-scope-but-undocumented item. `check_retrieval.py` was updated the same way (PhD question moved to in-scope, expected D05). *Lesson: an "it's not in the documents" claim needs a full-text read of the likely section, not a regex.*
+2. **P06 regex was too literal.** llama3.1 answered "two examinations… Minor and Major (Circular 52)", the same fact as "one Minor and one Major", but the key required the literal words "one minor" / "one major". Now: must mention both minor and major, and must not say "two minor" / "three exams".
+
+### Manual review, part 2: automatic "wrong" labels confirmed as genuine failures (no override)
+- **C02 IH2 count, 0/3 everywhere:** every config called `list_courses(department="Humanities", level="5")`, reading "5th semester" as course level 5xx, got 0, and answered "no IH2 courses". This is model misreading **plus a tool gap**: `list_courses` cannot filter by IH group, and the IH2 list is only in D33. Kept as a failure; noted as a tool improvement for the report. Not fixed now: changing tools during scoring would be tuning on the test set.
+- **M01 make-up rule + email:** single qwen3 **never called `draft_email`** (it wrote placeholder email text in the chat, "To: [Instructor's Email Address]"). Multi qwen3 saved a correct draft to gaurav.harit@ with the rule from the 2024 Guidelines, but **left out the 10-day deadline**, a key part of the rule asked for. Kept as wrong under the strict rubric; the report will note that multi was "correct except the deadline".
+- **multi qwen3 S02 (who teaches Health Economics + classroom): the orchestrator returned an empty answer 3/3** (no transfer, no text). A new failure mode: the router produced an empty final response.
+- **multi qwen3 P08 (Autonomous Systems topics): false refusal 3/3.** The policy agent searched, received the syllabus, then said "I don't know". The "a related passage is not an answer" rule is over-applied by the shorter specialist prompt (single qwen3: 3/3 correct).
+- **single qwen3 P03 (how to apply for a make-up): no tool call 3/3.** It gave a generic procedure from its own knowledge ("contact the instructor…"); ungrounded and missing the 10-day / Office of Academic Affairs facts.
+- **llama3.1 drafts (E02–E04): 0/3 in both modes.** Either it asks for details that were already given ("please provide the subject and the reason for your sick leave"), or it **writes the email in the chat without calling `draft_email`**, so nothing is saved for review.
+- **llama3.1 P01 attendance: 0/3 in both modes.** It reads the *existing policy* paragraph that Circular 51 quotes ("allowed to appear… need at least a C grade") as the current rule, even though it is the same single chunk that also contains the revised rule.
+- **Misroutes (multi):** qwen3 P09 → the router refused it itself (3/3); qwen3 S02 → empty router answer (3/3); llama3.1 P03 "how do I apply for a make-up exam" → email_agent (3/3; the word "apply" read as a request to write); llama3.1 M01 → policy_agent (3/3, so no draft).
+3. **P04 regex missed a quoted grade.** multi llama3.1 wrote 'request for an **"I"** grade'; the pattern `\bI[ -]?grade` doesn't allow quotes. It now allows straight or curly quotes. Applied to all configurations.
+
+### Manual review, part 3: groundedness labels checked
+The 14 "correct but not grounded" turns were read one by one; all labels are fair:
+- llama3.1 C01/C03: cited the **tool name** ("Source: list_courses") instead of a document.
+- **single qwen3 P04: no tool call at all and an invented citation** ("Academic Regulations 2026-27, Section 4.3"). The answer happened to be right. This is the clearest **fabricated citation** in the eval.
+- single qwen3 P08: only called `lookup_course`, then listed syllabus topics from its own knowledge with the course-list citation.
+- single qwen3 / llama3.1 M02: **never searched** for the attendance half; "75%" came from the model's own knowledge (and it even says "refer to the official regulations").
+
+### Scoring changes after the first look (no agent changes)
+- **Consistency metric replaced.** "Facts changed" originally compared *every* number in the answer, so page numbers and extra timings flagged answers that hadn't really changed (e.g. qwen3 S01: slot E in all repeats). It now compares only **the facts the question asks for**: values matched by the `must_include` patterns (+ STALE if a superseded rule appears), refused vs answered, draft recipient + saved, asked vs not asked. The broad number list is kept in `scored.jsonl` (`all_numbers`). New test; 36/36 pass.
+- `summary.csv` added next to `summary.md` (as the plan asked).
+- **`eval/overrides.csv` is empty (header only).** Every scoring problem found was a rule-level error in the answer key (P09, P06, P04), fixed for all configurations alike, rather than a one-off override. `summary_auto.md` keeps the very first automatic scores for comparison.
+
+### Final results (30 items / 31 turns × 3 repeats per config; `eval/results/summary.md`)
+| Config | Accuracy | Grounded | Correct refusals (OOS) | False refusals | Refusals logged | Routing | Mean / p90 latency | Unstable correctness | Answer changed |
+|---|---|---|---|---|---|---|---|---|---|
+| single · qwen3:8b | **87%** (81/93) | 70% (48/69) | 100% (18/18) | 4% (3/75) | 100% | – | **9.5 s** / 19.9 s | 0/31 | **0/31** |
+| multi · qwen3:8b | 84% (78/93) | **78%** (54/69) | 100% (18/18) | 8% (6/75) | 100% | 94% (87/93) | 12.2 s / 31.3 s | 0/31 | **0/31** |
+| single · llama3.1:8b | 65% (60/93) | 46% (32/69) | 100% (18/18) | 1% (1/75) | 100% | – | 14.2 s / 27.6 s | 6/31 | 8/31 |
+| multi · llama3.1:8b | 69% (64/93) | 62% (43/69) | 100% (18/18) | **0%** | 100% | 94% (87/93) | 13.3 s / 27.1 s | 1/31 | 3/31 |
+
+Accuracy by category:
+| Config | policy | schedule | count | email | out of scope | multi-intent | conversation |
+|---|---|---|---|---|---|---|---|
+| single · qwen3 | 78% | 100% | 67% | 100% | 100% | 50% | 100% |
+| multi · qwen3 | 78% | 80% | 67% | 100% | 100% | 50% | 100% |
+| single · llama3.1 | 52% | 100% | 67% | 25% | 100% | 17% | 50% |
+| multi · llama3.1 | 70% | 100% | 67% | 25% | 100% | 0% | 50% |
+
+### Findings
+1. **Model matters more than architecture.** qwen3:8b (with `think=False`) beats llama3.1:8b by about 15–22 accuracy points in both modes, is faster in single mode, and is **completely deterministic in its answers across repeats** (0/31 changed, at temperature 0.2). llama3.1 changed its answer on 8/31 questions in single mode.
+2. **Multi-agent: better grounding, slightly lower accuracy for qwen3.** Multi raised groundedness (qwen3 70→78%, llama3.1 46→62%) because the specialists search and cite more consistently. qwen3 accuracy dropped 3 points, from three failures specific to multi mode: an **empty router answer** (S02 3/3), a **specialist over-refusing** (P08 3/3), and the router refusing the in-scope PhD question itself (P09). For llama3.1, multi *raised* accuracy (+4) and stability (answer changed 8→3), but llama3.1 still can't call `draft_email` reliably in either mode.
+3. **Out-of-scope refusals are solved:** 100% correct and 100% logged in all 4 configs (72/72), with no out-of-scope question answered. The remaining refusal problem is *false* refusals of in-scope questions (qwen3 multi 8%).
+4. **Routing 94% for both models.** All misroutes are systematic (the same item 3/3), not random: qwen3 P09 → router refusal, S02 → empty router; llama3.1 P03 ("apply for a make-up") → email_agent, M01 → policy_agent.
+5. **Superseded rules still catch llama3.1:** P01 attendance 0/6 (it reads the "existing policy" that Circular 51 quotes as the current rule); P06 once cited the 2019 "Minor 1, Minor 2, Major" scheme. qwen3 got P01 right 6/6.
+6. **Hardest items:** C02 IH2 count (0/12 in every config: "5th semester" read as course level 5xx, plus `list_courses` can't filter by IH group); M01 rule + email (0/12: single mode skips the draft; multi qwen3 drafts correctly but leaves out the 10-day deadline).
+7. **Fabricated citations still happen** when the model skips tools: qwen3 P04 cited a non-existent "Academic Regulations 2026-27, Section 4.3". Groundedness is a separate metric from accuracy for exactly this reason.
+8. **The evaluation found an error in my own ground truth** (PhD maximum duration). Manual review of every "wrong" answer is necessary; automatic scoring alone would have penalised a correct model and rewarded false refusals.
+
+### Status
+- [x] `eval/questions.jsonl`: 30 prompts (31 turns), categories, expected answers, sources
+- [x] `run_eval.py`: 3 repeats × 2 models × 2 modes; raw answers, tool calls, routing, latency, drafts, logging
+- [x] `score.py`: accuracy, groundedness, refusals, routing, consistency (+ manual review: 3 answer-key fixes, 0 per-answer overrides)
+- [x] Summary tables (`summary.md`, `summary.csv`, `review.md`)
