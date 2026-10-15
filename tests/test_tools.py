@@ -137,6 +137,17 @@ def test_guard_strips_text_tool_calls_and_logs_refusal(tmp_outputs):
     assert config.UNANSWERED_LOG.read_text().count("Dining?") == 1
 
 
+def _index_ready() -> bool:
+    try:
+        import chromadb
+
+        chromadb.PersistentClient(path=str(config.CHROMA_DIR)).get_collection(config.CHROMA_COLLECTION)
+        return True
+    except Exception:
+        return False
+
+
+@pytest.mark.skipif(not _index_ready(), reason="needs the vector index: run `python -m helpdesk.ingest` (and Ollama)")
 def test_search_scoped_to_document_finds_cse_oe_credits():
     from helpdesk.tools import search_documents
 

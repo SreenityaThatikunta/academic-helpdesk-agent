@@ -133,7 +133,7 @@ I don't know the answer to that. I've forwarded your question to the academic of
 .venv/bin/python eval/run_eval.py --models ollama_chat/qwen3:8b --modes multi --repeats 1 --only P01 E01
 .venv/bin/python eval/score.py                        # → eval/results/summary.md, summary.csv, review.md
 .venv/bin/python eval/check_retrieval.py              # retrieval-only check (hit@k, distance threshold)
-.venv/bin/python -m pytest -q tests                   # 35 unit tests (no LLM needed)
+.venv/bin/python -m pytest -q tests                   # 35 unit tests; one needs the index + Ollama (skipped otherwise)
 ```
 
 ## Repository layout
