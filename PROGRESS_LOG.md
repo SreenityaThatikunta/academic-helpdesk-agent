@@ -229,3 +229,10 @@ This **replaces** the earlier "400-level Humanities = 2" decision.
 - `list_courses(department="Humanities")` → **60 courses** (54 SoLA + 6 AIDE IH).
 - **"How many 400-level electives has Humanities floated?" → 3**: LAL4070 Health Economics (Alok Ranjan, D), LAL4850 Introduction to Climate Change Economics (Souryabrata Mohapatra, D), **AIL4070 Fundamentals of Economics** (Souryabrata Mohapatra, I; AIDE, IH3). The eval answer key uses 3.
 - Tests updated: Humanities 400-level = 3, plus a new test that IH2/IH3 tags come from the syllabi and that untagged SoLA courses still count as Humanities. **22/22 pass.**
+
+### D32: previous year's IH list (user-provided, kept as outdated)
+- The user pasted the Registration Cell email of **25 Mar 2025** listing the IH-2 and IH-3 courses. That is the list for **Semester I, AY 2025-26 (the previous year)**, not the current semester. Instructors and slots differ (e.g. LAL3030 was Rachel Philip / N, now Bhaskar Kumar Kakati / K). Five of its courses are not offered this semester: LAL3070, LAL3110, LAL3120, **LAL4090** Health and Development, AIL7120.
+- **Decision (user): keep it as an outdated document.** Saved as `data/docs/32_IH_Course_List_AY2025-26_SemI.txt` (with a header that says it is outdated) and added to the manifest as D32, `status=superseded`, date 2025-03-25. Added a `.txt`/`.md` loader to `ingest.py`. Now 32 documents → 1,141 chunks.
+- It does **not** feed `courses.csv`. The current-semester counts are unchanged: Humanities (IH) = 60 courses, 400-level = 3. Using the old list would have wrongly added LAL4090.
+- Check: "What IH3 courses are offered this semester?" → all top 5 results come from the 2026-27 IH3 syllabus (D29). The superseded D32 is down-weighted and doesn't push in.
+- Open point: **AIL7310 Machine Learning for Economics** was IH3 last year and is offered this semester (AIDE, slot G), but it is not in the 2026-27 IH3 syllabus, so it is **not** tagged IH.

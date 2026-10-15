@@ -122,7 +122,11 @@ def load_xlsx(path: Path) -> list[Page]:
     return pages
 
 
-LOADERS = {".pdf": load_pdf, ".html": load_html, ".xlsx": load_xlsx}
+def load_text(path: Path) -> list[Page]:
+    return [Page(path.read_text(), "1")]
+
+
+LOADERS = {".pdf": load_pdf, ".html": load_html, ".xlsx": load_xlsx, ".txt": load_text, ".md": load_text}
 
 
 # ---------- chunking ----------

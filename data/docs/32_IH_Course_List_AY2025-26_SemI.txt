@@ -1,0 +1,36 @@
+IH Course List for Semester I, AY 2025-26 (OUTDATED - previous academic year)
+From: Registration IIT Jodhpur <registration@iitj.ac.in>
+Date: Tue, Mar 25, 2025, 3:39 PM
+Note: this list applied to Semester I of AY 2025-26. For the current semester (Semester I, AY 2026-27) see the IH2/IH3 syllabus documents and the Classroom Allocation.
+
+Dear Students,
+
+With reference to the previous email, IH courses list are as follows:
+
+List of IH-2 courses for students currently in their 4th Semester.
+
+Sl. No | Course Code | Course Name | Instructor | Slot
+1 | LAL3090 | Social Stratification | Sherin Sabu | K
+2 | LAL3030 | Introduction to Sociology | Rachel Philip | N
+3 | LAL3040 | Law and Society | Prasenjeet Tribhuvan | K
+4 | LAL3080 | Digital Societies | Rajdeep Konar | N
+5 | LAL3070 | Indian Society: A Sociological Introduction | Bhaswati Sarma | N
+6 | LAL3060 | Development and Environment | Bhaskar Kumar Kakati | K
+7 | LAL3120 | Sociology of work and Industry | Rajyalakshmi | N
+8 | LAL3130 | Gender and Society | Ayla Joncheere | K
+9 | LAL3110 | Urban Sociology | Shreya | N
+
+List of IH-3 Courses for students currently in their 6th Semester.
+
+Sl. No | Course Code | Course Name | Instructor | Slot
+1 | AIL6010 | Micreconomics 1 | Akanksha Choudhary | C
+2 | LAL4070 | Health Economics | Alok Ranjan | D
+3 | LAL7490 | Indian Economic Development and Policy | Gopakumar | C
+4 | LAL4090 | Health and Development | Souryabrata | D
+5 | AIL4070 | Fundamentals of Economics | Ganesh Manjhi | A
+6 | AIL7160 | Operations Research for Economics | S. Srivatsa Srinivas | D
+7 | AIL6110 | Decision Sciences Applications | S. Srivatsa Srinivas | A
+8 | AIL7380 | Mathematics for Economics | Abhinaba Lahiri | C
+9 | AIL7120 | Modern Macroeconomics | Ganesh Manjhi | D
+10 | AIL7320 | Theoretical Foundations of Econometrics | Dweepobotee Brahma | A
+11 | AIL7310 | Machine Learning for Economics | Dweepobotee Brahma | F
