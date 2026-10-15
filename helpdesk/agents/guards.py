@@ -12,6 +12,7 @@ REFUSAL = "I don't know the answer"
 REFUSAL_SENTENCE = "I don't know the answer to that. I've forwarded your question to the academic office."
 # llama3.1 sometimes "calls" a tool by printing it: {"name": "x", "parameters": {...}}
 TEXT_TOOL_CALL = re.compile(r'\{\s*"name"\s*:\s*"\w+"\s*,\s*"parameters"\s*:\s*\{.*?\}\s*\}', re.S)
+SOURCE_LINE = re.compile(r"^\s*\**\s*Sources?\s*\**\s*:.*$", re.I | re.M)
 
 
 def log_refusals(callback_context: CallbackContext, llm_response: LlmResponse) -> None:
@@ -28,7 +29,13 @@ def log_refusals(callback_context: CallbackContext, llm_response: LlmResponse) -
         if p.text and TEXT_TOOL_CALL.search(p.text):
             p.text = TEXT_TOOL_CALL.sub("", p.text).strip()
     text = "".join(p.text or "" for p in parts)
-    if REFUSAL.lower() not in text.lower() or callback_context.state.get(LOGGED_FLAG):
+    if REFUSAL.lower() not in text.lower():
+        return None
+    # A refusal has nothing to cite; models sometimes add "Source: <the refusal again>"
+    for p in parts:
+        if p.text:
+            p.text = SOURCE_LINE.sub("", p.text).strip()
+    if callback_context.state.get(LOGGED_FLAG):
         return None
     user = callback_context.user_content
     question = "".join(p.text or "" for p in (user.parts if user else [])) or "(unknown question)"

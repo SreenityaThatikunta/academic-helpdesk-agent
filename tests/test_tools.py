@@ -201,3 +201,24 @@ def test_draft_email_outside_project_folder(tmp_path, monkeypatch):
     monkeypatch.setattr(config, "DRAFTS_DIR", tmp_path / "elsewhere")
     r = draft_email("gaurav.harit@iitj.example", "Leave", "Dear Sir, ... Regards")
     assert r["status"] == "draft_saved" and Path(r["path"]).exists()
+
+
+def test_refusal_source_line_is_removed(tmp_outputs):
+    from types import SimpleNamespace
+
+    from google.adk.models import LlmResponse
+    from google.genai import types
+
+    from helpdesk.agents.guards import log_refusals
+    from helpdesk.tools.unanswered import LOGGED_FLAG
+
+    text = ("I don't know the answer to that. I've forwarded your question to the academic office.\n\n"
+            "Source: I don't know the answer to that. I've forwarded your question to the academic office.")
+    resp = LlmResponse(content=types.Content(role="model", parts=[types.Part(text=text)]))
+    log_refusals(SimpleNamespace(state={LOGGED_FLAG: True}, agent_name="t", user_content=None), resp)
+    assert resp.content.parts[0].text == ("I don't know the answer to that. "
+                                          "I've forwarded your question to the academic office.")
+    # normal answers keep their source line
+    ok = LlmResponse(content=types.Content(role="model", parts=[types.Part(text="Slot E.\nSource: Slot System")]))
+    log_refusals(SimpleNamespace(state={}, agent_name="t", user_content=None), ok)
+    assert "Source: Slot System" in ok.content.parts[0].text
