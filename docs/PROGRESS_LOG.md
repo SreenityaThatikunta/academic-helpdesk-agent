@@ -714,3 +714,23 @@ Cloned the GitHub repo into a scratch folder and followed the README steps, reus
 - [x] `docs/TECHNICAL.md`: technical deep dive
 - [x] `report/report.tex` → `report/report.pdf` (LaTeX, tables generated from the eval data)
 - [x] Final pass: fresh clone → README steps → tests, ingest, CLI and scoring all work
+
+### Report revision (user feedback, 2026-10-15; **not committed or pushed**, per the user)
+1. Subtitle under the title removed.
+2. Course name removed from the author line (name + roll number + date remain).
+3. Table of contents removed.
+4. No mention of the assignment or of the author's mailbox: the problem is stated as the goal; the 9 non-public sources are described as "official Registration and Examination Cell circulars sent to students".
+5. **No em dashes** anywhere: source, generated tables, and PDF text (checked: 0). En dashes in number ranges (2026–27, 15–22) are kept.
+6. Tone rewritten as a student group would write it: short sections, bullets and phrases, "we".
+7. The "Questions whose answers changed across runs" table was removed (hard to read). The consistency summary table stays, plus two bullets with concrete examples. (`tables/changed.tex` is still generated but not used.)
+8. Limitations cut to three points: regex scoring is unreliable → an LLM as judge; time tables are tentative and semester-specific → re-run the (idempotent) pipeline each semester; more models and comparisons.
+9. No repository paths (no `data/…`, `.csv`, `.jsonl`, `drafts/`, `logs/`, `docs/`; the closing "Code and data" paragraph removed). Tool names stay, since they describe the system rather than file locations.
+- Build: 10 pages, 0 overfull boxes; pages checked visually.
+
+### Report revision 2 (user feedback; **not committed or pushed**)
+- **Bullets vs paragraphs rebalanced** ("why does every section have bullets?"). Paragraphs now carry explanation and narrative: documents, privacy, amendment register, retrieval tuning, agents, every "what we learned" finding, the evaluation setup, consistency, the analysis, and the conclusion. Bullets are kept only for real lists: problem capabilities, structured tables, retrieval pipeline steps, the two transfer experiments, metric definitions, guards, the two hardest items, limitations. Itemize blocks went from about 20 to 8.
+- **Abstract removed** (user request); the report starts with the Problem section.
+- Build: 9 pages, 0 overfull boxes, no em dashes; pages checked visually.
+
+### Report revision 3 (**not committed**)
+- Authors set to the team: Sreenitya Thatikunta (B23CS1072), Arpita Deshmukh (B23CM1007), Prajna Agrawal (B23CS1054). Names stacked one per line. Still 9 pages, 0 overfull boxes.

@@ -7,7 +7,7 @@
 \usepackage{booktabs,longtable,tabularx,array}
 \usepackage{xcolor}
 \usepackage{tikz}
-\usetikzlibrary{arrows.meta,positioning,shapes.geometric,fit,backgrounds}
+\usetikzlibrary{arrows.meta,positioning,shapes.geometric}
 \usepackage{pifont}
 \usepackage{enumitem}
 \usepackage{caption}
@@ -23,64 +23,46 @@
 \newcommand{\code}[1]{\texttt{\small #1}}
 % \input is not expandable, so a rule right after it inside a tabular is "misplaced"; use the primitive
 \makeatletter\newcommand{\inputrows}[1]{\@@input #1 }\makeatother
-\setlist{itemsep=2pt,topsep=4pt}
+\setlist{itemsep=1pt,topsep=3pt}
 \captionsetup{font=small,labelfont=bf}
 
-\title{\textbf{A Multi-Agent Academic Helpdesk for IIT Jodhpur}\\[4pt]
-\large Retrieval-augmented, tool-using agents on local 8B models --- design and evaluation}
-\author{Sreenitya Thatikunta (B23CS1072)\\ CSL7650 Autonomous Systems, Semester I, AY 2026--27}
+\title{\textbf{A Multi-Agent Academic Helpdesk for IIT Jodhpur}}
+\author{Sreenitya Thatikunta (B23CS1072)\\ Arpita Deshmukh (B23CM1007)\\ Prajna Agrawal (B23CS1054)}
 \date{October 2026}
 
 \begin{document}
 \maketitle
 
-\begin{abstract}
-We build an academic helpdesk that answers questions about IIT Jodhpur's programmes, course contents,
-time table and academic rules, drafts emails to course instructors, cites the document behind every
-answer, and refuses --- and logs for a human --- anything it cannot answer. The system runs entirely on a
-16\,GB laptop: Google ADK agents call Ollama-hosted 8B models (Qwen3, Llama~3.1) through LiteLLM, with
-hybrid retrieval (dense \code{nomic-embed-text} + BM25) over ChromaDB and structured tools over the
-semester's course and exam data. The knowledge base contains 33 real documents (1{,}134 chunks). We compare
-a single-agent baseline with a multi-agent version (router + policy, schedule and email specialists) on 30
-prompts (31 turns) $\times$ 2 models $\times$ 2 modes $\times$ 3 repeats. Qwen3 reaches 87\% accuracy (single)
-and 78\% groundedness (multi), Llama~3.1 65--69\%; out-of-scope refusals are 100\% correct and logged in
-all configurations. Model choice matters more than architecture; the multi-agent design improves grounding
-but introduces router- and specialist-specific failure modes. We also report an ADK behaviour that silently
-overrides specialist instructions in small models, and the data-level techniques (an amendment register for
-superseded rules, scoped search, deterministic guards) that mattered more than prompt wording.
-\end{abstract}
-
-\tableofcontents
-\bigskip
-
 %=====================================================================
 \section{Problem}
 %=====================================================================
-The assignment asks for a multi-agent \emph{Academic Helpdesk Agent} that
-(i) answers questions about academic programmes, course contents, and rules and regulations, e.g.
-\emph{``What is the attendance requirement to sit in the Major exam?''}, \emph{``What is the slot for the course
-Autonomous Systems?''}, \emph{``How many 400-level electives have been floated by the Humanities department this
-semester?''}, \emph{``How many Open Elective credits do I need for a B.Tech?''};
-(ii) drafts an email to a course instructor (sick leave, make-up permission), e.g.
-\emph{``Write an email to the course instructor of CSL7570 that I need leave for 2 days''};
-(iii) answers \emph{``I don't know''} to anything else (\emph{``What are the dining options on campus?''}) and
-logs such questions for a human; and (iv) cites the source document of every answer.
-It must use RAG with a local embedding model and vector store, tools (vector search, time-table and course
-lookup from CSV, instructor email lookup, email drafting), Google ADK with Ollama-hosted 8B models, run on
-16\,GB of RAM, start as a single agent and then become an orchestrator with policy, schedule and email
-agents, and be evaluated on 20--30 prompts for accuracy, groundedness and correct refusals, across models and
-repeated runs.
+Goal: a helpdesk that students can ask about academics, which
+\begin{itemize}
+\item answers questions on programmes, course contents, and rules and regulations, e.g.
+  \emph{``What is the attendance requirement to sit in the Major exam?''},
+  \emph{``What is the slot for Autonomous Systems?''},
+  \emph{``How many 400-level electives has the Humanities department floated this semester?''},
+  \emph{``How many Open Elective credits do I need for a B.Tech?''};
+\item drafts an email to a course instructor (sick leave, make-up exam), e.g.
+  \emph{``Write an email to the course instructor of CSL7570 that I need leave for 2 days''};
+\item says it does not know for anything else (\emph{``What are the dining options on campus?''}) and logs
+  the question for a human;
+\item cites the source document of every answer.
+\end{itemize}
+Constraints: real institute documents, RAG with a local embedding model and vector store, Google ADK with
+Ollama-hosted 8B models, 16\,GB RAM, first a single agent and then a multi-agent version, evaluated for accuracy,
+groundedness and refusals across models and repeated runs.
 
 %=====================================================================
 \section{Data}
 %=====================================================================
 \subsection{Documents}
-We collected 33 real documents (Table~\ref{tab:data}). 24 are public pages and PDFs from
-\code{iitj.ac.in}; 9 come from the author's institute mailbox (Registration and Examination Cell
-circulars) because the current time table, course list and IH lists are not public. Three scanned
-circulars were OCR'd with Tesseract. Every document is described in \code{data/manifest.csv} with a
-title, category, source, date and a \emph{status}: 29 are \emph{current}, 4 \emph{superseded} by newer
-versions (2018 B.Tech regulations, 2025--26 calendar, 2023 slot chart, the previous year's IH list).
+We collected 33 real documents (Table~\ref{tab:data}). Most of them (24) are public pages and PDFs from the
+institute website. The rest are official Registration and Examination Cell circulars sent to students, which
+hold the information that is not public: the current course list, the slot system, the IH course lists, the
+major-exam time table and the examination guidelines. Three scanned circulars were OCR'd with Tesseract.
+Every document is tagged with a title, category, date and status; 29 are \emph{current} and 4 are
+\emph{superseded} by newer versions (older regulations, calendar, slot chart and IH list).
 
 \begin{table}[h]
 \centering\small
@@ -94,7 +76,7 @@ Curricula & 5 & B.Tech CSE (pre-2026 batches), AIDE 2026+, EE 2025+, M.Tech AI, 
 Course catalogues & 8 & CSE course details, HSS concept note, common courses, IH2/IH3 syllabi, IH course lists \\
 Calendars & 3 & AY 2026--27, AY 2025--26, Summer 2026 \\
 Time tables & 3 & Finalized course list, slot system + classroom allocation + minor-exam grid, 2023 slot chart \\
-Exams & 2 & Major-exam time table Sem I 2026--27, New Guidelines for Institute Examination (2024) \\
+Exams & 2 & Major-exam time table Sem I 2026--27, Examination Guidelines (2024) \\
 Registration & 2 & UG registration guidelines, Circular 2283 \\
 \bottomrule
 \end{tabularx}
@@ -103,32 +85,39 @@ Registration & 2 & UG registration guidelines, Circular 2283 \\
 \end{table}
 
 \subsection{Structured data}
-The semester spreadsheets are converted to CSVs: \code{courses.csv} (821 offerings from the final
-classroom allocation plus the finalized course list, with slot, classroom, instructor, level and an
-\code{ih\_group} tag so that ``Humanities'' means \emph{Institute Humanities}, including IH courses taught by
-AIDE), \code{slots.csv} (slot $\rightarrow$ day and time), \code{exam\_schedule.csv} (45 minor + 44 major exam
-slot entries) and \code{faculty.csv} (312 instructors). \textbf{All email addresses are dummy values}
-(\code{first.last@iitj.example}, a reserved domain); other addresses in the documents are masked at ingestion,
-and sheets listing other students were not collected.
+Semester spreadsheets converted to tables:
+\begin{itemize}
+\item \textbf{Courses} (821 offerings): slot, classroom, instructor, level, and an IH tag so that
+  ``Humanities'' means \emph{Institute Humanities}, including IH courses taught by AIDE.
+\item \textbf{Slots}: slot $\rightarrow$ day and time.
+\item \textbf{Exam schedule}: 45 minor + 44 major exam slot entries.
+\item \textbf{Faculty}: 312 instructors.
+\end{itemize}
+All email addresses in the system are \textbf{dummy values} (\code{first.last@iitj.example}, a reserved
+domain), other addresses in the documents are masked during ingestion, and no sheets listing other students
+were collected.
 
 \subsection{Amendment register}
-Institutional rules are amended by later circulars while the old text stays in the regulations.
-\code{data/amendments.csv} lists passages superseded by a named newer document (e.g.\ the 2019 attendance rule
-$\rightarrow$ Circular~51; the 2019/2022 make-up rules $\rightarrow$ the 2024 Examination Guidelines); matching chunks are
-marked \emph{amended} and never retrieved.
+Institutional rules are amended by later circulars, but the old text stays in the regulations. For example,
+Circular~51 (2024) replaced the 2019 attendance rule, and the 2024 Examination Guidelines replaced the make-up
+rules of the 2019 and 2022 regulations. We keep a small register of passages that a named newer document
+replaces; matching chunks are marked \emph{amended} and are never retrieved.
 
 %=====================================================================
 \section{System design}
 %=====================================================================
 \subsection{Retrieval pipeline}
-Documents are loaded page by page (PDF, OCR text, HTML with tables rendered as rows, spreadsheets per
-sheet), chunked to $\sim$1{,}800 characters with 250 overlap (documents under 3{,}200 characters stay whole so a
-circular's ``existing'' and ``revised'' policy are not separated), prefixed with a contextual header
-\code{[title | date | page]}, embedded with \code{nomic-embed-text} and stored in ChromaDB.
-A query runs dense (top 30) and BM25 (top 30) retrieval, fused with reciprocal rank fusion; amended chunks
-are dropped, superseded documents get half weight, at most two chunks per document are returned, and if the
-best dense distance exceeds 0.35 the search reports \emph{not found}. A \code{document} filter restricts the
-search to one document (e.g.\ a programme's curriculum).
+\begin{itemize}
+\item \textbf{Loading:} PDF per page, OCR text, HTML with tables kept as rows, spreadsheets per sheet.
+\item \textbf{Chunking:} $\sim$1{,}800 characters, 250 overlap; documents under 3{,}200 characters kept whole
+  (a circular's ``existing'' and ``revised'' policy stay together).
+\item \textbf{Context header} on every chunk: \code{[title | date | page]}.
+\item \textbf{Embedding:} \code{nomic-embed-text}, stored in ChromaDB.
+\item \textbf{Search:} dense top-30 + BM25 top-30, merged with reciprocal rank fusion; amended chunks dropped,
+  superseded documents at half weight, at most 2 chunks per document.
+\item \textbf{Not found:} if the best dense distance exceeds 0.35.
+\item \textbf{Scoped search:} optional filter to one document (e.g.\ a programme's curriculum).
+\end{itemize}
 
 \begin{figure}[h]
 \centering
@@ -153,11 +142,12 @@ search to one document (e.g.\ a programme's curriculum).
 \caption{Ingestion (top) and hybrid retrieval (bottom); retrieval reads the ChromaDB index (dashed).}
 \end{figure}
 
-Retrieval was tuned on a separate 19-question check: dense-only search placed the right document first
-for 9/18 questions (17/18 in the top 5); BM25 alone made it worse (15/18) until contextual headers gave
-keywords something to match; the final pipeline reaches 12/19 at rank 1 and 18/19 in the top 5. Best-match
-distances of in-scope (0.15--0.28) and out-of-scope questions (0.26--0.43) overlap, so the distance threshold
-rejects only half of the out-of-scope questions --- refusals must come from the agents.
+We tuned retrieval on a separate set of 19 questions with known source documents. Dense search alone put the
+right document first for 9/18 questions (17/18 in the top 5). Adding BM25 first made things worse (15/18), because
+chunks rarely name their own document; the context headers fixed that by giving keywords something to match. The
+final pipeline reaches 12/19 at rank 1 and 18/19 in the top 5. The distances of in-scope (0.15--0.28) and
+out-of-scope questions (0.26--0.43) overlap, so the threshold rejects only half of the out-of-scope questions:
+refusals have to come from the agents, not from retrieval.
 
 \subsection{Tools}
 \noindent\begin{minipage}{\linewidth}
@@ -167,26 +157,29 @@ rejects only half of the out-of-scope questions --- refusals must come from the 
 Tool & Behaviour \\
 \midrule
 \code{search\_documents} & hybrid RAG search; passages with citation, date, status \\
-\code{lookup\_course} & course by code or name; unknown codes return ``did you mean'' suggestions (CSL7570 $\rightarrow$ CSL7650) \\
+\code{lookup\_course} & course by code or name; unknown codes get ``did you mean'' suggestions (CSL7570 $\rightarrow$ CSL7650) \\
 \code{get\_slot} & slot, weekly class times, classroom, instructors, minor/major exam date \\
 \code{list\_courses} & count and list of courses floated by department / level (``Humanities'' = IH) \\
 \code{get\_instructor\_email} & instructor and (dummy) email by course or name \\
-\code{draft\_email} & saves the draft to \code{drafts/} with a NOT SENT header; never sends \\
-\code{log\_unanswered\_question} & appends the question to \code{logs/unanswered.jsonl} for a human \\
+\code{draft\_email} & saves the draft for review, marked NOT SENT; never sends \\
+\code{log\_unanswered\_question} & adds the question to the unanswered-questions log for a human \\
 \bottomrule
 \end{tabularx}
-\captionof{table}{Agent tools (plain Python functions; ADK derives the schemas from type hints and docstrings).}
+\captionof{table}{Agent tools (plain Python functions; ADK builds the schemas from type hints and docstrings).}
 \end{minipage}
 \medskip
 
 \subsection{Agents}
-The \textbf{single agent} is one ADK \code{LlmAgent} with all seven tools and a prompt composed of blocks:
-scope, \emph{call a tool before every answer}, grounding rules (exact refusal sentence + log; a related
-passage is not an answer; the newest source and the revised policy win; cite 1--2 sources), and sections for
-policy, schedule and email questions. The \textbf{multi-agent} version (Figure~\ref{fig:agents}) has a router
-that calls \code{transfer\_to\_agent} or refuses, and three specialists that see only their own tools and
-rules. Models run with temperature 0.2 and an 8{,}192-token context; Qwen3 runs with thinking disabled
-(\code{think=False}), which removed leaked reasoning from its answers and cut latency tenfold.
+The \textbf{single agent} is one ADK \code{LlmAgent} with all seven tools. Its prompt is built from blocks: the
+scope (IIT Jodhpur academics only), a rule to call a tool before every answer, grounding rules (a fixed refusal
+sentence plus logging, ``a related passage is not an answer'', the newest source and the revised policy win, cite
+one or two sources), and short sections for policy, schedule and email questions.
+
+The \textbf{multi-agent} version (Figure~\ref{fig:agents}) splits this up. A router either hands the request to a
+specialist with \code{transfer\_to\_agent} or refuses it; the policy, schedule and email agents each see only their
+own tools and rules. All models run at temperature 0.2 with an 8{,}192-token context. Qwen3 runs with thinking
+disabled (\code{think=False}), which stopped it from leaking its reasoning into answers and made it about ten times
+faster.
 
 \begin{figure}[h]
 \centering
@@ -211,64 +204,72 @@ rules. Models run with temperature 0.2 and an 8{,}192-token context; Qwen3 runs 
 \end{figure}
 
 \subsection{Guards}
-Two deterministic callbacks wrap every agent. (1) If a model writes the refusal sentence without calling
-\code{log\_unanswered\_question} --- Qwen3 did so in about half of its refusals during development --- the
-question is logged in code, so every unanswered question reaches a human. (2) Tool calls that Llama~3.1 prints as
-JSON text are stripped from the answer.
-
-%=====================================================================
-\section{Engineering findings during development}
-%=====================================================================
-\paragraph{Prompt rules are not enough for 8B models.} The first single-agent run answered the attendance
-and Open Elective questions \emph{without calling any tool}, with invented citations. A \emph{tools-first}
-block fixed tool use, but grounded answers were still wrong when old and new versions of a rule were both
-retrieved: three of five passages for the attendance question stated the 2019 rule. The amendment register,
-keeping short circulars whole and the per-document cap fixed this where prompt wording (``the newest source
-wins'') had not.
-
-\paragraph{Parameters a small model can misuse should be removed.} A \code{course\_type} filter turned
-``3 Humanities electives'' into 0 (most departments leave the category blank), and the \code{document}
-filter was used unprompted to scope rule questions to the wrong document. Both were removed from the agents
-that misused them.
-
-\paragraph{ADK's transfer instructions override specialist rules.} In multi-agent mode the policy agent never
-asked for the student's programme (0/3), although its prompt alone did (3/3). The LLM request showed that,
-when an agent is allowed to transfer, ADK appends generic instructions to the \emph{end} of its system prompt
-(\emph{``If you are the best to answer the question according to your description, you can answer it''}) and adds
-a \code{transfer\_to\_agent} tool. Removing the transfer bookkeeping messages did not help; disabling transfers
-from specialists did (3/3, then 5/5). Only the router routes, and multi-turn conversations still work because
-each new message is routed again.
-
-\paragraph{Programme- and batch-dependent answers need clarification.} Open Elective credits are 10 in the
-2019 regulations and the CSE curriculum but 12 in the newer EE and AIDE curricula. The agent therefore asks
-for the branch and year of joining and then searches only that curriculum (``B.Tech CSE, joined 2023''
-$\rightarrow$ 10 credits).
-
-%=====================================================================
-\section{Evaluation methodology}
-%=====================================================================
-The evaluation set has 30 items (31 turns, Appendix~\ref{app:questions}): policy 9, schedule 5, course counts 3,
-email 4, out-of-scope 6, multi-intent 2, and one two-turn conversation; it contains all five assignment examples.
-Every expected answer was checked against the documents or tools. Each turn specifies an expected
-\emph{behaviour} (answer, refuse, draft, suggest, clarify), regular expressions for the required facts,
-forbidden patterns for superseded rules, acceptable citation sources, the relevant tools, and the expected
-specialist. Each of the 12 configurations (2 models $\times$ 2 modes $\times$ 3 repeats) ran all items in fresh
-sessions with its own draft folder and unanswered log (372 turns, no errors).
-
+Two deterministic callbacks on every agent:
 \begin{itemize}
-\item \textbf{Accuracy}: the expected behaviour is met (facts present and no superseded rule; refusal; a
-clarifying question without a credit number; a suggestion without drafting; a saved draft to the right recipient).
-\item \textbf{Groundedness} (answer and draft turns): correct, the relevant tool was called, and an expected
-source is cited (for drafts: the recipient came from the instructor lookup).
-\item \textbf{Refusals}: correct-refusal rate on out-of-scope items, false-refusal rate on the rest, logging rate.
-\item \textbf{Routing}: the first specialist the router transfers to is the expected one.
-\item \textbf{Consistency}: whether correctness, or the facts the question asks for, differ across repeats.
+\item \textbf{Refusal logging:} if the model writes the refusal sentence but skips
+  \code{log\_unanswered\_question} (Qwen3 did this in about half its refusals during development), the question is
+  logged in code. Every unanswered question reaches a human.
+\item \textbf{Text tool calls:} tool calls that Llama~3.1 prints as JSON text are removed from the answer.
 \end{itemize}
 
-Every turn scored wrong or ungrounded was read by hand. This found three errors in the answer key, corrected for all
-configurations: the PhD maximum duration \emph{is} stated in the PG Regulations (\S11.5, 14 registered semesters;
-the item had been designed as unanswerable after a keyword search for ``years'' missed it), and two
-over-literal patterns (``two exams: Minor and Major''; a quoted ``I''~grade). No per-answer overrides were needed.
+%=====================================================================
+\section{What we learned while building it}
+%=====================================================================
+\paragraph{Prompt rules alone are not enough for 8B models.}
+In the first run the agent answered the attendance and Open Elective questions without calling any tool, and
+made up citations. A ``tools first'' rule fixed tool use, but answers were still wrong whenever old and new
+versions of a rule were both retrieved: three of the five passages for the attendance question stated the 2019
+rule. Prompt wording such as ``the newest source wins'' did not fix this; the amendment register, keeping short
+circulars whole and the per-document cap did.
+
+\paragraph{Remove tool parameters a small model can misuse.}
+A \code{course\_type} filter turned ``3 Humanities electives'' into 0, because most departments leave the
+category blank, and the \code{document} filter was used unprompted to scope rule questions to the wrong document.
+Explaining them better in the prompt did not help, so we removed both from the agents that misused them.
+
+\paragraph{ADK's transfer instructions override specialist rules.}
+In multi-agent mode the policy agent never asked for the student's programme (0/3), although the same prompt as
+a standalone agent did (3/3). Looking at the actual request sent to the model showed why: when an agent is allowed
+to transfer, ADK appends generic instructions to the \emph{end} of its system prompt (\emph{``If you are the best to
+answer the question according to your description, you can answer it''}) and adds a \code{transfer\_to\_agent} tool.
+Our attempts:
+\begin{itemize}
+\item removing the transfer messages from the specialist's context: no effect (0/3);
+\item disabling transfers from the specialists: fixed (3/3, then 5/5 in a re-check).
+\end{itemize}
+Now only the router routes. Multi-turn conversations still work, because every new message goes back to the
+router and is routed again.
+
+\paragraph{Some answers depend on the student.}
+Open Elective credits are 10 in the 2019 regulations and the CSE curriculum but 12 in the newer EE and AIDE
+curricula, so there is no single right answer. The agent asks for the branch and year of joining and then searches
+only that curriculum (``B.Tech CSE, joined 2023'' $\rightarrow$ 10 credits).
+
+%=====================================================================
+\section{Evaluation setup}
+%=====================================================================
+The question set has 30 items and 31 turns (Appendix~\ref{app:questions}): 9 policy, 5 schedule, 3 course-count,
+4 email, 6 out-of-scope and 2 multi-intent questions, plus one two-turn conversation. We checked every expected
+answer against the documents or the tools before using it. Each turn specifies the expected behaviour (answer,
+refuse, draft, suggest or clarify), regular expressions for the required facts, forbidden patterns for superseded
+rules, acceptable sources, the relevant tools and the expected specialist. We ran 2 models $\times$ 2 modes $\times$
+3 repeats, i.e.\ 12 runs and 372 turns, with a fresh session per item and a separate draft folder and unanswered log
+per run; no run produced an error.
+
+We report five metrics:
+\begin{itemize}
+\item \textbf{Accuracy}: the expected behaviour is met (required facts present and no superseded rule; a refusal; a
+  clarifying question without a credit number; a suggestion without drafting; a saved draft to the right recipient).
+\item \textbf{Groundedness} (answer and draft turns): correct, the relevant tool was called, and an expected source is
+  cited (for drafts, the recipient came from the instructor lookup).
+\item \textbf{Refusals}: correct refusals on out-of-scope items, false refusals on the rest, and the logging rate.
+\item \textbf{Routing}: the first specialist the router transfers to is the expected one.
+\item \textbf{Consistency}: whether correctness, or the facts asked for, differ across repeats.
+\end{itemize}
+We then read every turn that was scored wrong or ungrounded. This found three mistakes in our own answer key,
+which we fixed for all configurations: the PhD maximum duration \emph{is} given in the PG Regulations (\S11.5, 14
+registered semesters) although we had marked the question unanswerable, and two patterns were too literal (``two
+exams: Minor and Major'' and a quoted ``I''~grade were rejected).
 
 %=====================================================================
 \section{Results}
@@ -315,24 +316,14 @@ Config & Unstable correctness & Answer changed \\
 \inputrows{tables/consistency.tex}
 \bottomrule
 \end{tabular}
-\caption{Consistency across the three repeats (31 turns). \emph{Answer changed}: the facts the question asks for
-differ between repeats.}
+\caption{Consistency across the 3 repeats (31 turns). \emph{Answer changed}: the facts the question asks for differ
+between repeats.}
 \end{table}
 
-\subsection*{Questions whose answers changed across runs}
-\begin{longtable}{l l c p{7.2cm}}
-\toprule
-Config & Item & Correct (r1 r2 r3) & Asked-for facts per repeat \\
-\midrule
-\endhead
-\inputrows{tables/changed.tex}
-\bottomrule
-\end{longtable}
-Qwen3 gave the same asked-for facts in every repeat in both modes; all changes are Llama~3.1's
-(e.g.\ V01: asking for the programme in two repeats but not the third; P09: ``14 semesters'' twice and an
-invented ``4--5 years'' once).
+Qwen3 gave the same answer in every repeat in both modes. Llama~3.1 changed its answer on 8 questions as a
+single agent and on 3 as a multi-agent system; for example, it asked for the programme in two repeats but not in
+the third, and answered ``14 semesters'' twice and an invented ``4--5 years'' once.
 
-\subsection*{Routing errors (multi-agent)}
 \noindent\begin{minipage}{\linewidth}
 \centering\small
 \begin{tabular}{l l l c}
@@ -342,66 +333,65 @@ Config & Item & Routed to & Repeats \\
 \inputrows{tables/misroutes.tex}
 \bottomrule
 \end{tabular}
-\captionof{table}{All routing errors are systematic (the same item in every repeat). For Qwen3 P09 and S02 the router
-handled the request itself --- a refusal and an empty reply respectively.}
+\captionof{table}{Routing errors (multi-agent). All systematic (same item in every repeat). For Qwen3 P09 and S02 the
+router handled the request itself: a refusal and an empty reply.}
 \end{minipage}
 
 %=====================================================================
 \section{Analysis}
 %=====================================================================
-\paragraph{Model choice matters more than architecture.} Qwen3 (thinking disabled) beats Llama~3.1 by
-15--22 accuracy points in both modes, is faster in single mode, and is fully stable across repeats.
-Llama~3.1 never called \code{draft\_email} in any of its 24 draft requests --- it asked again for details the
-student had already given or wrote the email into the chat --- and answered the attendance question with the
-\emph{existing} policy quoted inside Circular~51 in all six runs.
+\paragraph{Model choice matters more than architecture.}
+Qwen3 (with thinking off) beats Llama~3.1 by 15--22 accuracy points in both modes, is faster as a single agent,
+and is fully stable across repeats. Llama~3.1 never called \code{draft\_email} in any of its 24 draft requests; it
+either asked again for details the student had already given or wrote the email into the chat. It also answered the
+attendance question with the \emph{old} policy quoted inside Circular~51 in all six runs.
 
-\paragraph{Multi-agent improves grounding, not necessarily accuracy.} Focused specialists search and cite more
-consistently (groundedness +8 points for Qwen3, +16 for Llama~3.1), and for Llama~3.1 accuracy (+4) and
-stability (answers changed on 3 instead of 8 questions) also improve. For Qwen3 accuracy drops by 3 points
-through three failure modes that do not exist in the single agent: the router returning an empty reply (S02),
-a specialist refusing a syllabus question whose answer it had retrieved (P08), and the router refusing an
-in-scope question itself (P09). The extra routing step adds about 2.7\,s on average for Qwen3.
+\paragraph{Multi-agent improves grounding, not always accuracy.}
+Focused specialists search and cite more consistently, so groundedness rises by 8 points for Qwen3 and 16 for
+Llama~3.1. Llama~3.1 also gains accuracy (+4) and stability (answers changed on 3 instead of 8 questions). Qwen3,
+however, loses 3 accuracy points to three failures that only exist in the multi-agent setup: the router returning
+an empty reply (S02), a specialist refusing a syllabus question whose answer it had retrieved (P08), and the router
+refusing an in-scope question itself instead of routing it (P09). The extra routing step also costs Qwen3 about
+2.7\,s per question.
 
-\paragraph{Refusals.} Out-of-scope questions are refused and logged in every configuration (72/72); the
-deterministic guard makes the logging independent of the model. The remaining problem is \emph{false}
-refusals of answerable questions (8\% for multi-agent Qwen3).
+\paragraph{Refusals.}
+All 72 out-of-scope turns were refused and logged. The logging is guaranteed by the guard rather than the model,
+which matters because Qwen3 often skips the logging tool. The remaining problem is the opposite one: false refusals
+of answerable questions, up to 8\% for the multi-agent Qwen3.
 
-\paragraph{Groundedness vs.\ accuracy.} Several answers were right but ungrounded: Qwen3 answered the I-grade
-question without any tool call and cited a non-existent ``Academic Regulations 2026--27, Section~4.3''; the
-attendance half of a mixed request was answered from the model's own knowledge. Reporting groundedness separately
-exposes answers that are right by luck.
+\paragraph{Right is not the same as grounded.}
+Some answers were correct but not grounded. Qwen3 answered the I-grade question without any tool call and cited a
+non-existent ``Academic Regulations 2026--27, Section~4.3'', and the attendance half of one mixed request was
+answered from the model's own knowledge. Reporting groundedness separately catches answers that are right by luck.
 
-\paragraph{Hardest items.} The IH2 course count failed everywhere (0/12): models read ``5th semester'' as
-500-level courses, and \code{list\_courses} cannot filter by IH group. The make-up rule + email request failed
-everywhere (0/12): the single agent skipped the draft, and the multi-agent Qwen3 drafted correctly but omitted the
-10-day deadline.
+\paragraph{Hardest items.} Two items failed in every configuration (0/12 each):
+\begin{itemize}
+\item \textbf{IH2 course count}: models read ``5th semester'' as 500-level courses, and the course tool cannot
+  filter by IH group;
+\item \textbf{make-up rule + email}: the single agent skipped the draft, while the multi-agent Qwen3 drafted correctly
+  but left out the 10-day deadline.
+\end{itemize}
 
 %=====================================================================
 \section{Limitations and future work}
 %=====================================================================
 \begin{itemize}
-\item Add IH-group and semester filters to \code{list\_courses}; add a router fallback when the router returns no
-text and no transfer; soften the ``related passage is not an answer'' rule for syllabus questions.
-\item The distance threshold separates out-of-scope queries poorly; an LLM relevance check on the top passage or a
-small classifier could replace it.
-\item Regex scoring needed three answer-key corrections; an LLM judge with human spot checks would scale better.
-\item Time tables are tentative and semester-specific; the (idempotent) data pipeline must be re-run each semester.
-\item Only two 8B models were compared; larger or tool-tuned models are the obvious next step.
+\item \textbf{Scoring:} regex scoring is not reliable (it needed three answer-key fixes after manual review); an LLM
+  as judge, with human spot checks, could be used instead.
+\item \textbf{Data freshness:} time tables are tentative and semester-specific; the (idempotent) data pipeline must
+  be re-run each semester.
+\item \textbf{Models:} only two 8B models compared; more models and comparisons are needed.
 \end{itemize}
 
 %=====================================================================
 \section{Conclusion}
 %=====================================================================
 A fully local helpdesk on 8B models can answer most academic questions correctly with citations, refuse and log
-everything outside its scope, and draft instructor emails safely. With Qwen3 it reaches 87\% accuracy (single
-agent) and 78\% groundedness (multi-agent) with stable answers across runs. The improvements that mattered most
-were in the data and tools --- explicit recency through an amendment register, scoped search, removing
-misusable parameters, deterministic guards --- and in understanding what the agent framework adds to the prompt.
-The multi-agent architecture improves grounding but needs its own safeguards against router and specialist failures.
-
-\bigskip
-\noindent\textbf{Code and data:} the repository README describes setup and reproduction; \code{docs/TECHNICAL.md}
-gives the technical details and \code{docs/PROGRESS\_LOG.md} the full development log.
+everything outside its scope, and draft instructor emails safely. Qwen3 gave the best results, with 87\% accuracy as
+a single agent, 78\% groundedness as a multi-agent system, and stable answers across runs. What helped most were
+changes to the data and tools (the amendment register, scoped search, removing misusable parameters, deterministic
+guards) and understanding what the agent framework adds to the prompt. The multi-agent design improves grounding,
+but it needs its own safeguards against router and specialist failures.
 
 \appendix
 %=====================================================================
