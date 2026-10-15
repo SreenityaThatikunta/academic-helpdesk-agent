@@ -49,6 +49,17 @@ DEPARTMENTS = {
     "DESE": "Department of Engineering Science",
 }
 
+# Allocation-sheet department name keyword -> short code (first match wins)
+ALLOCATION_DEPTS = [
+    ("liberal arts", "SoLA"), ("digital humanities", "SoLA"), ("economics", "SoLA"),
+    ("computer science", "CSE"), ("artificial intelligence", "AIDE"), ("electrical", "EE"),
+    ("electronics", "ECE"), ("mechanical", "ME"), ("civil", "CIE"), ("chemical", "Chemical"),
+    ("chemistry", "Chemistry"), ("physics", "Physics"), ("mathematics", "Math"), ("materials", "MT"),
+    ("bioscience", "BSBE"), ("management", "SME"), ("design", "SOD"), ("medical", "MedTech"),
+    ("education technology", "CET"), ("emerging technologies", "CET"), ("energy and automotive", "EnAuto"),
+    ("aerospace", "Aero"), ("environmental", "DESE"), ("student", "OSA"), ("institute", "INST"),
+]
+
 # Normalised column name -> patterns matched against the sheet header (first match wins)
 COLUMNS = {
     "course_code": [r"^course code$", r"^subject code$", r"^code$"],
@@ -102,7 +113,72 @@ def _level(code: str) -> str:
     return f"{m.group()}00" if m and CODE_RE.match(code) else ""
 
 
+def _dept_code(name: str) -> str:
+    """Map a full department name from the allocation sheet to a short code."""
+    n = name.lower()
+    for kw, code in ALLOCATION_DEPTS:
+        if kw in n:
+            return code
+    return re.sub(r"[^A-Za-z]", "", name)[:10]
+
+
+def _slot_code(slot: str) -> str:
+    """'G (Wed)' -> 'G', 'R (Thu 6 - 7 PM)' -> 'R', 'NG3' -> 'NG3'."""
+    m = re.match(r"^([A-Z]{1,3}\d{0,2})\b", slot.strip())
+    return m.group(1) if m else ""
+
+
+def build_allocation() -> pd.DataFrame:
+    """Final course list with slots and classrooms (Classroom Allocation sheet)."""
+    df = pd.read_excel(SLOTS_XLSX, sheet_name="Classroom Allocation", header=None).dropna(how="all")
+    df = df.dropna(axis=1, how="all")
+    df.columns = [_norm(c) for c in df.iloc[0]]
+    rows = []
+    for _, r in df.iloc[1:].iterrows():
+        code = _clean(r.iloc[0]).replace(" ", "").upper()
+        name = _clean(r["Subject"])
+        if not code or not name:
+            continue
+        dept = _clean(r["Department"]) or "Institute (common course)"
+        slot = _clean(r["Slot"])
+        rows.append(
+            {
+                "department_code": _dept_code(dept),
+                "department": dept,
+                "course_code": code,
+                "course_name": name,
+                "level": _level(code),
+                "ltp": _clean(r["L-T-P"]),
+                "credits": _clean(r["Credit"]),
+                # Co-Instructor is dropped: it mixes staff ID numbers into names
+                "instructor": _clean(r["Instructor"]),
+                "slot": slot,
+                "slot_code": _slot_code(slot),
+                "classroom": _clean(r["Classroom"]),
+                "registered": _clean(r["Student Registered*"]),
+                "semester": SEMESTER,
+                "source": f"{SLOTS_XLSX.name} (Classroom Allocation)",
+            }
+        )
+    return pd.DataFrame(rows)
+
+
 def build_courses() -> pd.DataFrame:
+    """Classroom allocation first (final); finalized-list rows fill in category / offered_for
+    and add courses the allocation doesn't have."""
+    alloc = build_allocation()
+    final = build_finalized()
+    extra = final.drop_duplicates("course_code").set_index("course_code")[["category", "offered_for", "remarks"]]
+    alloc = alloc.join(extra, on="course_code")
+    missing = final[(final.course_code == "") | ~final.course_code.isin(alloc.course_code)].copy()
+    missing["slot_code"] = missing["slot"].map(_slot_code)
+    missing["classroom"] = missing["registered"] = ""
+    cols = ["department_code", "department", "course_code", "course_name", "level", "ltp", "credits", "instructor",
+            "slot", "slot_code", "classroom", "registered", "category", "offered_for", "remarks", "semester", "source"]
+    return pd.concat([alloc, missing], ignore_index=True)[cols].fillna("")
+
+
+def build_finalized() -> pd.DataFrame:
     sheets = pd.read_excel(COURSES_XLSX, sheet_name=None, header=None)
     rows = []
     for tab, df in sheets.items():

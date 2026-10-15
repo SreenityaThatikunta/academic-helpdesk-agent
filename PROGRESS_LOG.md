@@ -181,3 +181,43 @@ With the user's approval, 2 more files were downloaded (bringing the total to **
 - [x] Hybrid retrieval + superseded down-weighting
 - [x] Retrieval check (12/18 at rank 1, 17/18 in top 5)
 - [x] Threshold tuned (0.35), with its limits written down for Phase 4
+
+---
+
+## Phase 3: Tools
+
+**Date:** 2026-10-15
+
+### Data change: course list rebuilt from the Classroom Allocation sheet
+While checking how the tools would answer the "400-level Humanities" question, I found that **LAL4850 Introduction to Climate Change Economics** (IH3 syllabus) was missing from `courses.csv`. So were the IH2 courses (LAL3030/3040/3060/3080/3090/3130). The slot-system workbook (D26) has a **Classroom Allocation** sheet I had skipped. It is the *final* allocation: **738 rows / 612 course codes**, with uniform columns (code, subject, L-T-P, credits, slot, department, instructor, students registered, classroom) and full instructor names ("Alok Ranjan" rather than just "Alok").
+- `courses.csv` is now built **from the allocation first** (738 rows). The Finalized Courses list (D25) adds category / offered_for where the codes match, plus **83 courses that aren't in the allocation**. Total: 821 rows across 25 departments.
+- New columns: `slot_code` (`G (Wed)` → `G`, `R (Thu 6 - 7 PM)` → `R`) for joining with `slots.csv` and `exam_schedule.csv`; `classroom`; `registered`.
+- The Co-Instructor column is dropped because it mixes staff ID numbers into names. The 26 sections of OAE1010 (first-year Engineering Design, no department) are labelled "Institute (common course)".
+- `faculty.csv` was rebuilt: **312 instructors** (full names now merge duplicates), still with dummy `@iitj.example` emails.
+- **The 400-level Humanities count of 2 now comes straight from the data**: LAL4070 Health Economics (Alok Ranjan, slot D, LHC 204) and LAL4850 Introduction to Climate Change Economics (Souryabrata Mohapatra, slot D, LHC 2 103).
+
+### Tools (`helpdesk/tools/`)
+All are plain functions with type hints and Google-style docstrings (ADK builds the tool schema from these), and all return dicts with a `source` field for citations.
+| Tool | File | What it does |
+|---|---|---|
+| `search_documents(query, top_k=5)` | `retrieval.py` | Hybrid search (Phase 2). Returns `found`, plus passages with `citation`, `date` and `status` (`superseded`) |
+| `lookup_course(course)` | `timetable.py` | By code (normalises `csl 7650` / `CSL-7650`) or by name (substring, then all-words match). Sections are merged into one record (instructors, slots, classrooms). **If not found, returns "did you mean" suggestions**: closest codes, same department prefix first |
+| `get_slot(course)` | `timetable.py` | Slot + weekly class times (from `slots.csv`) + classroom + **minor and major exam date/time** (from `exam_schedule.csv`) |
+| `list_courses(department, level, course_type)` | `timetable.py` | Counts **distinct** courses floated this semester. Department aliases ("Humanities"/"HSS"/"Liberal Arts" → SoLA, …); level "400"/"4" → course numbers 4xxx |
+| `get_instructor_email(course_or_instructor)` | `faculty.py` | Course → instructors → dummy email, or an instructor name → email. Unknown course codes return the same suggestions |
+| `draft_email(to, subject, body, cc="")` | `email_draft.py` | Validates the addresses and saves `drafts/<timestamp>_<subject>.md` with a "NOT SENT" header. Returns the draft text and `sent: false` |
+| `log_unanswered_question(question, reason)` | `unanswered.py` | Appends `{id, timestamp, question, reason, status: open}` to `logs/unanswered.jsonl` and returns a ticket id. `read_unanswered()` is a helper for humans and the report |
+
+### Example questions through the tools
+- "Slot for Autonomous Systems?" → **CSL7650, slot E**, Tue/Thu/Fri 11:00–11:50, LHC 106, Gaurav Harit; Minor 18 Sep 2026 08:00–10:00; Major 22 Nov 2026 09:00–12:00 (tentative)
+- "400-level electives floated by Humanities?" → **2** (LAL4070, LAL4850)
+- "Email the instructor of CSL7570" → not found; **suggestions: CSL7650 Autonomous Systems** (first), CSL7560, CSL7350
+- "Instructor of CSL7650" → Gaurav Harit, `gaurav.harit@iitj.example`
+- "OE credits for a B.Tech" (`search_documents`) → Academic Regulations 2019, p. 16–17 (Table 11.3) among the top 3. The AIDE curriculum also appears, which is the programme-specific problem noted in Phase 2.
+
+### Tests
+`tests/test_tools.py`: 15 tests covering code normalisation; code and name lookups agreeing; CSL7570 → CSL7650 suggestion; get_slot for Autonomous Systems (slot, weekly times, major exam date); Humanities 400-level = 2; unknown department → 0; dummy instructor email by course and by name; draft saved with "NOT SENT" and bad addresses rejected; unanswered log appends JSONL; and **every tool builds an ADK `FunctionTool` declaration**. Together with the Phase 2 tests: **21/21 pass**.
+
+### Status
+- [x] `search_documents`, `lookup_course`, `get_slot`, `list_courses`, `get_instructor_email`, `draft_email`, `log_unanswered_question`
+- [x] Unit tests for every tool (pure Python, no LLM)

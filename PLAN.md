@@ -112,14 +112,14 @@ academic-helpdesk-agent/
 - [x] Tune the similarity threshold used for refusals (0.35)
 
 ### Phase 3: Tools
-- [ ] `search_documents(query, k)` → chunks + citation metadata, or `found: false`
-- [ ] `lookup_course(code_or_name)` → course row (fuzzy match on name)
-- [ ] `get_slot(course)` → slot, days, time, room
-- [ ] `list_courses(dept, level, type, semester)` → matching courses + count
-- [ ] `get_instructor_email(course_code | instructor_name)` → name, email
-- [ ] `draft_email(to, subject, body)` → saves the draft and returns its path + text
-- [ ] `log_unanswered_question(question, reason)` → appends to `logs/unanswered.jsonl`
-- [ ] Unit tests for each tool (pure Python, no LLM)
+- [x] `search_documents(query, k)` → chunks + citation metadata, or `found: false`
+- [x] `lookup_course(code_or_name)` → course row (fuzzy match on name; "did you mean" suggestions for unknown codes)
+- [x] `get_slot(course)` → slot, days, time, room, minor/major exam dates
+- [x] `list_courses(dept, level, type, semester)` → matching courses + count
+- [x] `get_instructor_email(course_code | instructor_name)` → name, email
+- [x] `draft_email(to, subject, body)` → saves the draft and returns its path + text
+- [x] `log_unanswered_question(question, reason)` → appends to `logs/unanswered.jsonl`
+- [x] Unit tests for each tool (pure Python, no LLM)
 
 ### Phase 4: Single-Agent Baseline
 - [ ] System prompt with scope, tool-use policy, citation format and refusal rule
