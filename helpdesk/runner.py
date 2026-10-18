@@ -54,6 +54,8 @@ class Helpdesk:
                         on_event("call", event.author, call.name, dict(call.args or {}))
                 for resp in event.get_function_responses():
                     turn.tool_results.append({"agent": event.author, "name": resp.name, "response": resp.response})
+                    if on_event:
+                        on_event("result", event.author, resp.name, resp.response)
                 if event.is_final_response() and event.content and event.content.parts:
                     text = "".join(p.text or "" for p in event.content.parts)
                     if text.strip():

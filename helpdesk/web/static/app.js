@@ -4,13 +4,25 @@ const STORE = "helpdesk.chats.v1";
 const SUGGESTIONS = [
   "What is the attendance requirement to sit in the Major exam?",
   "What is the slot for Autonomous Systems?",
-  "How many Open Elective credits do I need for a B.Tech?",
+  "How many 400-level electives has the Humanities department floated this semester?",
   "Write an email to the instructor of CSL7650 that I need leave for 2 days",
 ];
+const TOOL_LABELS = {
+  search_documents: "Searching documents",
+  search_documents_all: "Searching documents",
+  get_slot: "Looking up the time table",
+  lookup_course: "Looking up the course",
+  list_courses: "Listing courses",
+  get_instructor_email: "Finding the instructor",
+  draft_email: "Drafting the email",
+  log_unanswered_question: "Forwarding to a human",
+};
+const DAYS = ["Mon", "Tue", "Wed", "Thu", "Fri"];
 
 let chats = load();
 let activeId = (() => { try { return localStorage.getItem(STORE + ".active"); } catch { return null; } })();
 let busy = false;
+let live = null; // the question being answered: {chatId, q, trace, docs, t0}
 let baseGraph = null;
 let graphScope = "local";
 let panelTab = "sources";
@@ -23,8 +35,10 @@ function save() {
 }
 const active = () => chats.find((c) => c.id === activeId);
 const uid = () => Math.random().toString(36).slice(2, 10);
-const esc = (s) => String(s).replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[c]);
+const esc = (s) => String(s ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[c]);
 const md = (s) => DOMPurify.sanitize(marked.parse(s || ""));
+const AGENT_NAMES = { helpdesk_orchestrator: "router", academic_helpdesk: "agent" };
+const agentName = (a) => AGENT_NAMES[a] || String(a || "").replace(/_agent$/, "");
 
 // ---------- sidebar ----------
 function renderList() {
@@ -79,7 +93,7 @@ function renderMessages() {
   }
   box.innerHTML = "";
   chat.messages.forEach((m, i) => box.appendChild(messageEl(m, i)));
-  if (busy) box.appendChild(typingEl());
+  if (live && live.chatId === chat.id) box.appendChild(liveEl());
   box.scrollTop = box.scrollHeight;
 }
 
@@ -91,7 +105,26 @@ function messageEl(m, i) {
     el.innerHTML = `<div class="bubble">${esc(m.text)}</div>`;
     return el;
   }
-  el.innerHTML = `<div class="body">${m.error ? esc(m.text) : md(m.text)}</div>`;
+  if (m.trace?.length) {
+    const d = document.createElement("details");
+    d.className = "trace";
+    const route = (m.meta?.agents || []).map(agentName).join(" → ");
+    const n = m.trace.filter((s) => !s.handoff).length;
+    d.innerHTML = `<summary>${n} step${n === 1 ? "" : "s"}${m.meta ? ` · ${m.meta.seconds}s` : ""}${route ? ` · ${esc(route)}` : ""}</summary>${traceHtml(m.trace)}`;
+    el.appendChild(d);
+  }
+  const body = document.createElement("div");
+  body.className = "body";
+  // the email card shows the draft (editable), so drop the same draft quoted in the answer text
+  const text = (m.cards || []).some((c) => c.kind === "email")
+    ? m.text.replace(/```[^\n]*\n(?:To|Subject):[\s\S]*?```\n?/g, "")
+    : m.text;
+  body.innerHTML = m.error ? esc(m.text) : md(text);
+  el.appendChild(body);
+  (m.cards || []).forEach((c) => {
+    const card = cardEl(c);
+    if (card) el.appendChild(card);
+  });
   const meta = document.createElement("div");
   meta.className = "meta";
   (m.sources || []).filter((s) => s.doc_id).forEach((s) => {
@@ -102,20 +135,62 @@ function messageEl(m, i) {
     chip.onclick = () => focusSource(i, s.doc_id);
     meta.appendChild(chip);
   });
-  if (m.meta) {
-    const info = document.createElement("span");
-    info.textContent = `${m.meta.seconds}s · ${m.meta.agents.join(" → ")}`;
-    meta.appendChild(info);
-  }
   el.appendChild(meta);
   return el;
 }
 
-function typingEl() {
+// ---------- live trace ----------
+function traceHtml(trace) {
+  return `<div class="steps">${trace.map((s) => {
+    if (s.handoff) {
+      return `<div class="step handoff"><span class="step-icon"></span><span class="step-agent">${esc(agentName(s.agent))}</span>
+        <span class="step-label">Handing off to <b>${esc(agentName(s.to))}</b></span></div>`;
+    }
+    const extra = Object.entries(s.extra || {}).map(([k, v]) => `<span class="step-extra">${esc(k)}: ${esc(v)}</span>`).join("");
+    return `<div class="step ${s.status}"><span class="step-icon"></span><span class="step-agent">${esc(agentName(s.agent))}</span>
+      <span class="step-label">${esc(TOOL_LABELS[s.name] || s.name)}</span>${s.arg ? `<code>${esc(s.arg)}</code>` : ""}${extra}
+      ${s.summary ? `<div class="step-sum">${esc(s.summary)}</div>` : ""}</div>`;
+  }).join("")}</div>`;
+}
+
+function liveEl() {
   const el = document.createElement("div");
-  el.className = "msg bot";
-  el.innerHTML = `<div class="typing"><i></i><i></i><i></i></div>`;
+  el.className = "msg bot live";
+  const status = !live.started ? "Waiting for the model…" : live.trace.length ? "Working" : "Thinking";
+  el.innerHTML = `<div class="live-head"><span class="spinner"></span><span>${status}</span><span class="live-time"></span></div>
+    ${live.trace.length ? traceHtml(live.trace) : ""}`;
   return el;
+}
+
+function updateLive() {
+  const box = $("#messages");
+  const old = box.querySelector(".msg.live");
+  if (!old || !live) return;
+  const stick = box.scrollHeight - box.scrollTop - box.clientHeight < 80;
+  old.replaceWith(liveEl());
+  tickLive();
+  if (stick) box.scrollTop = box.scrollHeight;
+}
+
+function tickLive() {
+  const t = document.querySelector(".msg.live .live-time");
+  if (t && live) t.textContent = `${((performance.now() - live.t0) / 1000).toFixed(1)}s`;
+}
+setInterval(tickLive, 100);
+
+function onStreamEvent(ev) {
+  if (ev.type === "start") live.started = true;
+  else if (ev.type === "call") {
+    live.started = true;
+    if (ev.step === "handoff") live.trace.push({ handoff: true, agent: ev.agent, to: ev.to });
+    else live.trace.push({ agent: ev.agent, name: ev.name, arg: ev.arg, extra: ev.extra, status: "running" });
+  } else if (ev.type === "result") {
+    const step = [...live.trace].reverse().find((s) => s.name === ev.name && s.status === "running");
+    if (step) Object.assign(step, { status: ev.ok ? "ok" : "fail", summary: ev.summary });
+    (ev.docs || []).forEach((d) => live.docs.add(d));
+    if (ev.docs?.length) renderGraph();
+  }
+  if (live.chatId === activeId) updateLive();
 }
 
 async function send(text) {
@@ -130,29 +205,138 @@ async function send(text) {
   chat.messages.push({ role: "user", text });
   chat.updated = Date.now();
   busy = true;
+  live = { chatId: chat.id, q: text, trace: [], docs: new Set(), t0: performance.now(), started: false };
   $("#send").disabled = true;
   save();
   renderAll();
+  let done = null;
   try {
-    const r = await fetch("/api/chat", {
+    const r = await fetch("/api/chat/stream", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ message: text, session_id: chat.sessionId }),
     });
-    if (!r.ok) throw new Error(`Server error ${r.status}`);
-    const d = await r.json();
-    chat.sessionId = d.session_id;
-    chat.messages.push(d.error && !d.answer
-      ? { role: "bot", text: d.error, error: true }
-      : { role: "bot", text: d.answer || "_(no answer)_", sources: d.sources, meta: { seconds: d.seconds, agents: d.agents } });
+    if (!r.ok || !r.body) throw new Error(`Server error ${r.status}`);
+    const reader = r.body.pipeThrough(new TextDecoderStream()).getReader();
+    let buf = "";
+    while (!done) {
+      const { value, done: end } = await reader.read();
+      if (end) break;
+      buf += value;
+      let cut;
+      while ((cut = buf.indexOf("\n\n")) >= 0) {
+        const line = buf.slice(0, cut).trim();
+        buf = buf.slice(cut + 2);
+        if (!line.startsWith("data:")) continue;
+        const ev = JSON.parse(line.slice(5));
+        if (ev.type === "done" || ev.type === "error") { done = ev; break; }
+        onStreamEvent(ev);
+      }
+    }
+    if (!done) throw new Error("connection closed before the answer arrived");
+    if (done.type === "error") throw new Error(done.message);
+    chat.sessionId = done.session_id;
+    const trace = live.trace.map((s) => (s.status === "running" ? { ...s, status: "ok" } : s));
+    chat.messages.push(done.error && !done.answer
+      ? { role: "bot", text: done.error, error: true, trace }
+      : { role: "bot", text: done.answer || "_(no answer)_", sources: done.sources, cards: done.cards, trace,
+          meta: { seconds: done.seconds, agents: done.agents } });
   } catch (e) {
-    chat.messages.push({ role: "bot", text: `Could not reach the helpdesk: ${e.message}`, error: true });
+    chat.messages.push({ role: "bot", text: `Could not reach the helpdesk: ${e.message}`, error: true, trace: live.trace });
   }
+  // the live question node becomes the answered one: keep its place in the graph
+  const qi = chat.messages.length - 1;
+  [graphSmall, graphBig].forEach((g) => g.positions.has("qlive") && g.positions.set(`q${qi}`, g.positions.get("qlive")));
   busy = false;
+  live = null;
   $("#send").disabled = false;
   chat.updated = Date.now();
   save();
   if (activeId === chat.id) renderAll(); else renderList();
+}
+
+// ---------- answer cards ----------
+function parseExamDate(s) {
+  const d = new Date(String(s).split(",")[0]); // "22 November 2026, Sunday"
+  return isNaN(d) ? null : d;
+}
+function countdown(d) {
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+  const days = Math.round((d - today) / 86400000);
+  return days < 0 ? "done" : days === 0 ? "today" : days === 1 ? "tomorrow" : `in ${days} days`;
+}
+
+function cardEl(c) {
+  const el = document.createElement("div");
+  el.className = `card card-${c.kind}`;
+  if (c.kind === "course") {
+    const byDay = Object.fromEntries(DAYS.map((d) => [d, []]));
+    (c.weekly_schedule || []).forEach((s) => {
+      const [day, ...t] = s.split(" ");
+      if (byDay[day]) byDay[day].push(t.join(" ").replace(/\s*-\s*/, "–"));
+    });
+    const facts = [
+      c.credits && `${c.credits} credits`, c.ltp && `L-T-P ${c.ltp}`, c.slots?.length && `slot ${c.slots.join(", ")}`,
+      c.classrooms?.length && c.classrooms.join(", "), c.ih_group,
+    ].filter(Boolean);
+    el.innerHTML = `
+      <div class="card-head"><span class="code">${esc(c.course_code)}</span><span class="card-title">${esc(c.course_name)}</span></div>
+      <div class="card-sub">${esc(c.department)}${c.instructors?.length ? ` · ${esc(c.instructors.join(", "))}` : ""}</div>
+      <div class="facts">${facts.map((f) => `<span>${esc(f)}</span>`).join("")}</div>
+      ${c.weekly_schedule ? `<div class="week">${DAYS.map((d) => `<div class="day${byDay[d].length ? " on" : ""}">
+          <div class="day-name">${d}</div>${byDay[d].map((t) => `<div class="slot-time">${esc(t)}</div>`).join("") || `<div class="slot-none">·</div>`}
+        </div>`).join("")}</div>` : ""}
+      ${(c.exams || []).length ? `<div class="exams">${c.exams.map((x) => {
+        const d = parseExamDate(x.date);
+        const when = d ? countdown(d) : "";
+        return `<div class="exam${when === "done" ? " past" : ""}"><span class="exam-name">${esc(x.exam)}</span>
+          <span>${esc(x.date)}</span><span class="muted">${esc(x.time)}</span>
+          ${when ? `<span class="when">${when}</span>` : ""}${x.status === "tentative" ? `<span class="muted">tentative</span>` : ""}</div>`;
+      }).join("")}</div>` : ""}`;
+    return el;
+  }
+  if (c.kind === "email") {
+    el.innerHTML = `
+      <div class="card-head"><span class="card-title">Email draft</span><span class="badge draft">not sent</span></div>
+      <label>To<input class="f-to" value="${esc(c.to)}"></label>
+      ${c.cc ? `<label>Cc<input class="f-cc" value="${esc(c.cc)}"></label>` : ""}
+      <label>Subject<input class="f-subject" value="${esc(c.subject)}"></label>
+      <textarea class="f-body" rows="8">${esc(c.body)}</textarea>
+      <div class="card-actions">
+        <button class="btn copy">Copy</button>
+        <button class="btn primary mail">Open in mail app</button>
+        ${c.path ? `<span class="muted">saved to ${esc(c.path)}</span>` : ""}
+      </div>`;
+    const val = (s) => el.querySelector(s)?.value || "";
+    el.querySelector(".copy").onclick = async (e) => {
+      const text = `To: ${val(".f-to")}\n${val(".f-cc") ? `Cc: ${val(".f-cc")}\n` : ""}Subject: ${val(".f-subject")}\n\n${val(".f-body")}`;
+      try { await navigator.clipboard.writeText(text); e.target.textContent = "Copied"; } catch { e.target.textContent = "Copy failed"; }
+      setTimeout(() => (e.target.textContent = "Copy"), 1500);
+    };
+    el.querySelector(".mail").onclick = () => {
+      const q = new URLSearchParams({ subject: val(".f-subject"), body: val(".f-body"), ...(val(".f-cc") ? { cc: val(".f-cc") } : {}) });
+      location.href = `mailto:${encodeURIComponent(val(".f-to"))}?${q.toString().replace(/\+/g, "%20")}`;
+    };
+    return el;
+  }
+  if (c.kind === "courses") {
+    const filters = Object.values(c.filters || {}).join(" · ");
+    el.innerHTML = `
+      <div class="card-head"><span class="card-title">${c.count} course${c.count === 1 ? "" : "s"}</span>
+        <input class="filter" placeholder="Filter…"></div>
+      ${filters ? `<div class="card-sub">${esc(filters)}</div>` : ""}
+      <div class="table-wrap"><table><thead><tr><th>Code</th><th>Course</th><th>Slot</th><th>Instructors</th></tr></thead>
+        <tbody>${c.courses.map((r) => `<tr><td class="code">${esc(r.course_code)}</td>
+          <td>${esc(r.course_name)}${r.ih_group ? ` <span class="badge">${esc(r.ih_group)}</span>` : ""}<div class="muted">${esc(r.department)}</div></td>
+          <td>${esc((r.slots || []).join(", "))}</td><td>${esc((r.instructors || []).join(", "))}</td></tr>`).join("")}</tbody></table></div>`;
+    el.querySelector(".filter").oninput = (e) => {
+      const q = e.target.value.toLowerCase();
+      el.querySelectorAll("tbody tr").forEach((tr) => (tr.style.display = tr.textContent.toLowerCase().includes(q) ? "" : "none"));
+    };
+    return el;
+  }
+  return null;
 }
 
 // ---------- sources ----------
@@ -215,6 +399,7 @@ function graphData(scope) {
   const nodes = baseGraph.nodes.map((n) => ({ ...n }));
   const links = baseGraph.links.map((l) => ({ ...l }));
   const touched = new Set();
+  const pulse = new Set();
   (chat?.messages || []).forEach((m, i) => {
     const docs = (m.sources || []).filter((s) => s.doc_id);
     if (m.role !== "bot" || !docs.length) return;
@@ -225,8 +410,18 @@ function graphData(scope) {
       links.push({ source: `q${i}`, target: s.doc_id, kind: s.cited ? "cites" : "retrieved" });
     });
   });
-  if (scope === "global") return { nodes, links, touched };
-  if (!touched.size) return { nodes: [], links: [], touched };
+  // the question being answered right now, linked to documents as the tools return them
+  if (live && chat && live.chatId === chat.id && live.docs.size) {
+    nodes.push({ id: "qlive", type: "question", title: live.q, pending: true });
+    pulse.add("qlive");
+    live.docs.forEach((d) => {
+      touched.add(d);
+      pulse.add(d);
+      links.push({ source: "qlive", target: d, kind: "retrieved" });
+    });
+  }
+  if (scope === "global") return { nodes, links, touched, pulse };
+  if (!touched.size) return { nodes: [], links: [], touched, pulse };
   // local graph (as in Quartz): the chat's questions, their documents, and one hop out from those
   const keep = new Set([...touched, ...nodes.filter((n) => n.type === "question").map((n) => n.id)]);
   links.forEach((l) => {
@@ -237,6 +432,7 @@ function graphData(scope) {
     nodes: nodes.filter((n) => keep.has(n.id)),
     links: links.filter((l) => keep.has(l.source) && keep.has(l.target)),
     touched,
+    pulse,
   };
 }
 
@@ -250,6 +446,7 @@ function renderGraph() {
 
 function onGraphClick(node) {
   if (node.type === "question") {
+    if (node.pending) return;
     $("#overlay").classList.add("hidden");
     scrollToMessage(node.index);
   } else if (node.type === "doc") {

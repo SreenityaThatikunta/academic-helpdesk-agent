@@ -8,6 +8,7 @@ Usage:
 import argparse
 import asyncio
 import csv
+import json
 import logging
 import re
 import warnings
@@ -15,7 +16,7 @@ from functools import lru_cache
 from pathlib import Path
 
 from fastapi import FastAPI, HTTPException
-from fastapi.responses import FileResponse
+from fastapi.responses import FileResponse, StreamingResponse
 from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel
 
@@ -71,9 +72,85 @@ def extract_sources(turn) -> list[dict]:
 
     answer = turn.answer.lower()
     for e in found.values():
-        title = manifest()[e["doc_id"]]["title"].lower() if e["doc_id"] else e["label"].lower()
-        e["cited"] = title in answer or e["label"].lower() in answer
+        names = {e["label"].lower()}
+        if e["doc_id"]:  # answers cite a document by title or, for spreadsheets, by file name
+            row = manifest()[e["doc_id"]]
+            names |= {row["title"].lower(), Path(row["filename"]).name.lower(), Path(row["filename"]).stem.lower()}
+        e["cited"] = any(n in answer for n in names)
     return sorted(found.values(), key=lambda e: not e["cited"])
+
+
+def _short(value, n=80) -> str:
+    text = value if isinstance(value, str) else json.dumps(value, ensure_ascii=False)
+    return text if len(text) <= n else text[: n - 1] + "…"
+
+
+def trace_call(name: str, args: dict) -> dict:
+    """One step of the live trace: which tool, with the argument worth showing."""
+    if name == "transfer_to_agent":
+        return {"step": "handoff", "to": args.get("agent_name", "")}
+    main = next((args[k] for k in ("query", "course", "course_or_instructor", "subject", "question", "department")
+                 if args.get(k)), "")
+    extra = {k: v for k, v in args.items() if k in ("document", "level") and v}
+    return {"step": "call", "arg": _short(main), "extra": {k: _short(v, 40) for k, v in extra.items()}}
+
+
+def trace_result(name: str, r) -> dict:
+    """Short human summary of a tool result, plus the documents it touched (for the graph)."""
+    r = r if isinstance(r, dict) else {}
+    docs, ok, summary = [], True, ""
+    if name.startswith("search_documents"):
+        hits = r.get("results") or []
+        docs = list(dict.fromkeys(d for d in (_doc_for_title(h.get("citation", "")) for h in hits) if d))
+        ok = bool(r.get("found")) and bool(hits)
+        summary = f"{len(hits)} passage{'s' * (len(hits) != 1)} from {', '.join(docs)}" if ok else "nothing relevant found"
+    elif name in ("get_slot", "lookup_course"):
+        if r.get("found"):
+            c = r["courses"][0]
+            summary = f"{c['course_code']} {c['course_name']}" + (f" · slot {', '.join(c['slots'])}" if c.get("slots") else "")
+        else:
+            ok = False
+            sug = ", ".join(x["course_code"] for x in r.get("suggestions") or [])
+            summary = "not offered this semester" + (f" · did you mean {sug}?" if sug else "")
+    elif name == "list_courses":
+        summary = f"{r.get('count', 0)} courses"
+    elif name == "get_instructor_email":
+        ok = bool(r.get("found"))
+        summary = ", ".join(i["name"] for i in r.get("instructors") or []) or "no instructor found"
+    elif name == "draft_email":
+        ok = r.get("status") == "draft_saved"
+        summary = "draft saved, not sent" if ok else r.get("message", "could not save draft")
+    elif name == "log_unanswered_question":
+        summary = f"forwarded to the academic office (ticket {r.get('ticket_id', '?')})"
+    elif name == "transfer_to_agent":
+        return {}
+    src = r.get("source")
+    for s in [src] if isinstance(src, str) else (src or []):
+        if (d := _doc_for_file(s)) and d not in docs:
+            docs.append(d)
+    return {"ok": ok, "summary": summary, "docs": docs}
+
+
+def extract_cards(turn) -> list[dict]:
+    """Structured views of what the tools returned: course time table, email draft, course list."""
+    cards, courses = [], {}
+    calls = {c["name"]: c["args"] for c in turn.tool_calls}
+    for res in turn.tool_results:
+        r = res["response"] if isinstance(res["response"], dict) else {}
+        if res["name"] in ("get_slot", "lookup_course") and r.get("found"):
+            for c in r["courses"]:
+                # get_slot adds the weekly schedule and exams; keep the richer record
+                if c["course_code"] not in courses or "weekly_schedule" in c:
+                    courses[c["course_code"]] = c
+        elif res["name"] == "draft_email" and r.get("status") == "draft_saved":
+            a = calls.get("draft_email", {})
+            cards.append({"kind": "email", "to": a.get("to", ""), "cc": a.get("cc", ""), "subject": a.get("subject", ""),
+                          "body": a.get("body", ""), "path": r.get("path", "")})
+        elif res["name"] == "list_courses" and r.get("count"):
+            cards.append({"kind": "courses", "count": r["count"], "filters": r.get("filters", {}),
+                          "courses": r["courses"][:200]})
+    cards[:0] = [{"kind": "course", **c} for c in list(courses.values())[:3]]
+    return cards
 
 
 class ChatIn(BaseModel):
@@ -87,20 +164,15 @@ def create_app(mode: str, model: str) -> FastAPI:
     known: set[str] = set()
     lock = asyncio.Lock()  # one local model: answer one question at a time
 
-    @app.get("/api/info")
-    async def info():
-        return {"mode": mode, "model": model, "semester": config.CURRENT_SEMESTER}
-
-    @app.post("/api/chat")
-    async def chat(body: ChatIn):
-        if not body.message.strip():
-            raise HTTPException(400, "empty message")
+    async def answer(body: ChatIn, on_event=None) -> dict:
         async with lock:
+            if on_event:
+                on_event("start", None, None, None)
             if body.session_id in known:
                 desk.session_id = body.session_id
             else:  # new chat, or the server restarted since this chat began
                 known.add(await desk.new_session())
-            turn = await desk.ask(body.message.strip())
+            turn = await desk.ask(body.message.strip(), on_event=on_event)
         return {
             "session_id": desk.session_id,
             "answer": turn.answer,
@@ -109,7 +181,54 @@ def create_app(mode: str, model: str) -> FastAPI:
             "agents": turn.agents,
             "tool_calls": [{"agent": c["agent"], "name": c["name"]} for c in turn.tool_calls],
             "sources": extract_sources(turn),
+            "cards": extract_cards(turn),
         }
+
+    @app.get("/api/info")
+    async def info():
+        return {"mode": mode, "model": model, "semester": config.CURRENT_SEMESTER}
+
+    @app.post("/api/chat")
+    async def chat(body: ChatIn):
+        if not body.message.strip():
+            raise HTTPException(400, "empty message")
+        return await answer(body)
+
+    @app.post("/api/chat/stream")
+    async def chat_stream(body: ChatIn):
+        """Server-sent events: start, call, result (as the agent works), then done with the full answer."""
+        if not body.message.strip():
+            raise HTTPException(400, "empty message")
+        queue: asyncio.Queue = asyncio.Queue()
+
+        def on_event(kind, agent, name, data):
+            if kind == "start":
+                queue.put_nowait({"type": "start"})
+            elif kind == "call":
+                queue.put_nowait({"type": "call", "agent": agent, "name": name, **trace_call(name, data)})
+            elif kind == "result" and (summary := trace_result(name, data)):
+                queue.put_nowait({"type": "result", "agent": agent, "name": name, **summary})
+
+        async def work():
+            try:
+                queue.put_nowait({"type": "done", **await answer(body, on_event)})
+            except Exception as e:  # noqa: BLE001 - report anything to the page
+                queue.put_nowait({"type": "error", "message": f"{type(e).__name__}: {e}"})
+
+        task = asyncio.create_task(work())
+
+        async def events():
+            try:
+                while True:
+                    ev = await queue.get()
+                    yield f"data: {json.dumps(ev, ensure_ascii=False, default=str)}\n\n"
+                    if ev["type"] in ("done", "error"):
+                        break
+            finally:
+                await task  # finish the turn even if the page went away, so the session stays consistent
+
+        return StreamingResponse(events(), media_type="text/event-stream",
+                                 headers={"Cache-Control": "no-cache", "X-Accel-Buffering": "no"})
 
     @app.get("/api/graph")
     async def graph():

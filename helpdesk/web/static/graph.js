@@ -36,6 +36,19 @@ class GraphView {
     const nodes = data.nodes.map((n) => ({ ...n, ...(this.positions.get(n.id) || {}) }));
     const links = data.links.map((l) => ({ ...l }));
     const touched = data.touched || new Set();
+    const pulse = data.pulse || new Set();
+    // a node new to this view starts beside a neighbour that already has a place, so the layout grows instead of resetting
+    const fresh = nodes.every((n) => n.x === undefined);
+    const byId = new Map(nodes.map((n) => [n.id, n]));
+    const added = nodes.filter((n) => n.x === undefined);
+    if (!fresh) {
+      added.forEach((n) => {
+        const l = links.find((l) => (l.source === n.id && byId.get(l.target)?.x !== undefined) || (l.target === n.id && byId.get(l.source)?.x !== undefined));
+        const anchor = l && byId.get(l.source === n.id ? l.target : l.source);
+        n.x = (anchor?.x ?? 0) + (Math.random() - 0.5) * 30;
+        n.y = (anchor?.y ?? 0) + (Math.random() - 0.5) * 30;
+      });
+    }
 
     const degree = new Map();
     links.forEach((l) => {
@@ -62,9 +75,12 @@ class GraphView {
     const link = root.append("g").selectAll("line").data(links).join("line")
       .attr("stroke", linkColor)
       .attr("stroke-width", (l) => (l.kind === "cites" || l.kind === "amends" ? 1.2 : 0.8))
-      .attr("stroke-dasharray", (l) => (l.kind === "amends" ? "3 2" : l.kind === "retrieved" ? "1.5 2" : null));
+      .attr("stroke-dasharray", (l) => (l.kind === "amends" ? "3 2" : l.kind === "retrieved" ? "1.5 2" : null))
+      .attr("class", (l) => (l.source === "qlive" ? "flow" : null));
 
     const node = root.append("g").selectAll("g").data(nodes).join("g").style("cursor", "pointer");
+    node.filter((n) => pulse.has(n.id)).append("circle")
+      .attr("class", "pulse").attr("r", (n) => radius(n) + 2).attr("fill", "none").attr("stroke", v("--accent")).attr("stroke-width", 1.5);
     node.filter((n) => touched.has(n.id)).append("circle")
       .attr("r", (n) => radius(n) + 3).attr("fill", "none").attr("stroke", v("--accent")).attr("stroke-width", 1.2);
     node.append("circle")
@@ -85,7 +101,7 @@ class GraphView {
 
     // labels for the chat's questions and cited documents; the rest appear on zoom or hover (Quartz-style)
     const cited = new Set(links.filter((l) => l.kind === "cites").map((l) => l.target));
-    const important = (n) => n.type === "question" || cited.has(n.id);
+    const important = (n) => n.type === "question" || cited.has(n.id) || pulse.has(n.id);
     let zoomK = 1, hovered = null;
     const baseLabelOpacity = (n) => {
       if (this.alwaysLabels && (important(n) || n.type === "tag")) return 1;
@@ -117,7 +133,6 @@ class GraphView {
       tooltip.style("opacity", 0);
     }).on("click", (e, n) => this.onClick?.(n));
 
-    const fresh = nodes.some((n) => n.x === undefined); // before the simulation assigns positions
     let ticks = 0;
     this.sim = d3.forceSimulation(nodes)
       .force("link", d3.forceLink(links).id((n) => n.id).distance((l) => (l.kind === "tag" ? 50 : 80)).strength(0.5))
@@ -126,16 +141,16 @@ class GraphView {
       .force("x", d3.forceX().strength(0.04))
       .force("y", d3.forceY().strength(0.04))
       .force("collide", d3.forceCollide((n) => radius(n) + 8))
-      .alpha(fresh ? 1 : 0.3)
+      .alpha(fresh ? 1 : added.length ? 0.5 : 0.15)
       .on("tick", () => {
         link.attr("x1", (l) => l.source.x).attr("y1", (l) => l.source.y).attr("x2", (l) => l.target.x).attr("y2", (l) => l.target.y);
         node.attr("transform", (n) => `translate(${n.x},${n.y})`);
         label.attr("x", (n) => n.x).attr("y", (n) => n.y);
         nodes.forEach((n) => this.positions.set(n.id, { x: n.x, y: n.y }));
-        if (fresh && ++ticks === 80) fit();
+        if ((fresh || added.length) && ++ticks === 80) fit();
       });
 
-    // once the layout has mostly settled, zoom so the whole graph fits (only on a fresh layout)
+    // once the layout has mostly settled, zoom so the whole graph fits (on a fresh layout or when nodes were added)
     const zoom = d3.zoom().scaleExtent([0.3, 5]).on("zoom", (e) => {
       zoomK = e.transform.k;
       root.attr("transform", e.transform);
