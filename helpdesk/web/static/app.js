@@ -28,6 +28,7 @@ let graphScope = "local";
 let mode = (() => { try { return localStorage.getItem(STORE + ".mode"); } catch { return null; } })();
 let unanswered = [];
 let unansweredFilter = "open";
+let preview = null; // {docId, page} shown over the panel
 let panelTab = "sources";
 
 function load() {
@@ -64,13 +65,14 @@ function renderList() {
 
 function newChat() {
   activeId = null;
+  setSidebar(false);
   renderAll();
   $("#input").focus();
 }
 
 function openChat(id) {
   activeId = id;
-  $("#sidebar").classList.remove("open");
+  setSidebar(false);
   renderAll();
 }
 
@@ -154,7 +156,7 @@ function messageEl(m, i, isLast = false) {
     chip.className = "chip" + (s.cited ? " cited" : "");
     chip.textContent = s.label;
     chip.title = s.label;
-    chip.onclick = () => focusSource(i, s.doc_id);
+    chip.onclick = () => openPreview(s.doc_id, s.page);
     meta.appendChild(chip);
   });
   el.appendChild(meta);
@@ -294,6 +296,25 @@ function countdown(d) {
 function cardEl(c, isLast) {
   const el = document.createElement("div");
   el.className = `card card-${c.kind}`;
+  if (c.kind === "history") {
+    const year = (d) => String(d.date || "").slice(0, 4);
+    const docBtn = (d, cls) => `<button class="hist-doc ${cls}" data-doc="${esc(d.id)}">
+        <span class="hist-year">${esc(year(d))}</span><span class="hist-title">${esc(d.title)}</span>
+        ${cls === "new" ? `<span class="badge cited">in force</span>` : `<span class="badge superseded">${cls === "old-part" ? "rule replaced" : "superseded"}</span>`}</button>`;
+    el.innerHTML = `<div class="card-head"><span class="card-title">Rule history</span><span class="muted">newest rule wins</span></div>
+      ${c.steps.map((st) => {
+        const olds = [...st.old].sort((a, b) => String(a.date).localeCompare(String(b.date)));
+        const detail = st.kind === "amended" ? st.note.split(/:\s/).slice(1).join(": ") || st.note : st.note;
+        return `<div class="hist">
+          <div class="hist-topic">${esc(st.kind === "amended" ? st.topic : `${st.topic} has a newer version`)}</div>
+          <div class="hist-line">${olds.map((d) => docBtn(d, st.kind === "amended" ? "old-part" : "old")).join("")}
+            ${st.new.map((d) => docBtn(d, "new")).join("")}</div>
+          <div class="hist-note">${esc(detail)}</div>
+        </div>`;
+      }).join("")}`;
+    el.querySelectorAll(".hist-doc").forEach((b) => (b.onclick = () => openPreview(b.dataset.doc)));
+    return el;
+  }
   if (c.kind === "ticket") {
     el.innerHTML = `
       <div class="ticket-icon">↗</div>
@@ -397,6 +418,113 @@ function cardEl(c, isLast) {
   return null;
 }
 
+// ---------- document preview ----------
+function openPreview(docId, page = null) {
+  if (!docId) return;
+  // opened straight from the chat (panel was closed): Back returns to the chat
+  const wasClosed = document.querySelector(".app").classList.contains("panel-closed");
+  preview = { docId, page, wasClosed: preview ? preview.wasClosed : wasClosed };
+  setPanel(true);
+  renderPreview();
+}
+
+function closePreview() {
+  preview = null;
+  pdfTask?.destroy();
+  pdfTask = null;
+  $("#preview").classList.add("hidden");
+  $("#preview").innerHTML = "";
+}
+
+function renderPreview() {
+  const box = $("#preview");
+  const doc = baseGraph?.nodes.find((n) => n.id === preview.docId);
+  if (!doc) return;
+  const url = `/api/doc/${doc.id}`;
+  let body;
+  if (doc.ext === "pdf") {
+    body = `<div class="pdf-pages" id="pdfPages"><div class="preview-none"><span class="spinner"></span></div></div>`;
+  } else if (doc.ext === "html" || doc.ext === "htm") {
+    body = `<iframe src="${url}" sandbox="" title="${esc(doc.title)}"></iframe>`; // saved web page: no scripts
+  } else if (doc.ext === "txt") {
+    body = `<iframe src="${url}" title="${esc(doc.title)}"></iframe>`;
+  } else {
+    body = `<div class="preview-none"><div class="preview-ext">.${esc(doc.ext)}</div>
+      <p>Spreadsheets can't be shown here. The helpdesk reads them as tables (courses, slots, exams).</p>
+      <a class="btn" href="${url}" download>Download file</a></div>`;
+  }
+  box.innerHTML = `
+    <div class="preview-head">
+      <button class="icon-btn" id="previewBack" aria-label="Back"><svg viewBox="0 0 16 16" width="14" height="14"><path d="M10 3 5 8l5 5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+      <div class="preview-title"><span class="src-id">${doc.id}</span> ${esc(doc.title)}</div>
+      ${preview.page ? `<span class="badge cited">p. ${preview.page}</span>` : ""}
+      ${doc.status === "superseded" ? `<span class="badge superseded">superseded</span>` : ""}
+      <a class="icon-btn" href="${url}${doc.ext === "pdf" && preview.page ? `#page=${preview.page}` : ""}" target="_blank" rel="noopener" aria-label="Open in new tab" title="Open in new tab">
+        <svg viewBox="0 0 16 16" width="14" height="14"><path d="M9 3h4v4M13 3 7.5 8.5M12 9.5V13H3V4h3.5" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
+    </div>
+    <div class="preview-body">${body}</div>`;
+  box.classList.remove("hidden");
+  $("#previewBack").onclick = () => {
+    const back = preview.wasClosed;
+    closePreview();
+    if (back) setPanel(false);
+  };
+  if (doc.ext === "pdf") renderPdf(url, preview.page || 1);
+}
+
+// PDFs are drawn with PDF.js rather than the browser's viewer: it works the same on phones (where an
+// embedded PDF shows only its first page) and lets us open at the cited page. Pages render as they scroll in.
+pdfjsLib.GlobalWorkerOptions.workerSrc = "https://cdn.jsdelivr.net/npm/pdfjs-dist@3.11.174/build/pdf.worker.min.js";
+let pdfTask = null;
+
+async function renderPdf(url, page) {
+  const box = $("#pdfPages");
+  pdfTask?.destroy();
+  pdfTask = pdfjsLib.getDocument(url);
+  const token = pdfTask;
+  let pdf;
+  try { pdf = await token.promise; } catch (e) {
+    if (box.isConnected) box.innerHTML = `<div class="preview-none">Could not open this PDF. <a class="btn" href="${url}" target="_blank" rel="noopener">Open in new tab</a></div>`;
+    return;
+  }
+  if (token !== pdfTask || !box.isConnected) return;
+  const width = box.clientWidth - 24;
+  const first = await pdf.getPage(1);
+  const base = first.getViewport({ scale: 1 });
+  const scale = width / base.width;
+  const dpr = Math.min(window.devicePixelRatio || 1, 2);
+  box.innerHTML = "";
+  const draw = async (n, holder) => {
+    if (holder.dataset.done) return;
+    holder.dataset.done = "1";
+    const p = await pdf.getPage(n).catch(() => null);
+    if (!p) return;
+    const vp = p.getViewport({ scale: scale * dpr });
+    const canvas = document.createElement("canvas");
+    canvas.width = vp.width;
+    canvas.height = vp.height;
+    canvas.style.width = "100%";
+    holder.replaceChildren(canvas);
+    // a render is cancelled when the preview closes or another document opens
+    await p.render({ canvasContext: canvas.getContext("2d"), viewport: vp }).promise.catch(() => {});
+  };
+  const io = new IntersectionObserver((entries) => entries.forEach((e) => {
+    if (e.isIntersecting) draw(+e.target.dataset.page, e.target);
+  }), { root: box, rootMargin: "600px 0px" });
+  for (let n = 1; n <= pdf.numPages; n++) {
+    const holder = document.createElement("div");
+    holder.className = "pdf-page" + (n === page ? " cited" : "");
+    holder.dataset.page = n;
+    holder.style.aspectRatio = `${base.width} / ${base.height}`;
+    holder.innerHTML = `<span class="pdf-num">${n}</span>`;
+    box.appendChild(holder);
+    io.observe(holder);
+  }
+  const cited = box.querySelector(`.pdf-page[data-page="${Math.min(page, pdf.numPages)}"]`);
+  cited?.scrollIntoView({ block: "start" });
+  if (cited) draw(+cited.dataset.page, cited); // the cited page first, the rest as they scroll in
+}
+
 // ---------- unanswered ----------
 async function loadUnanswered() {
   try { unanswered = await (await fetch("/api/unanswered")).json(); } catch { unanswered = []; }
@@ -438,7 +566,7 @@ function renderUnanswered() {
 }
 
 // ---------- sources ----------
-function renderSources(focus) {
+function renderSources() {
   const box = $("#tab-sources");
   const chat = active();
   const groups = [];
@@ -455,8 +583,8 @@ function renderSources(focus) {
       <div class="src-q" data-i="${g.i}" title="${esc(g.q)}">↳ ${esc(g.q)}</div>
       ${g.sources.map((s) => {
         const doc = docs[s.doc_id];
-        const title = s.doc_id ? `<a href="/api/doc/${s.doc_id}" target="_blank" rel="noopener">${esc(s.label)}</a>` : esc(s.label);
-        return `<div class="src${focus && focus.i === g.i && focus.doc === s.doc_id ? " focus" : ""}" data-doc="${s.doc_id || ""}">
+        const title = s.doc_id ? `<a href="/api/doc/${s.doc_id}" data-doc="${s.doc_id}" data-page="${s.page || ""}">${esc(s.label)}</a>` : esc(s.label);
+        return `<div class="src" data-doc="${s.doc_id || ""}">
           <div class="src-head">
             <span class="src-id">${s.doc_id || "csv"}</span>
             <span class="src-title">${title}</span>
@@ -467,15 +595,12 @@ function renderSources(focus) {
         </div>`;
       }).join("")}
     </div>`).join("");
+  box.querySelectorAll(".src-title a").forEach((a) => (a.onclick = (e) => {
+    e.preventDefault();
+    openPreview(a.dataset.doc, +a.dataset.page || null);
+  }));
   box.querySelectorAll(".src-snip").forEach((el) => (el.onclick = () => el.classList.toggle("open")));
   box.querySelectorAll(".src-q").forEach((el) => (el.onclick = () => scrollToMessage(+el.dataset.i)));
-  box.querySelector(".src.focus")?.scrollIntoView({ block: "center" });
-}
-
-function focusSource(i, docId) {
-  setPanel(true);
-  setTab("sources");
-  renderSources({ i, doc: docId });
 }
 
 function scrollToMessage(i) {
@@ -548,7 +673,8 @@ function onGraphClick(node) {
     $("#overlay").classList.add("hidden");
     scrollToMessage(node.index);
   } else if (node.type === "doc") {
-    window.open(`/api/doc/${node.id}`, "_blank", "noopener");
+    $("#overlay").classList.add("hidden");
+    openPreview(node.id);
   }
 }
 
@@ -559,12 +685,27 @@ function renderLegend() {
     + `<span><i class="line"></i>amended by</span>`;
 }
 
-// ---------- panel ----------
+// ---------- panel and drawers ----------
+const narrow = matchMedia("(max-width: 1000px)");
+
+// on narrow screens the chat list and the panel slide over the chat, with a dimmed backdrop
+function syncScrim() {
+  const open = $("#sidebar").classList.contains("open") || !document.querySelector(".app").classList.contains("panel-closed");
+  document.querySelector(".app").classList.toggle("show-scrim", narrow.matches && open);
+}
+function setSidebar(open) {
+  $("#sidebar").classList.toggle("open", open);
+  if (open && narrow.matches) document.querySelector(".app").classList.add("panel-closed");
+  syncScrim();
+}
 function setPanel(open) {
   document.querySelector(".app").classList.toggle("panel-closed", !open);
-  if (open) renderGraph();
+  if (open && narrow.matches) $("#sidebar").classList.remove("open");
+  syncScrim();
+  if (open) requestAnimationFrame(renderGraph); // after layout, so the graph knows its size
 }
 function setTab(tab) {
+  if (preview) closePreview();
   panelTab = tab;
   document.querySelectorAll(".tab").forEach((t) => t.classList.toggle("active", t.dataset.tab === tab));
   $("#tab-sources").classList.toggle("hidden", tab !== "sources");
@@ -587,6 +728,7 @@ const autosize = () => {
   const t = $("#input");
   t.style.height = "auto";
   t.style.height = Math.min(t.scrollHeight, 180) + "px";
+  t.style.overflowY = t.scrollHeight > 180 ? "auto" : "hidden";
 };
 $("#input").oninput = autosize;
 $("#input").onkeydown = (e) => {
@@ -608,19 +750,31 @@ document.querySelectorAll("#tab-graph .seg-btn").forEach((b) => (b.onclick = () 
   renderGraph();
 }));
 $("#togglePanel").onclick = () => setPanel(document.querySelector(".app").classList.contains("panel-closed"));
-$("#toggleSidebar").onclick = () => $("#sidebar").classList.toggle("open");
+$("#toggleSidebar").onclick = () => setSidebar(!$("#sidebar").classList.contains("open"));
+$("#closePanel").onclick = () => setPanel(false);
+$("#scrim").onclick = () => { setSidebar(false); setPanel(false); };
+const setPlaceholder = () => {
+  $("#input").placeholder = narrow.matches ? "Ask the helpdesk…" : "Ask about regulations, courses, slots, exams… or ask for an email draft";
+  autosize();
+};
+narrow.addEventListener("change", () => { syncScrim(); setPlaceholder(); });
 $("#expandGraph").onclick = () => {
   $("#overlay").classList.remove("hidden");
   graphBig.render(graphData("global"));
 };
 $("#closeOverlay").onclick = () => $("#overlay").classList.add("hidden");
 $("#overlay").onclick = (e) => { if (e.target.id === "overlay") $("#overlay").classList.add("hidden"); };
-document.addEventListener("keydown", (e) => { if (e.key === "Escape") $("#overlay").classList.add("hidden"); });
+document.addEventListener("keydown", (e) => {
+  if (e.key !== "Escape") return;
+  if (!$("#overlay").classList.contains("hidden")) $("#overlay").classList.add("hidden");
+  else if (preview) closePreview();
+});
 window.addEventListener("resize", () => renderGraph());
 
 if (matchMedia("(max-width: 1000px)").matches) setPanel(false);
 renderLegend();
 renderAll();
+setPlaceholder();
 
 fetch("/api/info").then((r) => r.json()).then((d) => {
   $("#modelInfo").textContent = d.model.replace("ollama_chat/", "");

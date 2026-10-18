@@ -23,7 +23,7 @@ class GraphView {
 
   render(data, emptyText = "") {
     const el = this.el;
-    if (!el.offsetWidth) return; // hidden tab: draw when shown
+    if (!el.offsetWidth || !el.offsetHeight) return; // hidden tab or collapsed panel: draw when shown
     this.sim?.stop();
     el.innerHTML = "";
     if (!data || !data.nodes.length) {
@@ -33,7 +33,10 @@ class GraphView {
     const css = getComputedStyle(document.documentElement);
     const v = (n) => css.getPropertyValue(n).trim();
     const W = el.clientWidth, H = el.clientHeight;
-    const nodes = data.nodes.map((n) => ({ ...n, ...(this.positions.get(n.id) || {}) }));
+    const nodes = data.nodes.map((n) => {
+      const p = this.positions.get(n.id);
+      return { ...n, ...(p && Number.isFinite(p.x) && Number.isFinite(p.y) ? p : {}) };
+    });
     const links = data.links.map((l) => ({ ...l }));
     const touched = data.touched || new Set();
     const pulse = data.pulse || new Set();
@@ -157,7 +160,9 @@ class GraphView {
       paint();
     });
     const fit = () => {
-      const xs = nodes.map((n) => n.x), ys = nodes.map((n) => n.y);
+      const placed = nodes.filter((n) => Number.isFinite(n.x) && Number.isFinite(n.y));
+      if (!placed.length || !W || !H) return;
+      const xs = placed.map((n) => n.x), ys = placed.map((n) => n.y);
       const [x0, x1, y0, y1] = [Math.min(...xs), Math.max(...xs), Math.min(...ys), Math.max(...ys)];
       const k = Math.min(1.6, 0.85 / Math.max((x1 - x0 + 80) / W, (y1 - y0 + 60) / H));
       svg.transition().duration(500).call(zoom.transform, d3.zoomIdentity.scale(k).translate(-(x0 + x1) / 2, -(y0 + y1) / 2));

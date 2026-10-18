@@ -10,6 +10,7 @@
 </head>
 <body>
   <div class="app">
+    <div class="scrim" id="scrim"></div>
     <aside class="sidebar" id="sidebar">
       <div class="brand">
         <span class="dot"></span>
@@ -58,9 +59,13 @@
         <button class="tab active" data-tab="sources">Sources</button>
         <button class="tab" data-tab="graph">Graph</button>
         <button class="tab" data-tab="unanswered">Unanswered <span class="tab-count hidden" id="openCount"></span></button>
+        <button class="icon-btn mobile-only panel-close" id="closePanel" aria-label="Close panel">
+          <svg viewBox="0 0 16 16" width="14" height="14"><path d="M3.5 3.5l9 9M12.5 3.5l-9 9" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+        </button>
       </div>
       <section class="tab-body" id="tab-sources"></section>
       <section class="tab-body hidden" id="tab-unanswered"></section>
+      <section class="preview hidden" id="preview"></section>
       <section class="tab-body hidden" id="tab-graph">
         <div class="graph-tools">
           <div class="seg">
@@ -89,6 +94,7 @@
   <script src="https://cdn.jsdelivr.net/npm/d3@7.9.0/dist/d3.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/marked@12.0.2/marked.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/dompurify@3.1.6/dist/purify.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/pdfjs-dist@3.11.174/build/pdf.min.js"></script>
   <script src="graph.js"></script>
   <script src="app.js"></script>
 </body>

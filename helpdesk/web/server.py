@@ -48,6 +48,31 @@ def _doc_for_title(citation: str) -> str | None:
     return best
 
 
+@lru_cache(maxsize=1)
+def rule_history() -> list[dict]:
+    """Old document -> newer document pairs: amended passages (data/amendments.csv) and whole
+    documents marked superseded in the manifest ("Superseded by D17 ...")."""
+    pairs: dict[tuple, dict] = {}
+    with open(DATA / "amendments.csv", newline="") as f:
+        for r in csv.DictReader(f):
+            topic = re.split(r" replaced by ", r["note"])[0]
+            pairs.setdefault((r["superseded_by"], topic), {"new": [r["superseded_by"]], "topic": topic, "note": r["note"],
+                                                          "old": [], "kind": "amended"})
+            if r["doc_id"] not in pairs[(r["superseded_by"], topic)]["old"]:
+                pairs[(r["superseded_by"], topic)]["old"].append(r["doc_id"])
+    for d, r in manifest().items():
+        m = re.search(r"[Ss]uperseded by ((?:D\d{2}[/ +]*)+)", r["notes"])
+        if r["status"] == "superseded" and m:
+            pairs[("superseded", d)] = {"new": [f"D{n}" for n in DOC_REF.findall(m.group(1))], "topic": r["title"],
+                                        "note": r["notes"], "old": [d], "kind": "superseded"}
+    return list(pairs.values())
+
+
+def doc_brief(doc_id: str) -> dict:
+    r = manifest()[doc_id]
+    return {"id": doc_id, "title": r["title"], "date": r["date"]}
+
+
 def _doc_for_file(source: str) -> str | None:
     m = FILE_NO.match(source)
     return f"D{m.group(1)}" if m and f"D{m.group(1)}" in manifest() else None
@@ -58,7 +83,9 @@ def extract_sources(turn) -> list[dict]:
     found: dict[str, dict] = {}
 
     def add(key, doc_id, label, snippet=""):
-        entry = found.setdefault(key, {"doc_id": doc_id, "label": label, "snippets": [], "cited": False})
+        page = re.search(r", pp?\. (\d+)", label)  # "<title>, p. 9" / "pp. 1-2" -> first page
+        entry = found.setdefault(key, {"doc_id": doc_id, "label": label, "snippets": [], "cited": False,
+                                       "page": int(page.group(1)) if page else None})
         if snippet and len(entry["snippets"]) < 3:
             entry["snippets"].append(snippet)
 
@@ -182,6 +209,15 @@ def extract_cards(turn) -> list[dict]:
         cards.append({"kind": "clarify", "branches": btech_branches(), "years": list(range(year - 4, year + 1))})
     elif suggestions and not courses and "did you mean" in answer:
         cards.append({"kind": "suggest", "options": [{"code": c, "name": n} for c, n in suggestions.items()]})
+
+    # rule history: the answer cites a document that replaced older rules, or cites a superseded one
+    cited = {s["doc_id"] for s in extract_sources(turn) if s["cited"] and s["doc_id"]}
+    steps = [h for h in rule_history() if (h["kind"] == "amended" and set(h["new"]) & cited)
+             or (h["kind"] == "superseded" and set(h["old"]) & cited)]
+    if steps:
+        cards.append({"kind": "history", "steps": [
+            {"topic": h["topic"], "note": h["note"], "kind": h["kind"], "new": [doc_brief(n) for n in h["new"]],
+             "old": [doc_brief(o) for o in h["old"]]} for h in steps]})
     return cards
 
 
@@ -283,7 +319,8 @@ def create_app(mode: str, model: str) -> FastAPI:
     async def graph():
         docs = manifest()
         nodes = [{"id": d, "type": "doc", "title": r["title"], "category": r["category"], "date": r["date"],
-                  "status": r["status"]} for d, r in docs.items()]
+                  "status": r["status"], "ext": Path(r["filename"]).suffix.lstrip(".").lower()}
+                 for d, r in docs.items()]
         links, seen = [], set()
 
         def link(a, b, kind):
