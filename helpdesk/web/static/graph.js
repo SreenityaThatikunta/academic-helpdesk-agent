@@ -164,7 +164,8 @@ class GraphView {
       if (!placed.length || !W || !H) return;
       const xs = placed.map((n) => n.x), ys = placed.map((n) => n.y);
       const [x0, x1, y0, y1] = [Math.min(...xs), Math.max(...xs), Math.min(...ys), Math.max(...ys)];
-      const k = Math.min(1.6, 0.85 / Math.max((x1 - x0 + 80) / W, (y1 - y0 + 60) / H));
+      // pad for the labels, which extend ~80px either side of a node and below it
+      const k = Math.min(1.6, 0.9 / Math.max((x1 - x0 + 200) / W, (y1 - y0 + 90) / H));
       svg.transition().duration(500).call(zoom.transform, d3.zoomIdentity.scale(k).translate(-(x0 + x1) / 2, -(y0 + y1) / 2));
     };
 
