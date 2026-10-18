@@ -23,7 +23,13 @@
         New chat
       </button>
       <nav class="chat-list" id="chatList"></nav>
-      <div class="sidebar-foot" id="modelInfo">…</div>
+      <div class="sidebar-foot">
+        <div class="seg mode-seg" id="modeSeg">
+          <button class="seg-btn" data-mode="single" title="One agent with every tool">Single agent</button>
+          <button class="seg-btn" data-mode="multi" title="Router hands off to policy, schedule and email agents">Multi-agent</button>
+        </div>
+        <div class="model-name" id="modelInfo">…</div>
+      </div>
     </aside>
 
     <main class="chat">
@@ -51,8 +57,10 @@
       <div class="tabs">
         <button class="tab active" data-tab="sources">Sources</button>
         <button class="tab" data-tab="graph">Graph</button>
+        <button class="tab" data-tab="unanswered">Unanswered <span class="tab-count hidden" id="openCount"></span></button>
       </div>
       <section class="tab-body" id="tab-sources"></section>
+      <section class="tab-body hidden" id="tab-unanswered"></section>
       <section class="tab-body hidden" id="tab-graph">
         <div class="graph-tools">
           <div class="seg">

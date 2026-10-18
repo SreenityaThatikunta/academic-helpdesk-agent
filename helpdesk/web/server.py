@@ -23,11 +23,14 @@ from pydantic import BaseModel
 from helpdesk import config
 from helpdesk.agents import build_agent
 from helpdesk.runner import Helpdesk
+from helpdesk.tools.unanswered import read_unanswered
 
 STATIC = Path(__file__).parent / "static"
 DATA = config.ROOT / "data"
 FILE_NO = re.compile(r"^(\d{2})_")  # "26_Slot_System....xlsx" -> D26
 DOC_REF = re.compile(r"\bD(\d{2})\b")
+REFUSAL = "i don't know the answer"
+CLARIFY = re.compile(r"which b\.?\s?tech programme|which (branch|programme).*which year", re.I | re.S)
 
 
 @lru_cache(maxsize=1)
@@ -131,9 +134,22 @@ def trace_result(name: str, r) -> dict:
     return {"ok": ok, "summary": summary, "docs": docs}
 
 
+def btech_branches() -> list[str]:
+    """Branches with a B.Tech curriculum in the collection ("B.Tech CSE Curriculum ..." -> CSE)."""
+    names = [m.group(1) for r in manifest().values() if (m := re.match(r"B\.Tech (\w+) Curriculum", r["title"]))]
+    return list(dict.fromkeys(names))
+
+
+def find_ticket(question: str) -> dict | None:
+    """The log entry for a refused question; the guard logs it itself when the model skipped the tool."""
+    q = question.strip()
+    return next((e for e in reversed(read_unanswered(status="")) if e["question"].strip() == q), None)
+
+
 def extract_cards(turn) -> list[dict]:
-    """Structured views of what the tools returned: course time table, email draft, course list."""
-    cards, courses = [], {}
+    """Structured views of the turn: course time table, email draft, course list, "did you mean"
+    suggestions, a refusal ticket, or choices for a clarifying question."""
+    cards, courses, suggestions = [], {}, {}
     calls = {c["name"]: c["args"] for c in turn.tool_calls}
     for res in turn.tool_results:
         r = res["response"] if isinstance(res["response"], dict) else {}
@@ -149,31 +165,59 @@ def extract_cards(turn) -> list[dict]:
         elif res["name"] == "list_courses" and r.get("count"):
             cards.append({"kind": "courses", "count": r["count"], "filters": r.get("filters", {}),
                           "courses": r["courses"][:200]})
+        if r.get("found") is False and r.get("suggestions"):
+            for sug in r["suggestions"]:
+                suggestions.setdefault(sug["course_code"], sug["course_name"])
     cards[:0] = [{"kind": "course", **c} for c in list(courses.values())[:3]]
+
+    answer = turn.answer.lower()
+    if REFUSAL in answer:
+        logged = next((res["response"] for res in turn.tool_results if res["name"] == "log_unanswered_question"
+                       and isinstance(res["response"], dict)), None)
+        entry = find_ticket(turn.question)
+        cards.append({"kind": "ticket", "ticket_id": (logged or {}).get("ticket_id") or (entry or {}).get("id"),
+                      "reason": (entry or {}).get("reason", "")})
+    elif CLARIFY.search(turn.answer):
+        year = int(config.CURRENT_SEMESTER.split("AY ")[-1][:4]) if "AY " in config.CURRENT_SEMESTER else 2026
+        cards.append({"kind": "clarify", "branches": btech_branches(), "years": list(range(year - 4, year + 1))})
+    elif suggestions and not courses and "did you mean" in answer:
+        cards.append({"kind": "suggest", "options": [{"code": c, "name": n} for c, n in suggestions.items()]})
     return cards
+
+
+MODES = ("single", "multi")
 
 
 class ChatIn(BaseModel):
     message: str
     session_id: str | None = None
+    mode: str | None = None
 
 
 def create_app(mode: str, model: str) -> FastAPI:
     app = FastAPI(title="Academic Helpdesk")
-    desk = Helpdesk(build_agent(mode, model))
-    known: set[str] = set()
+    desks: dict[str, Helpdesk] = {}  # one agent per mode, built on first use
+    known: dict[str, set[str]] = {m: set() for m in MODES}  # sessions belong to the agent that made them
     lock = asyncio.Lock()  # one local model: answer one question at a time
 
+    def desk_for(m: str) -> Helpdesk:
+        if m not in desks:
+            desks[m] = Helpdesk(build_agent(m, model))
+        return desks[m]
+
     async def answer(body: ChatIn, on_event=None) -> dict:
+        m = body.mode if body.mode in MODES else mode
         async with lock:
             if on_event:
                 on_event("start", None, None, None)
-            if body.session_id in known:
+            desk = desk_for(m)
+            if body.session_id in known[m]:
                 desk.session_id = body.session_id
-            else:  # new chat, or the server restarted since this chat began
-                known.add(await desk.new_session())
+            else:  # new chat, first question in this mode, or the server restarted since
+                known[m].add(await desk.new_session())
             turn = await desk.ask(body.message.strip(), on_event=on_event)
         return {
+            "mode": m,
             "session_id": desk.session_id,
             "answer": turn.answer,
             "error": turn.error,
@@ -186,7 +230,12 @@ def create_app(mode: str, model: str) -> FastAPI:
 
     @app.get("/api/info")
     async def info():
-        return {"mode": mode, "model": model, "semester": config.CURRENT_SEMESTER}
+        return {"mode": mode, "modes": MODES, "model": model, "semester": config.CURRENT_SEMESTER}
+
+    @app.get("/api/unanswered")
+    async def unanswered():
+        """Questions forwarded to a human (logs/unanswered.jsonl), newest first."""
+        return list(reversed(read_unanswered(status="")))
 
     @app.post("/api/chat")
     async def chat(body: ChatIn):

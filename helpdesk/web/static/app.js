@@ -25,6 +25,9 @@ let busy = false;
 let live = null; // the question being answered: {chatId, q, trace, docs, t0}
 let baseGraph = null;
 let graphScope = "local";
+let mode = (() => { try { return localStorage.getItem(STORE + ".mode"); } catch { return null; } })();
+let unanswered = [];
+let unansweredFilter = "open";
 let panelTab = "sources";
 
 function load() {
@@ -92,12 +95,28 @@ function renderMessages() {
     return;
   }
   box.innerHTML = "";
-  chat.messages.forEach((m, i) => box.appendChild(messageEl(m, i)));
+  let lastMode = null;
+  chat.messages.forEach((m, i) => {
+    // a divider where the chat switches between single and multi agent (each keeps its own memory)
+    const next = m.role === "user" ? (chat.messages[i + 1]?.meta?.mode || (i === chat.messages.length - 1 && live ? live.mode : null)) : null;
+    if (next && lastMode && next !== lastMode) box.appendChild(dividerEl(next));
+    if (next) lastMode = next;
+    box.appendChild(messageEl(m, i, i === chat.messages.length - 1));
+  });
   if (live && live.chatId === chat.id) box.appendChild(liveEl());
   box.scrollTop = box.scrollHeight;
 }
 
-function messageEl(m, i) {
+const MODE_LABELS = { single: "single agent", multi: "multi-agent" };
+
+function dividerEl(m) {
+  const el = document.createElement("div");
+  el.className = "divider";
+  el.innerHTML = `<span>Switched to ${MODE_LABELS[m] || m} · it has its own memory of this chat</span>`;
+  return el;
+}
+
+function messageEl(m, i, isLast = false) {
   const el = document.createElement("div");
   el.className = `msg ${m.role}` + (m.error ? " error" : "");
   el.dataset.index = i;
@@ -105,13 +124,16 @@ function messageEl(m, i) {
     el.innerHTML = `<div class="bubble">${esc(m.text)}</div>`;
     return el;
   }
+  const route = (m.meta?.agents || []).map(agentName).join(" → ");
+  const n = (m.trace || []).filter((s) => !s.handoff).length;
+  const head = [n ? `${n} step${n === 1 ? "" : "s"}` : "no tools", m.meta && `${m.meta.seconds}s`, route].filter(Boolean).map(esc).join(" · ");
   if (m.trace?.length) {
     const d = document.createElement("details");
     d.className = "trace";
-    const route = (m.meta?.agents || []).map(agentName).join(" → ");
-    const n = m.trace.filter((s) => !s.handoff).length;
-    d.innerHTML = `<summary>${n} step${n === 1 ? "" : "s"}${m.meta ? ` · ${m.meta.seconds}s` : ""}${route ? ` · ${esc(route)}` : ""}</summary>${traceHtml(m.trace)}`;
+    d.innerHTML = `<summary>${head}</summary>${traceHtml(m.trace)}`;
     el.appendChild(d);
+  } else if (m.meta) {
+    el.insertAdjacentHTML("beforeend", `<div class="trace trace-plain">${head}</div>`);
   }
   const body = document.createElement("div");
   body.className = "body";
@@ -122,7 +144,7 @@ function messageEl(m, i) {
   body.innerHTML = m.error ? esc(m.text) : md(text);
   el.appendChild(body);
   (m.cards || []).forEach((c) => {
-    const card = cardEl(c);
+    const card = cardEl(c, isLast);
     if (card) el.appendChild(card);
   });
   const meta = document.createElement("div");
@@ -205,7 +227,8 @@ async function send(text) {
   chat.messages.push({ role: "user", text });
   chat.updated = Date.now();
   busy = true;
-  live = { chatId: chat.id, q: text, trace: [], docs: new Set(), t0: performance.now(), started: false };
+  live = { chatId: chat.id, q: text, trace: [], docs: new Set(), t0: performance.now(), started: false, mode };
+  if (chat.sessionId && !chat.sessions) chat.sessions = { single: chat.sessionId }; // chats saved before modes
   $("#send").disabled = true;
   save();
   renderAll();
@@ -214,7 +237,7 @@ async function send(text) {
     const r = await fetch("/api/chat/stream", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ message: text, session_id: chat.sessionId }),
+      body: JSON.stringify({ message: text, session_id: chat.sessions?.[mode] || null, mode }),
     });
     if (!r.ok || !r.body) throw new Error(`Server error ${r.status}`);
     const reader = r.body.pipeThrough(new TextDecoderStream()).getReader();
@@ -235,12 +258,13 @@ async function send(text) {
     }
     if (!done) throw new Error("connection closed before the answer arrived");
     if (done.type === "error") throw new Error(done.message);
-    chat.sessionId = done.session_id;
+    chat.sessions = { ...(chat.sessions || {}), [done.mode]: done.session_id };
     const trace = live.trace.map((s) => (s.status === "running" ? { ...s, status: "ok" } : s));
     chat.messages.push(done.error && !done.answer
       ? { role: "bot", text: done.error, error: true, trace }
       : { role: "bot", text: done.answer || "_(no answer)_", sources: done.sources, cards: done.cards, trace,
-          meta: { seconds: done.seconds, agents: done.agents } });
+          meta: { seconds: done.seconds, agents: done.agents, mode: done.mode } });
+    if (done.cards?.some((c) => c.kind === "ticket")) loadUnanswered();
   } catch (e) {
     chat.messages.push({ role: "bot", text: `Could not reach the helpdesk: ${e.message}`, error: true, trace: live.trace });
   }
@@ -267,9 +291,43 @@ function countdown(d) {
   return days < 0 ? "done" : days === 0 ? "today" : days === 1 ? "tomorrow" : `in ${days} days`;
 }
 
-function cardEl(c) {
+function cardEl(c, isLast) {
   const el = document.createElement("div");
   el.className = `card card-${c.kind}`;
+  if (c.kind === "ticket") {
+    el.innerHTML = `
+      <div class="ticket-icon">↗</div>
+      <div class="ticket-text">
+        <div class="card-title">Forwarded to the academic office</div>
+        <div class="card-sub">${c.ticket_id ? `Ticket <span class="code">${esc(c.ticket_id)}</span> · ` : ""}a person will follow up instead of the helpdesk guessing</div>
+      </div>
+      <button class="btn">View queue</button>`;
+    el.querySelector(".btn").onclick = () => { setPanel(true); setTab("unanswered"); };
+    return el;
+  }
+  if (c.kind === "clarify") {
+    const pick = { branch: null, year: null };
+    el.innerHTML = `
+      <div class="pick-row"><span class="pick-label">Programme</span>${c.branches.map((b) => `<button class="pick" data-k="branch" data-v="${esc(b)}">B.Tech ${esc(b)}</button>`).join("")}</div>
+      <div class="pick-row"><span class="pick-label">Joined in</span>${c.years.map((y) => `<button class="pick" data-k="year" data-v="${y}">${y}</button>`).join("")}</div>
+      <div class="card-actions"><button class="btn primary go" disabled>Answer</button><span class="muted">or type your answer below</span></div>`;
+    const go = el.querySelector(".go");
+    el.querySelectorAll(".pick").forEach((b) => (b.onclick = () => {
+      pick[b.dataset.k] = b.dataset.v;
+      el.querySelectorAll(`.pick[data-k="${b.dataset.k}"]`).forEach((x) => x.classList.toggle("on", x === b));
+      go.disabled = !(pick.branch && pick.year);
+    }));
+    go.onclick = () => send(`I am in B.Tech ${pick.branch} and joined in ${pick.year}.`);
+    if (!isLast || busy) el.querySelectorAll("button").forEach((b) => (b.disabled = true));
+    return el;
+  }
+  if (c.kind === "suggest") {
+    el.innerHTML = `<div class="pick-row"><span class="pick-label">Did you mean</span>${c.options.map((o) =>
+      `<button class="pick" data-code="${esc(o.code)}" data-name="${esc(o.name)}"><span class="code">${esc(o.code)}</span> ${esc(o.name)}</button>`).join("")}</div>`;
+    el.querySelectorAll(".pick").forEach((b) => (b.onclick = () => send(`Yes, I meant ${b.dataset.code} (${b.dataset.name}).`)));
+    if (!isLast || busy) el.querySelectorAll("button").forEach((b) => (b.disabled = true));
+    return el;
+  }
   if (c.kind === "course") {
     const byDay = Object.fromEntries(DAYS.map((d) => [d, []]));
     (c.weekly_schedule || []).forEach((s) => {
@@ -337,6 +395,46 @@ function cardEl(c) {
     return el;
   }
   return null;
+}
+
+// ---------- unanswered ----------
+async function loadUnanswered() {
+  try { unanswered = await (await fetch("/api/unanswered")).json(); } catch { unanswered = []; }
+  const open = unanswered.filter((e) => e.status === "open").length;
+  $("#openCount").textContent = open;
+  $("#openCount").classList.toggle("hidden", !open);
+  if (panelTab === "unanswered") renderUnanswered();
+}
+
+function ago(iso) {
+  const s = (Date.now() - new Date(iso)) / 1000;
+  if (s < 60) return "just now";
+  if (s < 3600) return `${Math.floor(s / 60)} min ago`;
+  if (s < 86400) return `${Math.floor(s / 3600)} h ago`;
+  return new Date(iso).toLocaleDateString(undefined, { day: "numeric", month: "short" });
+}
+
+function renderUnanswered() {
+  const box = $("#tab-unanswered");
+  const mine = new Set((active()?.messages || []).flatMap((m) => (m.cards || []).filter((c) => c.kind === "ticket").map((c) => c.ticket_id)));
+  const counts = { open: 0, resolved: 0 };
+  unanswered.forEach((e) => (counts[e.status] = (counts[e.status] || 0) + 1));
+  const rows = unanswered.filter((e) => unansweredFilter === "all" || e.status === unansweredFilter);
+  box.innerHTML = `
+    <div class="uq-head">
+      <div class="seg">${["open", "resolved", "all"].map((f) => `<button class="seg-btn${f === unansweredFilter ? " active" : ""}" data-f="${f}">
+        ${f[0].toUpperCase() + f.slice(1)}${f !== "all" ? ` <span class="muted">${counts[f] || 0}</span>` : ""}</button>`).join("")}</div>
+    </div>
+    <p class="uq-note">Questions the helpdesk refused instead of guessing. They are logged to <code>logs/unanswered.jsonl</code> for the academic office.</p>
+    ${rows.length ? rows.map((e) => `
+      <div class="uq${mine.has(e.id) ? " mine" : ""}">
+        <div class="uq-q">${esc(e.question)}</div>
+        <div class="uq-meta"><span class="code">${esc(e.id)}</span><span>${ago(e.timestamp)}</span>
+          <span class="badge ${e.status}">${esc(e.status)}</span>${mine.has(e.id) ? `<span class="badge cited">this chat</span>` : ""}</div>
+        <div class="uq-reason">${esc(e.reason)}</div>
+        ${e.resolution ? `<div class="uq-res">↳ ${esc(e.resolution)}</div>` : ""}
+      </div>`).join("") : `<div class="src-empty">Nothing here.</div>`}`;
+  box.querySelectorAll(".seg-btn").forEach((b) => (b.onclick = () => { unansweredFilter = b.dataset.f; renderUnanswered(); }));
 }
 
 // ---------- sources ----------
@@ -471,6 +569,8 @@ function setTab(tab) {
   document.querySelectorAll(".tab").forEach((t) => t.classList.toggle("active", t.dataset.tab === tab));
   $("#tab-sources").classList.toggle("hidden", tab !== "sources");
   $("#tab-graph").classList.toggle("hidden", tab !== "graph");
+  $("#tab-unanswered").classList.toggle("hidden", tab !== "unanswered");
+  if (tab === "unanswered") loadUnanswered();
   renderGraph();
 }
 
@@ -496,9 +596,15 @@ $("#input").onkeydown = (e) => {
   }
 };
 document.querySelectorAll(".tab").forEach((t) => (t.onclick = () => setTab(t.dataset.tab)));
-document.querySelectorAll(".seg-btn").forEach((b) => (b.onclick = () => {
+function setMode(m) {
+  mode = m;
+  try { localStorage.setItem(STORE + ".mode", m); } catch {}
+  document.querySelectorAll("#modeSeg .seg-btn").forEach((b) => b.classList.toggle("active", b.dataset.mode === m));
+}
+document.querySelectorAll("#modeSeg .seg-btn").forEach((b) => (b.onclick = () => setMode(b.dataset.mode)));
+document.querySelectorAll("#tab-graph .seg-btn").forEach((b) => (b.onclick = () => {
   graphScope = b.dataset.scope;
-  document.querySelectorAll(".seg-btn").forEach((x) => x.classList.toggle("active", x === b));
+  document.querySelectorAll("#tab-graph .seg-btn").forEach((x) => x.classList.toggle("active", x === b));
   renderGraph();
 }));
 $("#togglePanel").onclick = () => setPanel(document.querySelector(".app").classList.contains("panel-closed"));
@@ -517,8 +623,10 @@ renderLegend();
 renderAll();
 
 fetch("/api/info").then((r) => r.json()).then((d) => {
-  $("#modelInfo").textContent = `${d.mode} · ${d.model.replace("ollama_chat/", "")}`;
+  $("#modelInfo").textContent = d.model.replace("ollama_chat/", "");
+  setMode(d.modes.includes(mode) ? mode : d.mode);
 }).catch(() => ($("#modelInfo").textContent = "server offline"));
+loadUnanswered();
 fetch("/api/graph").then((r) => r.json()).then((d) => {
   baseGraph = d;
   renderSources();
