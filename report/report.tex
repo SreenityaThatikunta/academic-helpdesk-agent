@@ -14,6 +14,7 @@
 \usepackage{float}
 \usepackage[hidelinks]{hyperref}
 \usepackage{amsmath}
+\usepackage{graphicx}
 
 \definecolor{accent}{HTML}{1F4E79}
 \definecolor{soft}{HTML}{DCE6F1}
@@ -64,7 +65,9 @@ institute website. The rest are official Registration and Examination Cell circu
 hold the information that is not public: the current course list, the slot system, the IH course lists, the
 major-exam time table and the examination guidelines. Three scanned circulars were OCR'd with Tesseract.
 Every document is tagged with a title, category, date and status; 29 are \emph{current} and 4 are
-\emph{superseded} by newer versions (older regulations, calendar, slot chart and IH list).
+\emph{superseded} by newer versions (older regulations, calendar, slot chart and IH list). The helpdesk therefore
+works from 29 current documents, within the 20--30 the assignment asks for; the 4 older versions are kept on purpose
+to test that a newer rule wins over an old one.
 
 \begin{table}[H]
 \centering\small
@@ -199,7 +202,8 @@ one or two sources), and short sections for policy, schedule and email questions
 
 The \textbf{multi-agent} version (Figure~\ref{fig:agents}) splits this up. A router either hands the request to a
 specialist with \code{transfer\_to\_agent} or refuses it; the policy, schedule and email agents each see only their
-own tools and rules. All models run at temperature 0.2 with an 8{,}192-token context. Qwen3 runs with thinking
+own tools and rules. Both versions reach the Ollama-hosted models through ADK's LiteLLM connector; all models run
+at temperature 0.2 with an 8{,}192-token context. Qwen3 runs with thinking
 disabled (\code{think=False}), which stopped it from leaking its reasoning into answers and made it about ten times
 faster.
 
@@ -283,7 +287,8 @@ answer against the documents or the tools before using it. Each turn specifies t
 refuse, draft, suggest or clarify), regular expressions for the required facts, forbidden patterns for superseded
 rules, acceptable sources, the relevant tools and the expected specialist. We ran 2 models $\times$ 2 modes $\times$
 3 repeats, i.e.\ 12 runs and 372 turns, with a fresh session per item and a separate draft folder and unanswered log
-per run; no run produced an error.
+per run; no run produced an error. Everything ran locally on a laptop with 16\,GB of RAM (Apple M2 Pro), with the
+chat and embedding models served by Ollama.
 
 We report five metrics:
 \begin{itemize}
@@ -358,8 +363,12 @@ or a correct citation.}
 \label{tab:outcomes}
 \end{table}
 
-\textbf{Consistency:} Qwen3 gave the same answer to every question in all three repeats in both modes; Llama~3.1
-changed its answer on 8 of 31 questions as a single agent and 3 as a multi-agent system.
+\textbf{Consistency:} Qwen3 gave the same answer to every question in all three repeats in both modes. Llama~3.1
+changed its answer on 8 of 31 turns as a single agent: P01 (attendance requirement), P06 (number of exams per
+course), P07 (minor-exam dates), P08 (Autonomous Systems topics), P09 (PhD maximum duration), M02 (major-exam date and
+attendance rule) and both turns of the Open Elective conversation V01. As a multi-agent system it changed on 3:
+P01, P04 (missing the Major exam through illness) and M02. Appendix~\ref{app:perq} gives the correct runs per
+question.
 
 \begin{figure}[H]
 \centering
@@ -434,7 +443,12 @@ The retrieval check improved to 19/19 in the top 5 (from 18/19).
 
 \paragraph{New safety checks.} The router sometimes returned a completely empty message (evaluation item S02); a
 fallback now routes it by keywords. Refusals are forced to the fixed sentence and lose any ``Source:'' line
-(a model once cited its own refusal). Figure~\ref{fig:guards} shows all checks around a model call.
+(a model once cited its own refusal). After a few turns in one chat, Qwen3's router sent ``Can I get a make-up exam
+if I miss the Minor exam due to illness?'' to the email agent (3 of 3 runs), although it routed the same question
+correctly in a fresh chat. A transfer to the email agent is now kept only if the message asks for something to be
+written (email, mail, draft, write, letter, message) or answers a question the email agent just asked; anything
+else goes to the policy agent. This also covers Llama~3.1's ``how do I \emph{apply} for a make-up exam''
+misroute (Figure~\ref{fig:routing}). Figure~\ref{fig:guards} shows all checks around a model call.
 
 \begin{figure}[H]
 \centering
@@ -448,10 +462,12 @@ fallback now routes it by keywords. Refusals are forced to the fixed sentence an
 \node[chk, right=of trim] (noise) {drop transfer messages};
 \node[llm, right=of noise] (llm) {\textbf{LLM}\\call};
 \node[newchk, right=of llm] (empty) {empty router reply $\rightarrow$ route by keywords};
-\node[chk, right=of empty] (json) {strip tool calls printed as text};
+\node[newchk, right=of empty] (mail) {email agent only for email requests};
+\node[chk, right=of mail] (json) {strip tool calls printed as text};
 \node[newchk, right=of json] (src) {refusal: fixed sentence, no Source line};
 \node[chk, right=of src] (log) {refused but not logged $\rightarrow$ log it};
-\draw[arr] (trim)--(noise); \draw[arr] (noise)--(llm); \draw[arr] (llm)--(empty); \draw[arr] (empty)--(json);
+\draw[arr] (trim)--(noise); \draw[arr] (noise)--(llm); \draw[arr] (llm)--(empty); \draw[arr] (empty)--(mail);
+\draw[arr] (mail)--(json);
 \draw[arr] (json)--(src); \draw[arr] (src)--(log);
 \node[above=1mm of trim, font=\scriptsize\itshape] {before the call};
 \node[above=1mm of empty, font=\scriptsize\itshape] {after the call};
@@ -514,6 +530,21 @@ Red: the prompt filled the 8k context window and was truncated.}
 \label{tab:latency}
 \end{table}
 
+\paragraph{Web interface.} Besides the command-line chat, a local web page (FastAPI, one static page) makes the
+system's behaviour visible (Figure~\ref{fig:ui}). It shows each tool call live while the model works, turns tool
+results into cards (a course's weekly slots and exam dates, an editable email draft marked \emph{not sent}, the
+refusal's ticket number, a timeline of amended rules), opens a cited document at the cited page, draws the
+documents and the chat's questions as a graph, and lists the questions forwarded to a human. Single- and
+multi-agent modes can be switched in the page.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=\linewidth]{img/web-ui.jpg}
+\caption{The web interface: an answer with its rule history (the 2024 guidelines replace three older make-up rules)
+and the cited page opened next to it.}
+\label{fig:ui}
+\end{figure}
+
 %=====================================================================
 \section{Limitations and future work}
 %=====================================================================
@@ -550,7 +581,7 @@ Item & Category & Question & Expected \\
 \end{longtable}}
 
 %=====================================================================
-\section{Per-question results}
+\section{Per-question results}\label{app:perq}
 %=====================================================================
 Correct runs out of 3 repeats (\textbf{bold}: all correct; \textcolor{bad}{red}: none correct).
 

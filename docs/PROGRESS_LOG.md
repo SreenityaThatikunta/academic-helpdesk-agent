@@ -895,3 +895,16 @@ Measured (eval average for multi qwen3 was 12.2 s per question, one fresh sessio
   - A routing probe of 8 questions × 3 runs in fresh sessions (5 rule questions about make-up / I grade / sick leave, 3 email requests) → 24/24, the same as before the fix.
   - Every eval turn that should reach email_agent (E01–E04, M01) contains an email word, so the eval routing is unaffected.
   - Unit test `test_email_agent_only_for_email_requests`.
+
+---
+
+## Coverage check against the problem statement; README tightened (2026-10-21)
+
+Each requirement in `docs/PROBLEM_STATEMENT.md` was checked against the report. Covered: the five example questions (P01, S01, C01, V01, E01), both out-of-scope examples (O01 dining, O02 reaching campus), the four example tools, the unanswered log, citations, ADK, Ollama 8B models, local embeddings + ChromaDB, single → multi-agent with the three named specialists, 30 prompts, accuracy / groundedness / refusals, a second model, and the deliverables. Gaps fixed in the report (now 12 pages, 0 overfull boxes):
+- **Questions whose answers changed across runs** were only counted ("8 of 31"); they are now named in the consistency paragraph (single Llama: P01, P06, P07, P08, P09, M02, V01 both turns; multi Llama: P01, P04, M02). The assignment asks for this list.
+- **20–30 documents:** we have 33; the report now says 29 are current (within the range) and the 4 older versions are kept on purpose to test that the newer rule wins.
+- **16 GB RAM:** the evaluation setup now states the runs were on a 16 GB laptop (Apple M2 Pro). Only the requirement is stated, without the memory-pressure framing removed earlier.
+- **LiteLLM** is now named (ADK reaches Ollama through its LiteLLM connector).
+- Section 8 gained the email-routing check (also a box in the safety-check figure) and a short **web interface** paragraph with one screenshot (`report/img/web-ui.jpg`, resized so the PDF stays ~0.55 MB).
+
+README rewritten from 202 to 123 lines: one pitch, a screenshot, "What it does", a diagram with three lines, results, one quick-start block, the web UI in brief (details moved to TECHNICAL §9.1), evaluate/test, layout, privacy.
