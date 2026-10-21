@@ -13,6 +13,7 @@ from google.adk.agents import LlmAgent
 from helpdesk import prompts
 from helpdesk.agents.guards import (
     drop_transfer_noise,
+    keep_email_agent_for_email_requests,
     log_refusals,
     route_empty_router_reply,
     standardize_router_refusal,
@@ -62,5 +63,6 @@ def build_multi_agent(model: str | None = None) -> LlmAgent:
         tools=[log_unanswered_question],
         sub_agents=[policy, schedule, email],
         before_model_callback=trim_history,
-        after_model_callback=[route_empty_router_reply, log_refusals, standardize_router_refusal],
+        after_model_callback=[route_empty_router_reply, keep_email_agent_for_email_requests, log_refusals,
+                              standardize_router_refusal],
     )

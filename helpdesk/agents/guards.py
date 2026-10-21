@@ -83,9 +83,12 @@ def standardize_router_refusal(callback_context: CallbackContext, llm_response: 
     return None
 
 
+# The student asks for something to be written: the only reason to hand a message to email_agent
+EMAIL_REQUEST = re.compile(r"\b(e-?mail|mail|draft|write|compose|letter|message)\b", re.I)
+
 # Keyword fallback routes used only when the router returns an empty message
 FALLBACK_ROUTES = [
-    (re.compile(r"\b(e-?mail|mail|draft|write|letter)\b", re.I), "email_agent"),
+    (EMAIL_REQUEST, "email_agent"),
     (re.compile(r"\b(slot|teach(es|ing)?|instructor|professor|classroom|room|timings?|time ?table|"
                 r"how many .*(courses|electives)|courses? (offered|floated))\b", re.I), "schedule_agent"),
 ]
@@ -103,6 +106,39 @@ def route_empty_router_reply(callback_context: CallbackContext, llm_response: Ll
     target = next((agent for pat, agent in FALLBACK_ROUTES if pat.search(question)), "policy_agent")
     call = types.FunctionCall(name="transfer_to_agent", args={"agent_name": target})
     return LlmResponse(content=types.Content(role="model", parts=[types.Part(function_call=call)]))
+
+
+def _previous_reply(callback_context: CallbackContext) -> tuple[str | None, str]:
+    """(agent, text) of the last specialist reply before the current student message."""
+    for ev in reversed(callback_context.session.events):
+        if ev.invocation_id == callback_context.invocation_id or ev.author in ("user", callback_context.agent_name):
+            continue
+        text = "".join(p.text or "" for p in ((ev.content.parts if ev.content else None) or [])).strip()
+        if text:
+            return ev.author, text
+    return None, ""
+
+
+def keep_email_agent_for_email_requests(callback_context: CallbackContext, llm_response: LlmResponse) -> None:
+    """after_model_callback for the router: hand a message to email_agent only when it asks for an email
+    to be written, or answers a question the email agent just asked ("Did you mean CSL7650?" -> "yes").
+    Otherwise send it to policy_agent. After a few turns qwen3 routed rule questions that mention a
+    make-up exam or illness ("Can I get a make-up exam if I miss the Minor due to illness?") to
+    email_agent, whose description lists those topics as reasons to write an email."""
+    parts = (llm_response.content.parts if llm_response.content else None) or []
+    for p in parts:
+        call = p.function_call
+        if not call or call.name != "transfer_to_agent" or (call.args or {}).get("agent_name") != "email_agent":
+            continue
+        user = callback_context.user_content
+        question = "".join(q.text or "" for q in (user.parts if user else []))
+        if EMAIL_REQUEST.search(question):
+            continue
+        agent, reply = _previous_reply(callback_context)
+        if agent == "email_agent" and "?" in reply:
+            continue
+        call.args = {**call.args, "agent_name": "policy_agent"}
+    return None
 
 
 # ADK's transcript of another agent's tool result: "[agent] `tool` tool returned result: {...}"

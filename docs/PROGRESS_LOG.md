@@ -851,3 +851,18 @@ Measured (eval average for multi qwen3 was 12.2 s per question, one fresh sessio
 - Not committed yet (user to review).
 - **User revision:** the accuracy heatmap and the outcome bars went back to **tables** (category table; new outcome table with Correct: grounded / refuse-clarify-suggest / not grounded and Wrong: false refusal / other, generated as `tables/outcomes.tex`), and the per-question grid went back to the appendix **table**. The unused heatmap / outcome-bar / grid generators (and the colour-scale helper) were removed from `make_tables.py`. Remaining figures: retrieval pipeline, agents, amendment timeline, accuracy/groundedness bars, routing matrices, failure reasons, safety-check pipeline, request sequence. 11 pages, 0 overfull boxes, all references resolved. Not committed yet.
 - **User revision (response time):** the paragraph now explains what drives the time (3 model calls; prompts growing with the chat history up to the 8k limit) and lists **what we did to make answers faster**: trimming old tool results (20–31 s instead of growing to 71 s), Qwen3 `think=False` (19 s → 1.9 s on a one-tool question), small retrieved context (5 passages, at most 2 per document). Memory pressure / swapping / 240 tok/s / the 16 GB laptop are no longer mentioned; the "~18 s" in the sequence diagram was removed (it was measured under that memory pressure), and the table caption says "command-line chat" instead of "the same laptop". 11 pages, 0 overfull, no em dashes. Not committed yet.
+
+---
+
+## Fix: make-up exam questions routed to email_agent (2026-10-21)
+
+**Found** while timing the web UI: in multi mode, "Can I get a make-up exam if I miss the Minor exam due to illness?" went to `email_agent` instead of `policy_agent`. The answer was still correct (email_agent can search the documents), but the routing was wrong.
+
+- **Only after earlier turns.** In a fresh session the router got it right 3/3. After "attendance requirement" (→ policy) and "slot for Autonomous Systems" (→ schedule) in the same session it chose email_agent **3/3**. The likely reading: "email the Autonomous Systems instructor about a make-up exam". The email agent's description lists "sick leave … permission for a make-up exam", so a question that mentions a make-up exam and illness is pulled towards it.
+- **Fix: a deterministic router check, not a prompt change.** The eval numbers stay comparable, and the check can be unit-tested. `keep_email_agent_for_email_requests` (after_model_callback on the router, in `guards.py`) keeps a transfer to email_agent only if the student's message asks for something to be written (`email / mail / draft / write / compose / letter / message`), or the email agent's previous reply asked a question (so "Did you mean CSL7650?" → "Yes, I meant CSL7650" still reaches it). Otherwise it transfers to policy_agent. The same `EMAIL_REQUEST` pattern now drives the empty-reply fallback route.
+- **Checked:**
+  - The reproduction (attendance → slot → make-up, same session) → policy_agent 3/3, answered with `search_documents`.
+  - The CSL7570 email with "Did you mean" → "Yes, I meant CSL7650" stays with email_agent and drafts the email.
+  - A routing probe of 8 questions × 3 runs in fresh sessions (5 rule questions about make-up / I grade / sick leave, 3 email requests) → 24/24, the same as before the fix.
+  - Every eval turn that should reach email_agent (E01–E04, M01) contains an email word, so the eval routing is unaffected.
+  - Unit test `test_email_agent_only_for_email_requests`.

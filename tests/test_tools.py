@@ -197,6 +197,45 @@ def test_empty_router_reply_falls_back_to_a_transfer():
     assert route_empty_router_reply(SimpleNamespace(user_content=None), ok) is None
 
 
+def test_email_agent_only_for_email_requests():
+    from types import SimpleNamespace
+
+    from google.adk.models import LlmResponse
+    from google.genai import types
+
+    from helpdesk.agents.guards import keep_email_agent_for_email_requests
+
+    def text(t):
+        return types.Content(role="model", parts=[types.Part(text=t)])
+
+    def route(question, chosen="email_agent", previous=None):
+        """Router chose `chosen` for `question`; `previous` = (agent, reply) of the last turn."""
+        events = [SimpleNamespace(invocation_id="before", author="user", content=text("earlier question"))]
+        if previous:
+            events.append(SimpleNamespace(invocation_id="before", author=previous[0], content=text(previous[1])))
+        ctx = SimpleNamespace(user_content=types.Content(role="user", parts=[types.Part(text=question)]),
+                              session=SimpleNamespace(events=events), invocation_id="now",
+                              agent_name="helpdesk_orchestrator")
+        call = types.FunctionCall(name="transfer_to_agent", args={"agent_name": chosen})
+        resp = LlmResponse(content=types.Content(role="model", parts=[types.Part(function_call=call)]))
+        assert keep_email_agent_for_email_requests(ctx, resp) is None
+        return resp.content.parts[0].function_call.args["agent_name"]
+
+    # the misroute seen after a slot question: a rule question that mentions a make-up exam and illness
+    makeup = "Can I get a make-up exam if I miss the Minor exam due to illness?"
+    assert route(makeup, previous=("schedule_agent", "The slot for Autonomous Systems is E.")) == "policy_agent"
+    assert route(makeup) == "policy_agent"
+    # real email requests stay
+    assert route("Write an email to the instructor of CSL7650 that I need leave for 2 days") == "email_agent"
+    assert route("Draft a mail asking for a make-up exam") == "email_agent"
+    # a reply to the email agent's question stays; after a finished draft a new question does not
+    asked = ("email_agent", "CSL7570 is not offered. Did you mean CSL7650 (Autonomous Systems)?")
+    assert route("Yes, I meant CSL7650 (Autonomous Systems).", previous=asked) == "email_agent"
+    assert route(makeup, previous=("email_agent", "Your draft has been saved.")) == "policy_agent"
+    # other routes are left alone
+    assert route("What is the slot for Autonomous Systems?", chosen="schedule_agent") == "schedule_agent"
+
+
 def test_draft_email_outside_project_folder(tmp_path, monkeypatch):
     monkeypatch.setattr(config, "DRAFTS_DIR", tmp_path / "elsewhere")
     r = draft_email("gaurav.harit@iitj.example", "Leave", "Dear Sir, ... Regards")
