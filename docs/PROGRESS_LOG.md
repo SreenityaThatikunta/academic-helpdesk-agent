@@ -907,4 +907,6 @@ Each requirement in `docs/PROBLEM_STATEMENT.md` was checked against the report. 
 - **LiteLLM** is now named (ADK reaches Ollama through its LiteLLM connector).
 - Section 8 gained the email-routing check (also a box in the safety-check figure) and a short **web interface** paragraph with one screenshot (`report/img/web-ui.jpg`, resized so the PDF stays ~0.55 MB).
 
+**Font size (user):** the body text went from 11pt to 10pt; the report is now 11 pages, 0 overfull boxes. A small `\needlines` macro (what the `needspace` package does; it isn't installed) keeps the "Guards" heading on the same page as its list.
+
 README rewritten from 202 to 123 lines: one pitch, a screenshot, "What it does", a diagram with three lines, results, one quick-start block, the web UI in brief (details moved to TECHNICAL §9.1), evaluate/test, layout, privacy.

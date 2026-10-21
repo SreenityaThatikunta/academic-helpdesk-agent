@@ -1,4 +1,4 @@
-\documentclass[11pt,a4paper]{article}
+\documentclass[10pt,a4paper]{article}
 
 \usepackage[margin=2.2cm]{geometry}
 \usepackage[T1]{fontenc}
@@ -26,6 +26,9 @@
 \newcommand{\code}[1]{\texttt{\small #1}}
 % \input is not expandable, so a rule right after it inside a tabular is "misplaced"; use the primitive
 \makeatletter\newcommand{\inputrows}[1]{\@@input #1 }\makeatother
+% start a new page unless #1 lines still fit (what the needspace package does; it isn't installed here)
+\makeatletter\newcommand{\needlines}[1]{\par\penalty-100\begingroup\setlength{\dimen@}{#1\baselineskip}%
+  \dimen@ii\pagegoal\advance\dimen@ii-\pagetotal\ifdim\dimen@>\dimen@ii\ifdim\dimen@ii>\z@\vfil\fi\break\fi\endgroup}\makeatother
 \setlist{itemsep=1pt,topsep=3pt}
 \captionsetup{font=small,labelfont=bf}
 
@@ -229,6 +232,7 @@ faster.
 \label{fig:agents}
 \end{figure}
 
+\needlines{8}
 \subsection{Guards}
 Two deterministic callbacks on every agent:
 \begin{itemize}
