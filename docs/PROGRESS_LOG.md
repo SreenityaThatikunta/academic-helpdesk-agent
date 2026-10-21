@@ -854,6 +854,35 @@ Measured (eval average for multi qwen3 was 12.2 s per question, one fresh sessio
 
 ---
 
+## Web UI (branch `web-ui`, 2026-10-15 → 2026-10-21)
+
+**Goal (user):** a small, minimal UI for the agent: chat, new chat, sources, and a graph like the mind map in Kuberwastaken's blog (Quartz's graph view). It was then extended in rounds the user picked from a list of ideas.
+
+**Built** (`helpdesk/web/`; details in TECHNICAL §9.1, screenshots in the README):
+- FastAPI server + one static page (no build step); chats in the browser's local storage, agent sessions on the server.
+- Sources panel; a d3 force graph of the 33 documents (category tags, amendment edges, the chat's questions linked to the documents behind each answer; "This chat" / "All documents").
+- **Live agent trace** over server-sent events. The runner got an `on_event("result", …)` hook next to the existing `"call"` one, and the CLI ignores it. While a search runs, its documents pulse on the graph.
+- **Answer cards from tool results:** course time table (week grid, exam countdown), editable email draft (Copy / Open in mail app, "not sent"), course list, did-you-mean chips, refusal ticket, programme/year picker for the clarify question, **rule history** (amendments.csv + superseded documents).
+- Single / multi-agent toggle (one agent per mode, built on first use; separate memory per mode); **Unanswered** tab (open / resolved, this chat's tickets highlighted).
+- **Cited-page preview** in the panel.
+- Responsive layout: the chat list and panel slide over the chat on tablets and phones.
+
+**Decisions and findings:**
+- Cards are built from tool results, not parsed from the answer text, so a card can't contradict the data. The trade-off: a card appears only when the tool ran.
+- Citations of time-table answers name the spreadsheet file (`26_Slot_System_AY2026-27_SemI.xlsx`), not the document title, so "cited" matches either one.
+- The browser's PDF viewer showed a blank frame in the app's browser pane, and phones show only the first page of an embedded PDF. PDFs are therefore drawn with PDF.js, starting at the cited page, with the other pages rendered as they scroll into view.
+- Rule history is shown only when the *newer* document is cited (or a superseded one is). Showing it whenever any related document was retrieved was noise; e.g. the make-up history appeared on attendance answers.
+- **Layout testing** at 320 px, phone, tablet, 1100 px and 1920 px, light and dark, found three bugs:
+  - The panel stacked under the chat on phones: a later `.panel { position: relative }` overrode the mobile `position: fixed`.
+  - The graph could get a NaN zoom when fitted while hidden.
+  - Closing a PDF mid-render threw an uncaught error.
+  
+  All three are fixed. Drawers got a backdrop and the panel a close button; the composer gets a shorter placeholder on phones.
+- **Slowness report (user: ~80 s for one answer).** Ollama's log showed the specialist's call taking 62–66 s; the same calls took 13–23 s a few minutes later, and a 6-question multi-agent chat took 9–21 s per answer. The cause was memory pressure, not the code: the model was reloaded with only 4.5 GB free (later 1.8 GB), and swap was at 6.5 / 7 GB. This timing run also exposed the routing bug below.
+- One agent observation that was not fixed in the UI: in multi mode, "How many Open Elective credits do I need for a B.Tech?" was once answered from the AIDE curriculum without asking for the programme first.
+
+---
+
 ## Fix: make-up exam questions routed to email_agent (2026-10-21)
 
 **Found** while timing the web UI: in multi mode, "Can I get a make-up exam if I miss the Minor exam due to illness?" went to `email_agent` instead of `policy_agent`. The answer was still correct (email_agent can search the documents), but the routing was wrong.

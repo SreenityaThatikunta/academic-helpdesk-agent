@@ -39,7 +39,7 @@ flowchart LR
 
 - **Data:** 33 real IIT Jodhpur documents — academic regulations, attendance/exam circulars, B.Tech/M.Tech curricula, course catalogues, academic calendars, the Semester I 2026-27 course list, slot system, classroom allocation and major-exam time table, IH course lists, examination guidelines. Spreadsheets are turned into structured CSVs (821 course offerings, slot timings, minor/major exam schedule, 312 instructors with **dummy** emails).
 - **RAG:** documents are chunked with a title/date/page header, embedded with `nomic-embed-text`, stored in ChromaDB, and searched with **hybrid retrieval** (dense + BM25, reciprocal-rank fusion). Superseded documents are down-weighted and passages replaced by a later circular are dropped (an *amendment register*).
-- **Agents:** a single-agent baseline and a multi-agent version (router + 3 specialists) built with Google ADK on `LiteLlm → Ollama`. Deterministic guards make sure every refusal is logged.
+- **Agents:** a single-agent baseline and a multi-agent version (router + 3 specialists) built with Google ADK on `LiteLlm → Ollama`. Deterministic guards make sure every refusal is logged and that only requests to write an email reach the email agent.
 - **Evaluation:** 30 prompts × 2 models × 2 modes × 3 repeats (372 turns), scored for accuracy, groundedness, refusals, routing and run-to-run consistency, with manual review of every failure.
 
 ## Features
@@ -140,7 +140,7 @@ I don't know the answer to that. I've forwarded your question to the academic of
 .venv/bin/python eval/run_eval.py --models ollama_chat/qwen3:8b --modes multi --repeats 1 --only P01 E01
 .venv/bin/python eval/score.py                        # → eval/results/summary.md, summary.csv, review.md
 .venv/bin/python eval/check_retrieval.py              # retrieval-only check (hit@k, distance threshold)
-.venv/bin/python -m pytest -q tests                   # 35 unit tests; one needs the index + Ollama (skipped otherwise)
+.venv/bin/python -m pytest -q tests                   # 73 unit tests; one needs the index + Ollama (skipped otherwise)
 ```
 
 ## Web UI

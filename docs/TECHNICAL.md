@@ -11,7 +11,7 @@ How the Academic Helpdesk Agent is built, why it is built that way, and what the
 6. [LLM configuration](#6-llm-configuration)
 7. [Prompts](#7-prompts)
 8. [Agents](#8-agents)
-9. [Runtime: runner, CLI, ADK web](#9-runtime-runner-cli-adk-web)
+9. [Runtime: runner, CLI, ADK web, web UI](#9-runtime-runner-cli-adk-web-web-ui)
 10. [Evaluation methodology](#10-evaluation-methodology)
 11. [Results and analysis](#11-results-and-analysis)
 12. [Design decisions and lessons](#12-design-decisions-and-lessons)
@@ -34,7 +34,7 @@ flowchart TB
         ING --> IDX[(ChromaDB data/index/)]
     end
     subgraph online[Online: a question]
-        Q([student]) --> RUN[runner / CLI / adk web]
+        Q([student]) --> RUN[runner: CLI / web UI / adk web]
         RUN --> AG[agent: single or router + specialists]
         AG --> TOOLS[7 tools]
         TOOLS --> IDX
@@ -204,13 +204,27 @@ So specialists cannot transfer; only the router routes. Because a specialist can
 - The same callback **strips tool calls printed as JSON text** (`{"name": …, "parameters": …}`), a llama3.1 habit.
 - **`drop_transfer_noise` (before_model_callback, specialists):** removes the router's `transfer_to_agent` bookkeeping messages from the specialist's context.
 
+Guards added after the evaluation (`standardize_router_refusal`, `route_empty_router_reply`, `trim_history`, `keep_email_agent_for_email_requests`) are described in §15.
+
 ---
 
-## 9. Runtime: runner, CLI, ADK web
+## 9. Runtime: runner, CLI, ADK web, web UI
 
-- `helpdesk/runner.py::Helpdesk` wraps `InMemoryRunner`; `ask()` returns a `Turn` with the answer, tool calls (agent, name, args), tool results, the **sequence of agents that produced events** (routing), latency and errors; strips stray `<think>` blocks. The CLI keeps one session; the evaluation uses one fresh session per item.
+- `helpdesk/runner.py::Helpdesk` wraps `InMemoryRunner`; `ask()` returns a `Turn` with the answer, tool calls (agent, name, args), tool results, the **sequence of agents that produced events** (routing), latency and errors; strips stray `<think>` blocks. An optional `on_event(kind, agent, name, data)` callback reports each tool call (`"call"`) and tool result (`"result"`) as it happens. The CLI keeps one session; the evaluation uses one fresh session per item.
 - `helpdesk/cli.py`: rich REPL showing tool calls live; `--ask`, `--mode`, `--model`; `/new`, `/unanswered`, `/quit`.
 - `agent/academic_helpdesk/agent.py` exposes `root_agent` for `adk web agent`.
+
+### 9.1 Web UI (`helpdesk/web/`)
+
+`python -m helpdesk.web.server [--mode] [--model] [--port]` starts a FastAPI app that serves one static page (`static/`: plain HTML/CSS/JS; d3, marked, DOMPurify and PDF.js from a CDN; no build step). Chats live in the browser's local storage; the server keeps only the ADK sessions, in memory.
+
+- **Agents:** one `Helpdesk` per mode, built on first use, so the page can switch between single and multi agent. Each chat keeps a session id per mode (switching modes starts a separate memory, shown as a divider). A lock answers one question at a time, since there is one local model.
+- **Streaming:** `POST /api/chat/stream` returns server-sent events: `start` once the lock is held, then one `call` / `result` event per tool call (from the runner's `on_event`), then `done` with the full answer. `trace_call` / `trace_result` turn these into one-line steps ("5 passages from D31, D04, D05", "not offered this semester · did you mean CSL7650?") plus the documents touched, which light up on the graph while the answer is being written. `POST /api/chat` returns the same final payload without streaming.
+- **Sources:** `extract_sources` maps search citations to documents by the longest matching title (several titles start with "Academic Regulations") and CSV sources by file-name prefix (`26_…xlsx` → D26). A source counts as *cited* if the answer contains its title or file name, since time-table answers cite the spreadsheet's file name. The first page of the citation ("p. 9", "pp. 1-2") is kept for the preview.
+- **Cards** come from tool results, not from the model's text, so they can't disagree with the data: course (`get_slot` / `lookup_course`, the richer `get_slot` record wins), email draft (`draft_email` arguments, only if the draft was saved), course list (`list_courses`), *did you mean* (suggestions from a not-found lookup, only if the answer asks), ticket (refusal; the ticket id comes from the tool result, or from `logs/unanswered.jsonl` when the guard logged it), clarify (the fixed programme/year question), and **rule history**. Rule history shows when the answer cites a document that replaced older rules (`data/amendments.csv`) or cites one marked superseded in the manifest.
+- **Graph:** `GET /api/graph` returns the documents, category tags, `amends` edges (amendments.csv) and `related` edges (document ids named in manifest notes). The page adds the chat's questions and draws a d3 force layout in the style of Quartz's graph view.
+- **Preview:** `GET /api/doc/{id}` serves the raw file. PDFs are rendered with PDF.js at the cited page, because the browser's built-in viewer showed a blank frame in the app's browser pane and phones show only the first page of an embedded PDF. Saved web pages render in a sandboxed iframe; spreadsheets offer a download.
+- `GET /api/unanswered` lists the hand-off log, newest first. `tests/test_web.py` covers the helpers and the API without Ollama.
 
 ---
 
@@ -291,6 +305,8 @@ So specialists cannot transfer; only the router routes. Because a specialist can
 | `UNANSWERED_LOG`, `DRAFTS_DIR` | `logs/unanswered.jsonl`, `drafts` | runtime outputs |
 | `TOP_K`, `MAX_DISTANCE` | `5`, `0.35` | retrieval defaults |
 
+The web UI server takes `--mode`, `--model`, `--host` (default `127.0.0.1`) and `--port` (default `8000`); its default mode and model come from the same variables.
+
 ---
 
 ## 15. Post-evaluation changes
@@ -306,3 +322,6 @@ Made after the evaluation in §10–11 (the numbers there describe the version b
 - **Prompt:** "this semester" dates are filtered to the current semester.
 - **`draft_email`** works when `DRAFTS_DIR` is outside the project.
 - Retrieval check after these changes: hit@1 12/19, hit@5 **19/19** (was 18/19). Still open: the PhD maximum duration (the §11.5 chunk ranks 13th in BM25); an occasional out-of-semester holiday in answers.
+- **`trim_history` guard** (before_model_callback, router and specialists): earlier turns' tool results are replaced by a placeholder; tool calls, questions and answers stay. Long sessions no longer overflow the 8k context.
+- **`keep_email_agent_for_email_requests` guard** (after_model_callback, router): after a few turns (e.g. an attendance and a slot question), the router sent "Can I get a make-up exam if I miss the Minor exam due to illness?" to email_agent in 3/3 runs, although it routed it correctly in a fresh session. The email agent's description names sick leave and make-up exams as reasons to write an email. A transfer to email_agent is now kept only if the message asks for something to be written (email / mail / draft / write / compose / letter / message) or answers a question the email agent just asked ("Did you mean CSL7650?" → "yes"); otherwise it goes to policy_agent. Checked: the reproduction → policy_agent 3/3; a routing probe of 8 questions × 3 runs → 24/24; every eval turn meant for email_agent contains an email word, so the eval routing is unchanged.
+- **Web UI** (§9.1).

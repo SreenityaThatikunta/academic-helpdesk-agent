@@ -23,7 +23,7 @@ Everything runs locally and fits in 16GB RAM (8B model at Q4 ≈ 5–6GB, plus e
 academic-helpdesk-agent/
 ├── README.md
 ├── requirements.txt, .env.example
-├── docs/            PROBLEM_STATEMENT.md · PLAN.md · PROGRESS_LOG.md
+├── docs/            PROBLEM_STATEMENT.md · PLAN.md · PROGRESS_LOG.md · TECHNICAL.md · img/ (screenshots)
 ├── data/
 │   ├── raw/         33 source documents (PDF / XLSX / HTML / TXT)
 │   ├── ocr/         OCR text for scanned PDFs
@@ -36,7 +36,8 @@ academic-helpdesk-agent/
 │   ├── config.py · llm.py · prompts.py · runner.py · cli.py
 │   ├── ingest.py (load → chunk → embed → Chroma) · rag.py (hybrid dense + BM25 search)
 │   ├── tools/       retrieval · timetable · faculty · email_draft · unanswered
-│   └── agents/      single_agent · multi_agent · guards
+│   ├── agents/      single_agent · multi_agent · guards
+│   └── web/         server.py (FastAPI) · static/ (index.html · app.js · graph.js · style.css)
 ├── agent/           ADK dev-UI entry point (`adk web agent`)
 ├── eval/            questions (build_questions.py → questions.jsonl) · run_eval · score · check_retrieval
 │   └── results/     summary.md/.csv · review.md · scored.jsonl · runs/<mode>__<model>__r<k>/
@@ -137,6 +138,15 @@ academic-helpdesk-agent/
   - [x] Error analysis (retrieval misses, wrong routing, hallucinated citations)
   - [x] Limitations and future work
 - [x] Final pass: fresh clone → follow the README → everything runs on a 16GB machine
+
+### Phase 8: Web UI (after the report)
+- [x] FastAPI server + static page: chat, new chat, chats kept in the browser
+- [x] Sources panel; document graph in the style of Quartz's graph view (documents, category tags, amendment edges, the chat's questions)
+- [x] Live agent trace over server-sent events; the graph lights up retrieved documents while the answer is written
+- [x] Answer cards from tool results: course time table, email draft, course list, did-you-mean, refusal ticket, clarify, rule history
+- [x] Single / multi-agent toggle; Unanswered tab (the hand-off queue)
+- [x] Cited-page preview (PDF.js); responsive layouts (phone, tablet, laptop, wide; light and dark)
+- [x] Tests (`tests/test_web.py`), README section with screenshots, `docs/TECHNICAL.md` §9.1
 
 ---
 
