@@ -54,6 +54,7 @@ flowchart LR
 | **Honest refusals + human hand-off** | Out-of-scope questions get *"I don't know the answer to that. I've forwarded your question to the academic office."* and are logged to `logs/unanswered.jsonl` (`/unanswered` in the CLI lists them). |
 | **Single- or multi-agent** | `--mode single` (one agent, 7 tools) or `--mode multi` (router → policy / schedule / email specialists). |
 | **Swappable local models** | Any Ollama chat model via `HELPDESK_MODEL` (tested: `qwen3:8b`, `llama3.1:8b`). |
+| **Web UI** | Local chat page with a live agent trace, answer cards (time table, email draft, course list), rule history, cited-page preview, a document graph and the unanswered queue — see [Web UI](#web-ui). |
 | **Reproducible evaluation** | `eval/run_eval.py` + `eval/score.py` with per-run isolation, resumable runs, review sheet and summary tables. |
 
 ## Results at a glance
@@ -94,6 +95,12 @@ cp .env.example .env            # model, mode, paths; defaults work
 ```
 
 REPL commands: `/new` (new session), `/unanswered` (questions forwarded to a human), `/quit`.
+
+**Web UI** — see [Web UI](#web-ui) below
+
+```bash
+.venv/bin/python -m helpdesk.web.server              # http://localhost:8000 (--mode, --model, --port)
+```
 
 **ADK dev UI** (mode/model from `.env`, e.g. `HELPDESK_MODE=multi`)
 
@@ -136,10 +143,38 @@ I don't know the answer to that. I've forwarded your question to the academic of
 .venv/bin/python -m pytest -q tests                   # 35 unit tests; one needs the index + Ollama (skipped otherwise)
 ```
 
+## Web UI
+
+A small FastAPI server (`helpdesk/web/`) in front of the same agents, with a single static page (no build step). Chats are kept in the browser's local storage; the server only holds the agent sessions.
+
+![Answer with rule history and the cited page open](docs/img/answer-history-preview.png)
+
+- **Live agent trace.** While the model works, each step streams in (server-sent events): router hand-offs, tool calls with their arguments, and a one-line result (*"5 passages from D31, D04, D05"*, *"CSL7650 Autonomous Systems · slot E"*). Afterwards it folds into a summary line: steps · seconds · route.
+- **Single / multi-agent toggle** in the sidebar. Each mode keeps its own conversation memory; the chat shows a divider where you switch.
+- **Answer cards** built from the tool results, not from the model's text:
+  - *Course* — slot, room, instructor, a Mon–Fri grid of class times and the minor/major exams with a countdown.
+  - *Email draft* — editable To / Subject / Body with Copy and Open-in-mail-app; marked **not sent**.
+  - *Course list* — a filterable table for "how many courses…" questions.
+  - *Did you mean* — the suggested course codes as buttons; *clarify* — programme and year pickers when the agent asks for them.
+  - *Forwarded* — a refusal shows its ticket id from `logs/unanswered.jsonl`.
+  - *Rule history* — when the answer cites a document that replaced older rules (or cites a superseded one), a timeline from `data/amendments.csv` and the manifest: *2019 Regulations → 2024 Examination Guidelines (in force)*.
+- **Sources and page preview.** Every document a tool returned, cited ones first, with the retrieved passages. Clicking a source opens it in the side panel at the cited page (PDFs are drawn with PDF.js so this also works on phones); saved web pages and text files render too, spreadsheets offer a download.
+- **Document graph** (in the style of [Quartz](https://quartz.jzhao.xyz/)'s graph view): the 33 documents coloured by category, linked to category tags and by "amended by" edges; each question in the chat becomes a node linked to the documents behind its answer. While a question is being answered, the documents a search returns light up as they arrive. *This chat* shows the local neighbourhood, *All documents* everything; hover to highlight, scroll to zoom, click a document to preview it.
+- **Unanswered tab** — the hand-off queue (open / resolved), with this chat's tickets highlighted.
+- **Responsive** — three columns on a laptop; on tablets and phones the chat list and the panel slide over the chat.
+
+| Multi-agent trace, refusal ticket and the hand-off queue | Course card and the chat's document graph |
+|---|---|
+| ![](docs/img/multi-agent-unanswered.png) | ![](docs/img/course-card-graph.png) |
+
+<img src="docs/img/phone.png" alt="Phone layout" width="300">
+
+API (used by the page, handy for scripting): `POST /api/chat` (one JSON answer) · `POST /api/chat/stream` (server-sent events: `start`, `call`, `result`, `done`) · `GET /api/graph` · `GET /api/unanswered` · `GET /api/doc/{doc_id}` · `GET /api/info`. Request body: `{"message": "...", "session_id": null, "mode": "multi"}`.
+
 ## Repository layout
 
 ```
-docs/          PROBLEM_STATEMENT.md · PLAN.md · PROGRESS_LOG.md · TECHNICAL.md
+docs/          PROBLEM_STATEMENT.md · PLAN.md · PROGRESS_LOG.md · TECHNICAL.md · img/ (screenshots)
 data/
   raw/         33 source documents (PDF / XLSX / HTML / TXT)
   ocr/ csv/    derived: OCR text · courses, slots, exam_schedule, faculty (dummy emails)
@@ -149,11 +184,12 @@ scripts/       data pipeline: ocr_scanned.py → build_csvs.py
 helpdesk/      config · llm · prompts · ingest · rag · runner · cli
   tools/       retrieval · timetable · faculty · email_draft · unanswered
   agents/      single_agent · multi_agent · guards
+  web/         server.py (FastAPI) · static/ (index.html · app.js · graph.js · style.css)
 agent/         ADK dev-UI entry point
 eval/          questions.jsonl (build_questions.py) · run_eval.py · score.py · check_retrieval.py
   results/     summary.md/.csv · review.md · scored.jsonl · runs/<mode>__<model>__r<k>/
 report/        report.tex → report.pdf
-tests/         unit tests for ingestion, retrieval, tools, guards, scoring
+tests/         unit tests for ingestion, retrieval, tools, guards, scoring, web UI
 ```
 
 ## Data and privacy

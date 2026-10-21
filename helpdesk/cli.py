@@ -25,6 +25,8 @@ console = Console()
 
 
 def _show_call(kind, agent, name, args):
+    if kind != "call":
+        return
     console.print(f"  [dim]→ {agent}: {name}({json.dumps(args, ensure_ascii=False)[:160]})[/dim]")
 
 
