@@ -2,9 +2,9 @@
 
 import json
 import re
+from pathlib import Path
 
 import pytest
-from pathlib import Path
 
 from helpdesk import config
 from helpdesk.tools import (
@@ -143,12 +143,25 @@ def _index_ready() -> bool:
         import chromadb
 
         chromadb.PersistentClient(path=str(config.CHROMA_DIR)).get_collection(config.CHROMA_COLLECTION)
+    except Exception:
+        return False
+    return _ollama_up()
+
+
+def _ollama_up() -> bool:
+    """The query needs Ollama for embeddings; skip (not fail) when it isn't running."""
+    import os
+    import urllib.request
+
+    base = os.getenv("OLLAMA_API_BASE", "http://localhost:11434")
+    try:
+        urllib.request.urlopen(f"{base}/api/tags", timeout=1)
         return True
     except Exception:
         return False
 
 
-@pytest.mark.skipif(not _index_ready(), reason="needs the vector index: run `python -m helpdesk.ingest` (and Ollama)")
+@pytest.mark.skipif(not _index_ready(), reason="needs the vector index: run `python -m helpdesk.ingest` and start Ollama")
 def test_search_scoped_to_document_finds_cse_oe_credits():
     from helpdesk.tools import search_documents
 
