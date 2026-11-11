@@ -14,8 +14,10 @@ jobs:
         with:
           python-version: "3.12"
       - name: Install dependencies
-        run: uv pip install --system -r requirements-dev.txt
+        run: |
+          uv venv .venv
+          uv pip install -p .venv -r requirements-dev.txt
       - name: Lint
-        run: ruff check .
+        run: .venv/bin/ruff check .
       - name: Unit tests (no Ollama; the retrieval test skips itself)
-        run: pytest
+        run: .venv/bin/pytest
