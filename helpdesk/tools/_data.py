@@ -1,7 +1,7 @@
 """Cached access to the structured CSVs in data/csv/."""
 
 import re
-from functools import lru_cache
+from functools import cache
 
 import pandas as pd
 
@@ -10,7 +10,7 @@ from helpdesk import config
 CODE_RE = re.compile(r"\b([A-Za-z]{2,4})\s?-?(\d{3,5}[A-Za-z]?)\b")
 
 
-@lru_cache(maxsize=None)
+@cache
 def table(name: str) -> pd.DataFrame:
     return pd.read_csv(config.CSV_DIR / f"{name}.csv", dtype=str).fillna("")
 

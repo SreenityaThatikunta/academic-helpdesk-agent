@@ -131,7 +131,7 @@ def search(query: str, k: int = config.TOP_K, max_distance: float = config.MAX_D
                     "message": f"No document title matches '{document}'"}
         where = {"doc_id": {"$in": sorted(allowed)}}
     dense = col.query(query_embeddings=[embed_query(query)], n_results=CANDIDATES, include=["distances"], where=where)
-    dense_ids, dists = dense["ids"][0], dict(zip(dense["ids"][0], dense["distances"][0]))
+    dense_ids, dists = dense["ids"][0], dict(zip(dense["ids"][0], dense["distances"][0], strict=True))
     # The distance guard detects off-topic questions across the whole collection; once the
     # agent has picked a document it would only hide that document's tables
     if not dense_ids or (not allowed and dists[dense_ids[0]] > max_distance):
@@ -147,7 +147,7 @@ def search(query: str, k: int = config.TOP_K, max_distance: float = config.MAX_D
             fused[cid] += 1 / (RRF_K + rank + 1)
     pool = col.get(ids=list(fused), include=["metadatas"])
     doc_of = {}
-    for cid, meta in zip(pool["ids"], pool["metadatas"]):
+    for cid, meta in zip(pool["ids"], pool["metadatas"], strict=True):
         doc_of[cid] = meta["doc_id"]
         if meta.get("status") == "amended":
             # replaced by a named newer document (data/amendments.csv): never show it
@@ -165,7 +165,7 @@ def search(query: str, k: int = config.TOP_K, max_distance: float = config.MAX_D
             break
 
     got = col.get(ids=top_ids, include=["documents", "metadatas"])
-    by_id = {i: (doc, meta) for i, doc, meta in zip(got["ids"], got["documents"], got["metadatas"])}
+    by_id = {i: (doc, meta) for i, doc, meta in zip(got["ids"], got["documents"], got["metadatas"], strict=True)}
     hits = []
     for cid in top_ids:
         text, meta = by_id[cid]

@@ -307,7 +307,7 @@ def build_faculty(courses: pd.DataFrame) -> pd.DataFrame:
                 seen[key]["courses"].add(c["course_code"] or c["course_name"])
                 continue
             seen[key] = {"name": name, "department": c["department"], "courses": {c["course_code"] or c["course_name"]}}
-    for i, (key, f) in enumerate(sorted(seen.items()), start=1):
+    for i, (_key, f) in enumerate(sorted(seen.items()), start=1):
         rows.append(
             {
                 "instructor_id": f"F{i:04d}",

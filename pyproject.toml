@@ -1,0 +1,23 @@
+[project]
+name = "academic-helpdesk-agent"
+version = "1.0.0"
+description = "Local multi-agent RAG helpdesk for IIT Jodhpur academics: cited answers, email drafts, and logged refusals (Google ADK + Ollama + ChromaDB)."
+readme = "README.md"
+license = { text = "MIT" }
+authors = [{ name = "Sreenitya Thatikunta" }]
+requires-python = ">=3.12"
+keywords = ["rag", "multi-agent", "llm", "google-adk", "ollama", "chromadb"]
+
+[tool.ruff]
+line-length = 120
+target-version = "py312"
+extend-exclude = [".venv", "data", "report"]
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "I", "B", "UP"]
+ignore = ["E501"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-q"
+filterwarnings = ["ignore::DeprecationWarning"]

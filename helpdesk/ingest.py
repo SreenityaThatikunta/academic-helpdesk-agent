@@ -188,7 +188,7 @@ def chunk_document(row: pd.Series, amendments: pd.DataFrame | None = None, title
     amends = amendments[amendments["doc_id"] == row.doc_id] if amendments is not None else []
     titles = titles or {}
     chunks = []
-    for pg, text in zip(pages, texts):
+    for pg, text in zip(pages, texts, strict=True):
         for i, piece in enumerate([text] if whole else split_text(text)):
             if len(piece) < MIN_CHUNK_CHARS:
                 continue
@@ -252,7 +252,7 @@ def get_collection(reset: bool = False):
 def ingest(reset: bool = False) -> None:
     manifest = pd.read_csv(MANIFEST, dtype=str).fillna("")
     amendments = load_amendments()
-    titles = dict(zip(manifest.doc_id, manifest.title))
+    titles = dict(zip(manifest.doc_id, manifest.title, strict=True))
     col = get_collection(reset)
     total = 0
     for _, row in manifest.iterrows():

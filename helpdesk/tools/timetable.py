@@ -34,7 +34,7 @@ def _offerings(rows: pd.DataFrame) -> list[dict]:
     for code, g in rows.groupby("course_code", sort=False):
         first = g.iloc[0]
 
-        def uniq(col):
+        def uniq(col, g=g):
             return sorted({v for v in g[col] if v})
 
         out.append(
