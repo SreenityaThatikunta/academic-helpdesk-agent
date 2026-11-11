@@ -1,8 +1,25 @@
 # Academic Helpdesk Agent · IIT Jodhpur
 
+[![CI](https://github.com/SreenityaThatikunta/academic-helpdesk-agent/actions/workflows/ci.yml/badge.svg)](https://github.com/SreenityaThatikunta/academic-helpdesk-agent/actions/workflows/ci.yml)
+![Python 3.12](https://img.shields.io/badge/python-3.12-blue)
+![Runs locally](https://img.shields.io/badge/LLM-local%20(Ollama)-green)
+![Google ADK](https://img.shields.io/badge/agents-Google%20ADK-4285F4)
+[![License: MIT](https://img.shields.io/badge/license-MIT-lightgrey)](LICENSE)
+
 A multi-agent helpdesk for IIT Jodhpur students. It answers questions about programmes, courses, the time table and academic rules, cites a document for every answer, drafts emails to instructors, and says **"I don't know"** instead of guessing, logging the question for a human. It runs fully locally on a 16 GB laptop with Google ADK, Ollama (Qwen3 8B / Llama 3.1 8B) and ChromaDB.
 
 [Report (PDF)](report/report.pdf) · [Technical deep dive](docs/TECHNICAL.md) · [Problem statement](docs/PROBLEM_STATEMENT.md) · [Build log](docs/PROGRESS_LOG.md)
+
+![Demo: a question routed to the schedule agent, answered with a cited time-table card](docs/img/demo.gif)
+
+## Highlights
+
+- **87% accuracy** on a hand-reviewed 30-question set with a local 8B model (Qwen3 8B), and **100% of out-of-scope questions refused** and logged for a human.
+- **Stable answers:** with Qwen3, 0 of 31 answers changed across 3 repeated runs.
+- **Built on 33 real institute documents** (PDFs, scans, spreadsheets, web pages) → 1,134 chunks with hybrid dense + BM25 retrieval.
+- **Handles rules that changed over time:** an amendment register makes the 2024 circular win over the 2019 regulation it replaced.
+- **Single vs multi-agent compared** across 2 models × 3 repeats (372 scored turns). The model mattered more than the architecture.
+- **Runs fully offline** on a 16 GB laptop, with a FastAPI + vanilla-JS web UI that streams the agent trace live.
 
 ![Web UI: an answer with its rule history and the cited page](docs/img/answer-history-preview.png)
 
@@ -51,18 +68,37 @@ flowchart LR
 
 The model matters more than the architecture, multi-agent mode improves grounding, and every out-of-scope question was refused and logged.
 
+## Design decisions
+
+- **Fix the data and tools, not just the prompt.** The gains that held up came from structure: the amendment register, keeping short circulars whole, a per-document cap in retrieval, and removing tool parameters a small model misused. Extra prompt wording often fixed one case and broke another.
+- **Put a rule in code when it must always hold.** Refusal logging and email routing are deterministic guards around the LLM, not instructions to it.
+- **Recency is data, not an instruction.** Conflicting versions of a rule caused most wrong-but-grounded answers. Dates, status and amendments are stored as metadata so retrieval can drop replaced passages.
+- **Inspect what the framework sends.** ADK's appended transfer instructions were overriding specialist rules. Dumping the actual LLM request found this in one step, after four prompt-level fixes had failed.
+- **Repeat runs and audit the answer key.** Three repeats separate systematic failures from noise, and manual review caught a ground-truth error that would have rewarded false refusals.
+
+More in [TECHNICAL.md §12–13](docs/TECHNICAL.md#12-design-decisions-and-lessons), including limitations and future work.
+
 ## Quick start
 
 Needs macOS/Linux with 16 GB RAM, [Ollama](https://ollama.com) and Python 3.12 ([uv](https://docs.astral.sh/uv/) or pip). Setup takes about 15–30 minutes, mostly the model download.
 
 ```bash
-ollama pull qwen3:8b && ollama pull nomic-embed-text      # ~5.5 GB; add llama3.1:8b to compare models
-uv venv --python 3.12 .venv && uv pip install -p .venv -r requirements.txt
-cp .env.example .env                                       # defaults work
-.venv/bin/python -m helpdesk.ingest --reset                # build the vector index (~40 s)
+make setup      # .venv with Python 3.12, dependencies, .env from .env.example (defaults work)
+make models     # ollama pull qwen3:8b + nomic-embed-text (~5.5 GB); add llama3.1:8b to compare models
+make index      # build the vector index (~40 s)
+make web        # web UI at http://localhost:8000
 ```
 
-Run it:
+`make help` lists every target. Without `make`:
+
+```bash
+ollama pull qwen3:8b && ollama pull nomic-embed-text
+uv venv --python 3.12 .venv && uv pip install -p .venv -r requirements.txt   # requirements-dev.txt adds pytest and ruff
+cp .env.example .env
+.venv/bin/python -m helpdesk.ingest --reset
+```
+
+Other ways to run it:
 
 ```bash
 .venv/bin/python -m helpdesk.web.server                    # web UI at http://localhost:8000
@@ -93,7 +129,8 @@ How it is built: [TECHNICAL.md §9.1](docs/TECHNICAL.md#91-web-ui-helpdeskweb).
 .venv/bin/python eval/run_eval.py                          # 2 models × 2 modes × 3 repeats (~80 min)
 .venv/bin/python eval/score.py                             # → eval/results/summary.md, review.md
 .venv/bin/python eval/check_retrieval.py                   # retrieval only (hit@k)
-.venv/bin/python -m pytest -q tests                        # 73 unit tests
+make test                                                  # 73 unit tests (the retrieval test skips without Ollama)
+make lint                                                  # ruff
 ```
 
 The question set is in [`eval/questions.jsonl`](eval/questions.jsonl). To rebuild the data from the raw documents, run `scripts/ocr_scanned.py` (needs `tesseract`) and then `scripts/build_csvs.py` before ingesting.
@@ -112,6 +149,7 @@ agent/         ADK dev-UI entry point
 eval/          questions · run_eval · score · check_retrieval · results/
 report/        report.tex → report.pdf
 tests/         unit tests
+.github/       CI: ruff + pytest on every push
 ```
 
 ## Data and privacy
