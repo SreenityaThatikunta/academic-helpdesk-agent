@@ -9,3 +9,8 @@ data/index/
 logs/*.jsonl
 drafts/*.md
 .pytest_cache/
+
+# Local tooling
+.claude/
+*.zip
+.ruff_cache/
